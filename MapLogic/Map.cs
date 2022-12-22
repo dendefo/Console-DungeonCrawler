@@ -119,7 +119,7 @@
             actor.Move(deltaY, deltaX, temp);
         }
 
-        private void ChoseCollision(int deltaX, int deltaY, Actor actor)
+        public void ChoseCollision(int deltaX, int deltaY, Actor actor)
         {
             if (actor == null) return;
 
