@@ -7,9 +7,10 @@ namespace First_Semester_Project.Output
     internal class Data
     {
         public int _currentlevel;
+        private int _count;
         public string action;
         public string action2;
-        private int _count;
+        
         public CancellationTokenSource _cancelToken;
         public static void SetUp()
         {
@@ -44,9 +45,6 @@ namespace First_Semester_Project.Output
                         break;
                     case ItemTypes.Shield:
                         Write($"{i}. {item.Name} with {((Shield)item).Block} Damage Blocking");
-                        break;
-                    case ItemTypes.Armor:
-                        Write($"{i}. {item.Name} with {((Armor)item).Defence} Defence");
                         break;
                     case ItemTypes.Potion:
                         Write($"{i}. {item.Name} with {((Potion)item).Heal} Healing");

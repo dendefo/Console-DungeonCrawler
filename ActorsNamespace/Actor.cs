@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace First_Semester_Project.ActorsNamespace
+﻿namespace First_Semester_Project.ActorsNamespace
 {
     //Anything interactable is called Actor.
     //All the Actor Childs are represented in this namespace
@@ -86,6 +84,7 @@ namespace First_Semester_Project.ActorsNamespace
                 int userD = map.User.Attack(enemy);
                 if (enemy.CurrentHP == 0)
                 {
+                    map.User.Killed(enemy);
                     map.ChangeSquare(new Square(SquareTypes.Chest, x+deltaX,y+deltaY, enemy.Die()), y + deltaY, x + deltaX);
                     map.Log.action = $"Enemy died and dropped chest with {((Chest)map.MapArray[y + deltaY][x+deltaX].ActorOnSquare).Inside.Name} for you";
                     return;

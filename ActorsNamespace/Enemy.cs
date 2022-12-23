@@ -1,5 +1,4 @@
-﻿
-using System.IO;
+﻿using System.Drawing.Text;
 
 namespace First_Semester_Project.ActorsNamespace
 {
@@ -20,8 +19,74 @@ namespace First_Semester_Project.ActorsNamespace
             CurrentHP = MaxHP;
             StandsOn = new Square(SquareTypes.Empty, xCoordinate, yCoordinate);
             ActorsSquare = square;
-            EquipedWeapon = new Weapon(WeaponTypes.Fists);
-            EquipedShield = new Shield(ShieldTypes.Abs);
+            Random rand = new Random();
+            switch (rand.Next(0, 101))
+            {
+                case < 25:
+                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
+                    EquipedShield = new Shield(ShieldTypes.Abs);
+                    break;
+                case < 30:
+                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
+                    EquipedShield = new Shield(ShieldTypes.Abs);
+                    break;
+                case < 35:
+                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
+                    EquipedShield = new Shield(ShieldTypes.Buckler);
+                    break;
+                case < 40:
+                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
+                    EquipedShield = new Shield(ShieldTypes.Buckler);
+                    break;
+                case < 45:
+                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
+                    EquipedShield = new Shield(ShieldTypes.Abs);
+                    break;
+                case < 50:
+                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
+                    EquipedShield = new Shield(ShieldTypes.Buckler);
+                    break;
+                case < 55:
+                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
+                    EquipedShield = new Shield(ShieldTypes.Robust);
+                    break;
+                case < 60:
+                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
+                    EquipedShield = new Shield(ShieldTypes.Robust);
+                    break;
+                case < 65:
+                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
+                    EquipedShield = new Shield(ShieldTypes.Robust);
+                    break;
+                case < 70:
+                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
+                    EquipedShield = new Shield(ShieldTypes.Abs);
+                    break;
+                case < 75:
+                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
+                    EquipedShield = new Shield(ShieldTypes.Buckler);
+                    break;
+                case < 80:
+                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
+                    EquipedShield = new Shield(ShieldTypes.Robust);
+                    break;
+                case < 85:
+                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
+                    EquipedShield = new Shield(ShieldTypes.Kite);
+                    break;
+                case < 90:
+                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
+                    EquipedShield = new Shield(ShieldTypes.Kite);
+                    break;
+                case < 95:
+                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
+                    EquipedShield = new Shield(ShieldTypes.Kite);
+                    break;
+                case <= 100:
+                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
+                    EquipedShield = new Shield(ShieldTypes.Kite);
+                    break;
+            }
             Evasion = level * 5;
             NumberInArray = numberInArray;
         }
@@ -30,8 +95,32 @@ namespace First_Semester_Project.ActorsNamespace
         public Item Die()
         {
             ActorsSquare.MakeEmpty();
-            if (EquipedWeapon.Name != "Fists") return EquipedWeapon;
-            if (EquipedShield.Name != "Abs") return EquipedShield;
+            Random rand = new Random();
+            if (EquipedWeapon.Name != "Fists" && EquipedShield.Name != "Abs")
+            {
+                switch (rand.Next(0, 3))
+                {
+                    case 0: return EquipedWeapon;
+                    case 1: return EquipedShield;
+                    case 2: return new Potion(PotionTypes.GreatHealingPotion);
+                }
+            }
+            else if (EquipedShield.Name != "Abs")
+            {
+                switch (rand.Next(0, 2))
+                {
+                    case 0: return EquipedShield;
+                    case 1: return new Potion(PotionTypes.HealingPotion);
+                }
+            }
+            else if (EquipedWeapon.Name != "Fists")
+            {
+                switch (rand.Next(0, 2))
+                {
+                    case 0: return EquipedWeapon;
+                    case 1: return new Potion(PotionTypes.HealingPotion);
+                }
+            }
             return new Potion(PotionTypes.SmallHealingPotion);
         }
 
@@ -51,7 +140,7 @@ namespace First_Semester_Project.ActorsNamespace
                 enemy.isTriggerd = true; //Start never-ending chase
 
                 //I burned 5 hours to understand and make this algorithm, used pseudo code from one site as reverence and tryed to implement it for 2 hours
-                enemy.Pathfinder(LevelMap, player);  
+                enemy.Pathfinder(LevelMap, player);
             }
         }
 
@@ -78,7 +167,7 @@ namespace First_Semester_Project.ActorsNamespace
                 }
 
                 visited.Add(node); //Already been there, don't need to check nodes twice
-                reachable.RemoveAt(0); 
+                reachable.RemoveAt(0);
                 List<Node> new_reachable = new List<Node>(); //Adding from 1 to 4 nodes, that we can reach from thi node
 
                 //Block of four checks (For the four directions). Each block has check if coordinates are exists on map, if this node already been visited and if enemy can actualy walk there
@@ -144,13 +233,13 @@ namespace First_Semester_Project.ActorsNamespace
         }
         static public Node BuildPath(Node to_node) //Gives node that is next to enemy, that he need to move to
         {
-            List<Node> path = new(); 
+            List<Node> path = new();
             while (to_node != null)
             {
-                path.Add(to_node); 
+                path.Add(to_node);
                 to_node = to_node.previous;
             } //Making a list of nodes that starts at player Node and ends on Enemy node. It is a shortest way
-            return path[path.Count-2];//We need to get node that stands before last one
+            return path[path.Count - 2];//We need to get node that stands before last one
         }
     }
 }

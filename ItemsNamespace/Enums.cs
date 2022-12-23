@@ -4,7 +4,6 @@
     {
         Weapon,
         Shield,
-        Armor,
         Potion
     }
 
@@ -29,7 +28,5 @@
         SmallHealingPotion,
         HealingPotion,
         GreatHealingPotion
-        
     }
-
 }

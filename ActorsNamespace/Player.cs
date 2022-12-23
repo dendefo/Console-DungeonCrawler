@@ -1,10 +1,16 @@
-﻿namespace First_Semester_Project.ActorsNamespace
+﻿using System.Xml.Serialization;
+
+namespace First_Semester_Project.ActorsNamespace
 {
     //Class that represents Player
     internal class Player : Actor
     {
         //Players Inventory in format <Item-object, amount>
         public Dictionary<Item, int> Inventory { get; protected set; }
+
+        public int Exp { get; private set; }
+        public int KillCount { get; private set; }
+        public int Level { get; private set; }
 
         //Constructor
         public Player(int xCoordinate, int yCoordinate, Square square) : base(xCoordinate, yCoordinate)
@@ -33,7 +39,6 @@
             EquipedShield = player.EquipedShield;
             Inventory = new Dictionary<Item, int>(player.Inventory);
         }
-
 
         //Adding "item" to the Inventory
         public void GiveItem(Item item)
@@ -148,7 +153,7 @@
                     EquipedWeapon = (Weapon)keys[number];
                     TakeItem(keys[number], 1);
 
-                    if (!(weapon.Name == "Fists")) GiveItem(weapon);
+                    if (weapon.Name != "Fists") GiveItem(weapon);
 
                     log.action = $"You equiped {EquipedWeapon.Name}";
                     break;
@@ -156,11 +161,10 @@
                 case ItemTypes.Shield: //Changing shield 
                     Shield shield = EquipedShield;
                     EquipedShield = (Shield)keys[number];
-                    if (shield.Name == "Abs") TakeItem(keys[number], 1);
-                    else GiveItem(shield);
-                    break;
+                    TakeItem(keys[number], 1);
 
-                case ItemTypes.Armor: //TODO
+                    if (shield.Name != "Abs") GiveItem(shield);
+                    log.action = $"You equiped {EquipedShield.Name}";
                     break;
 
                 case ItemTypes.Potion: //Using potions
@@ -178,6 +182,23 @@
                     break;
 
             }
+        }
+
+        public void Killed(Enemy enemy)
+        {
+            Exp+=enemy.MaxHP/3;
+            KillCount++;
+            if (Exp > 5 * Level)
+            {
+                LevelUp();
+            }
+        }
+        private void LevelUp()
+        {
+            Level++;
+            Exp %= 5;
+            MaxHP += 3;
+            CurrentHP = MaxHP;
         }
     }
 }
