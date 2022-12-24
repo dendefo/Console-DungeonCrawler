@@ -126,7 +126,7 @@
                     case ConsoleKey.D8:
                     case ConsoleKey.D9: //Share same logic of numbers from 0-9
 
-                        User.Use((int)key - 48, log); //Use item
+                        User.Use((int)key - 48, log,LevelMap); //Use item
                         break;
                     case ConsoleKey.H:
                         User.FullHeal();

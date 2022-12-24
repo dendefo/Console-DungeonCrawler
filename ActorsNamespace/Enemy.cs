@@ -13,80 +13,15 @@ namespace First_Semester_Project.ActorsNamespace
         public int NumberInArray { get; protected set; }
 
         //Basic constructor
-        public Enemy(int xCoordinate, int yCoordinate, int level, int numberInArray, Square square) : base(xCoordinate, yCoordinate)
+        public Enemy(int xCoordinate, int yCoordinate, int level, int numberInArray, Square square,Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
         {
             MaxHP = level * 3;
             CurrentHP = MaxHP;
             StandsOn = new Square(SquareTypes.Empty, xCoordinate, yCoordinate);
             ActorsSquare = square;
             Random rand = new Random();
-            switch (rand.Next(0, 101))
-            {
-                case < 25:
-                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
-                    EquipedShield = new Shield(ShieldTypes.Abs);
-                    break;
-                case < 30:
-                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
-                    EquipedShield = new Shield(ShieldTypes.Abs);
-                    break;
-                case < 35:
-                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
-                    EquipedShield = new Shield(ShieldTypes.Buckler);
-                    break;
-                case < 40:
-                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
-                    EquipedShield = new Shield(ShieldTypes.Buckler);
-                    break;
-                case < 45:
-                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
-                    EquipedShield = new Shield(ShieldTypes.Abs);
-                    break;
-                case < 50:
-                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
-                    EquipedShield = new Shield(ShieldTypes.Buckler);
-                    break;
-                case < 55:
-                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
-                    EquipedShield = new Shield(ShieldTypes.Robust);
-                    break;
-                case < 60:
-                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
-                    EquipedShield = new Shield(ShieldTypes.Robust);
-                    break;
-                case < 65:
-                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
-                    EquipedShield = new Shield(ShieldTypes.Robust);
-                    break;
-                case < 70:
-                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
-                    EquipedShield = new Shield(ShieldTypes.Abs);
-                    break;
-                case < 75:
-                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
-                    EquipedShield = new Shield(ShieldTypes.Buckler);
-                    break;
-                case < 80:
-                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
-                    EquipedShield = new Shield(ShieldTypes.Robust);
-                    break;
-                case < 85:
-                    EquipedWeapon = new Weapon(WeaponTypes.Fists);
-                    EquipedShield = new Shield(ShieldTypes.Kite);
-                    break;
-                case < 90:
-                    EquipedWeapon = new Weapon(WeaponTypes.Sword);
-                    EquipedShield = new Shield(ShieldTypes.Kite);
-                    break;
-                case < 95:
-                    EquipedWeapon = new Weapon(WeaponTypes.Axe);
-                    EquipedShield = new Shield(ShieldTypes.Kite);
-                    break;
-                case <= 100:
-                    EquipedWeapon = new Weapon(WeaponTypes.Nunchucks);
-                    EquipedShield = new Shield(ShieldTypes.Kite);
-                    break;
-            }
+            EquipedWeapon = weapon;
+            EquipedShield = shield;
             Evasion = level * 5;
             NumberInArray = numberInArray;
         }

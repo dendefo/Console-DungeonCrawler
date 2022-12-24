@@ -5,6 +5,7 @@
     {
         Empty = 32,
         Wall = 124,
+        CrackedWall = 120,
         Entry = 69,
         Exit = 88,
         Player = 3,
@@ -32,25 +33,26 @@
                 case SquareTypes.Empty:
                     Symbol = ' ';
                     Color = ConsoleColor.White;
-                    ActorOnSquare = null;
                     break;
 
                 case SquareTypes.Wall:
                     Symbol = '█';
                     Color = ConsoleColor.White;
-                    ActorOnSquare = null;
+                    break;
+
+                case SquareTypes.CrackedWall:
+                    Symbol = '▒';
+                    Color = ConsoleColor.White;
                     break;
 
                 case SquareTypes.Entry:
                     Color = ConsoleColor.DarkYellow;
                     Symbol = 'E';
-                    ActorOnSquare = null;
                     break;
 
                 case SquareTypes.Exit:
                     Symbol = 'X';
                     Color = ConsoleColor.DarkGreen;
-                    ActorOnSquare = null;
                     break;
 
                 case SquareTypes.Player:
@@ -62,7 +64,6 @@
                 case SquareTypes.RevealedTrap:
                     Symbol = 'T';
                     Color = ConsoleColor.DarkRed;
-                    ActorOnSquare = null;
                     break;
 
                 case SquareTypes.DamagingTrap:
@@ -73,12 +74,12 @@
             }
         }
 
-        public Square(SquareTypes type, int x, int y, int level, int number)
+        public Square(SquareTypes type, int x, int y, int level, int number, int weapon, int shield)
         {
             Entity = type;
             Symbol = '☻';
             Color = ConsoleColor.DarkRed;
-            ActorOnSquare = new Enemy(x, y, level, number, this);
+            ActorOnSquare = new Enemy(x, y, level, number,this, new((WeaponTypes)weapon), new((ShieldTypes)shield));
         }
         public Square(SquareTypes type, int x, int y, Item item)
         {
@@ -87,9 +88,7 @@
             Color = ConsoleColor.Blue;
             ActorOnSquare = new Chest(x, y);
             ((Chest)ActorOnSquare).PutInside(item);
-
         }
-
         public void MakeEmpty()
         {
             Color = ConsoleColor.White;

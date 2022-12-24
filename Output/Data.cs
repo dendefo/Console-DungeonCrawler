@@ -10,7 +10,7 @@ namespace First_Semester_Project.Output
         private int _count;
         public string action;
         public string action2;
-        
+
         public CancellationTokenSource _cancelToken;
         public static void SetUp()
         {
@@ -47,7 +47,18 @@ namespace First_Semester_Project.Output
                         Write($"{i}. {item.Name} with {((Shield)item).Block} Damage Blocking");
                         break;
                     case ItemTypes.Potion:
-                        Write($"{i}. {item.Name} with {((Potion)item).Heal} Healing");
+                        switch (((Potion)item).PotionType)
+                        {
+                            case PotionTypes.ExplosivePotion:
+                                Write($"{i}. {item.Name} with {((Potion)item).Damage} Damage");
+                                break;
+                            case PotionTypes.SmallHealingPotion:
+                            case PotionTypes.HealingPotion:
+                            case PotionTypes.GreatHealingPotion:
+                                Write($"{i}. {item.Name} with {((Potion)item).Heal} Healing");
+                                break;
+                        }
+
                         break;
                 }
                 SetCursorPosition(102, i * 2 + 2);
@@ -84,7 +95,7 @@ namespace First_Semester_Project.Output
             Write($"Your HP is {player.CurrentHP} of {player.MaxHP}");
             Heart(player);
             //Sword();
-            
+
             //Coin();
         }
 

@@ -1,4 +1,6 @@
-﻿namespace First_Semester_Project.MapLogic
+﻿using System.Reflection.Emit;
+
+namespace First_Semester_Project.MapLogic
 {
     internal class Map
     {
@@ -11,6 +13,7 @@
         public Player User { get; private set; } //Player's Actor
 
         public Square[][] MapArray { get; private set; } //Array with each tile of map
+        string[] fileSpawn;
 
         //Map constructor. Filling MapArray with tiles from map-file
         public Map(int Level, Player player, Data log)
@@ -18,6 +21,7 @@
             _enemyCount = 0;
             Log = log;
             string[] file = FileReader.Read(Level); //Accepting level from file
+            fileSpawn = FileReader.ReadSpawnConfig(Level);
             MapArray = new Square[file.Length][];
             for (int y = 0; y < file.Length; y++) //Going throw each row of level
             {
@@ -39,10 +43,14 @@
         private Square Spawn(char type, int Level, Player player, int x, int y)
         {
             Square square;
+            
+
             switch ((SquareTypes)type)
             {
                 case SquareTypes.Enemy:
-                    square = new(SquareTypes.Enemy, x, y, Level, _enemyCount);
+                    int weapon = fileSpawn[1][_enemyCount*2];
+                    int shield = fileSpawn[1][_enemyCount*2+1];
+                    square = new(SquareTypes.Enemy, x, y, Level, _enemyCount ,weapon ,shield);
                     Enemies[_enemyCount] = (Enemy)square.ActorOnSquare;
                     _enemyCount++;
                     break;
@@ -53,7 +61,11 @@
                     User = player;
                     break;
                 case SquareTypes.Chest:
-                    square = new Square(SquareTypes.Chest, x, y, new Weapon(WeaponTypes.Sword));
+
+                    int itemInt = fileSpawn[0][0];
+
+                    fileSpawn[0] = fileSpawn[0].Remove(0, 1);
+                    square = new Square(SquareTypes.Chest, x, y, ItemParse(itemInt));
                     break;
                 case SquareTypes.RevealedTrap:
                     square = new Square(SquareTypes.RevealedTrap, x, y);
@@ -65,6 +77,19 @@
             return square;
         }
 
+        private Item ItemParse(int itemInt)
+        {
+
+            switch (itemInt)
+            {
+                case < 60:
+                    return new Weapon((WeaponTypes)itemInt);
+                case < 70:
+                    return new Shield((ShieldTypes)itemInt);
+                case >= 70:
+                    return new Potion((PotionTypes)itemInt);
+            }
+        }
         public void Refresh()
         {
             Console.SetCursorPosition(0, 0);
@@ -158,6 +183,10 @@
 
                     Log.action = "You can't go there";
                     break;
+                case SquareTypes.CrackedWall:
+                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
+                    Log.action = "This wall looks different, maybe it can be destoryed";
+                    break;
 
                 case SquareTypes.Entry:
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
@@ -194,7 +223,7 @@
 
                     MapArray[y + deltaY][x + deltaX] = actor.ActorsSquare;
                     MapArray[y][x] = actor.StandsOn;
-                    actor.Move(deltaY, deltaX, new Square(SquareTypes.RevealedTrap, x+deltaX,y+deltaY));
+                    actor.Move(deltaY, deltaX, new Square(SquareTypes.RevealedTrap, x + deltaX, y + deltaY));
                     Log.action = "Oh, you just walked on a trap. Something just happened";
                     break;
             }

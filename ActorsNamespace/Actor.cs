@@ -71,9 +71,10 @@
 
             return temp - CurrentHP;
         } //Checking for Evading
-        private void DealDamage(int damage)
+        public void DealDamage(int damage)
         {
             CurrentHP -= damage;
+            if (CurrentHP< 0) CurrentHP = 0;
         }
 
         public static void Battle(Map map , Enemy enemy, int y, int deltaY, int x, int deltaX, bool isPlayerAttacked)

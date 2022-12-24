@@ -2,31 +2,32 @@
 {
     enum ItemTypes
     {
-        Weapon,
-        Shield,
-        Potion
+        Weapon = 40,
+        Shield = 41,
+        Potion = 42
     }
 
     enum WeaponTypes
     {
-        Fists,
-        Sword,
-        Axe,
-        Nunchucks
+        Fists = 50,
+        Sword = 51,
+        Axe = 52,
+        Nunchucks = 53
     }
 
     enum ShieldTypes
     {
-        Abs,
-        Buckler,
-        Robust,
-        Kite
+        Abs = 60,
+        Buckler = 61,
+        Robust = 62,
+        Kite = 63
     }
 
     enum PotionTypes
     {
-        SmallHealingPotion,
-        HealingPotion,
-        GreatHealingPotion
+        SmallHealingPotion = 70,
+        HealingPotion = 71,
+        GreatHealingPotion = 72,
+        ExplosivePotion = 73
     }
 }

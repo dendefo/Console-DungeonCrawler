@@ -85,7 +85,7 @@ namespace First_Semester_Project.Output
 
         public static void EndOfGame()
         {
-            Console.Clear();
+            Clear();
             char[] gameOver = { 'g', 'a', 'm', 'e', ' ', 'o', 'v', 'e', 'r' };
             for (int i = 0; i < gameOver.Length; i++)
             {

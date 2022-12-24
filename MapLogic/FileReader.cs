@@ -1,10 +1,17 @@
-﻿namespace First_Semester_Project.MapLogic
+﻿using System.Reflection.Emit;
+
+namespace First_Semester_Project.MapLogic
 {
     static internal class FileReader
     {
         static public string[] Read(int Level)
         {
             return File.ReadAllLines($"C:\\Users\\danie\\source\\repos\\First_Semester_Project\\TextFiles\\Level_{Level}.txt");
+        }
+
+        static public string[] ReadSpawnConfig(int Level)
+        {
+            return File.ReadAllLines($"C:\\Users\\danie\\source\\repos\\First_Semester_Project\\TextFiles\\Level_{Level}_SpawnConfig.txt");
         }
         //static public void Write(int stringNumber, char symbol, ConsoleColor color) 
         //{

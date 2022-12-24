@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using First_Semester_Project.MapLogic;
+using System.Xml.Serialization;
 
 namespace First_Semester_Project.ActorsNamespace
 {
@@ -142,7 +143,7 @@ namespace First_Semester_Project.ActorsNamespace
         }
 
         //Using item by the player
-        public void Use(int number, Data log)
+        public void Use(int number, Data log, Map level)
         {
             List<Item> keys = Inventory.Keys.ToList();
             if (number >= keys.Count) return;
@@ -177,6 +178,42 @@ namespace First_Semester_Project.ActorsNamespace
                             Heal(((Potion)keys[number]).Heal);
                             log.action = $"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points";
                             break;
+                        case PotionTypes.ExplosivePotion:
+                            int overAllDamage = 0;
+                            foreach (Enemy enemy in level.Enemies)
+                            {
+                                if (enemy == null) continue;
+                                if (enemy.CurrentHP == 0) continue;
+                                if (Math.Abs(enemy.XCoordinate - XCoordinate) < 3 && Math.Abs(enemy.YCoordinate - YCoordinate) < 3)
+                                {
+                                    enemy.DealDamage(((Potion)keys[number]).Damage);
+                                    overAllDamage += ((Potion)keys[number]).Damage;
+                                    if (enemy.CurrentHP == 0)
+                                    {
+                                        Killed(enemy);
+                                        level.ChangeSquare(new Square(SquareTypes.Chest, enemy.XCoordinate, enemy.YCoordinate, enemy.Die()), enemy.YCoordinate, enemy.XCoordinate);
+
+
+                                    }
+                                }
+                            }
+
+                            int countWalls =0;
+                            foreach (int y in new List<int> { -1, 0, 1 })
+                            {
+                                foreach (int x in new List<int> { -1, 0, 1 })
+                                {
+                                    if (y == 0 && x == 0) continue;
+                                    
+                                    if (level.MapArray[YCoordinate + y][XCoordinate + x].Entity == SquareTypes.CrackedWall)
+                                    {
+                                        level.MapArray[YCoordinate + y][XCoordinate + x] = new Square(SquareTypes.Empty,XCoordinate+x,YCoordinate+y);
+                                        countWalls++;
+                                    }
+                                }
+                            }
+                            log.action = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
+                            break;
                     }
                     TakeItem(keys[number], 1);
                     break;
@@ -186,7 +223,7 @@ namespace First_Semester_Project.ActorsNamespace
 
         public void Killed(Enemy enemy)
         {
-            Exp+=enemy.MaxHP/3;
+            Exp += enemy.MaxHP / 3;
             KillCount++;
             if (Exp > 5 * Level)
             {

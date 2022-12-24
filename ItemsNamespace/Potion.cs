@@ -4,6 +4,7 @@
     {
         public PotionTypes PotionType { get; private set; }
         public int Heal { get; private set; }
+        public int Damage { get; private set; }
         public Potion(PotionTypes type)
         {
             PotionType = type;
@@ -21,6 +22,10 @@
                 case PotionTypes.GreatHealingPotion:
                     Heal = 8;
                     Name = "Great Healing Potion";
+                    break;
+                case PotionTypes.ExplosivePotion:
+                    Damage = 10;
+                    Name = "Exploading Potion";
                     break;
             }
         }
