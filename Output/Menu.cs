@@ -34,27 +34,27 @@ namespace First_Semester_Project.Output
             ForegroundColor = ConsoleColor.Green;
             Write("'N'");
             ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(49, 13);
+            SetCursorPosition(45, 15);
             Write("To CONTINUE press ");
             ForegroundColor = ConsoleColor.Green;
             Write("'C'");
             ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(46, 15);
+            SetCursorPosition(45, 13);
             Write("To RESTART current level ");
             ForegroundColor = ConsoleColor.Green;
             Write("'R'");
             ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(49, 17);
+            SetCursorPosition(45, 17);
             Write("For controls press ");
             ForegroundColor = ConsoleColor.Green;
             Write("'B'");
             ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(48, 19);
-            Write("For castomization ");
+            SetCursorPosition(45, 19);
+            Write("For options ");
             ForegroundColor = ConsoleColor.Green;
-            Write("'P'");
+            Write("'O'");
             ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(50, 21);
+            SetCursorPosition(45, 21);
             Write("To Exit press ");
             ForegroundColor = ConsoleColor.Green;
             Write("'Esc'");
@@ -94,9 +94,45 @@ namespace First_Semester_Project.Output
             }
         }
 
-        public static void Castomization()
+        public static void OptionsMenu()
         {
+            Clear();
+            WriteLine("1. To change Player's avatar");
+            WriteLine("2. To change Enemie's avatar");
+            WriteLine("3. Set the Difficulty (Medium is standart)");
+            WriteLine("4. To chose colour of Player's avatar");
+            WriteLine("5. To chose colour of Enemie's avatar");
+            WriteLine("6. Reset");
+            WriteLine("\nGame has to be restarted to apply the changes ('N' in main menu)\n\n'ESC' to leave this menu");
 
+        }
+        public static ConsoleColor ColorChose()
+        {
+            WriteLine("1. White\n2. Red\n3. Green\n4. Magenta\n5. Gray\n6. Blue\n7. Cyan\n8. Yellow\n9. Dark Green\n0. Dark Red");
+            switch (ReadKey(true).Key)
+            {
+                case ConsoleKey.D1:
+                    return ConsoleColor.White;
+                case ConsoleKey.D2:
+                    return ConsoleColor.Red;
+                case ConsoleKey.D3:
+                    return ConsoleColor.Green;
+                case ConsoleKey.D4:
+                    return ConsoleColor.Magenta;
+                case ConsoleKey.D5:
+                    return ConsoleColor.Gray;
+                case ConsoleKey.D6:
+                    return ConsoleColor.Blue;
+                case ConsoleKey.D7:
+                    return ConsoleColor.Cyan;
+                case ConsoleKey.D8:
+                    return ConsoleColor.Yellow;
+                case ConsoleKey.D9:
+                    return ConsoleColor.DarkGreen;
+                case ConsoleKey.D0:
+                    return ConsoleColor.DarkRed;
+                default: return ConsoleColor.White;
+            }
         }
     }
 }

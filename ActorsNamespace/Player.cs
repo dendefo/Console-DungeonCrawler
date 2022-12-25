@@ -18,6 +18,7 @@ namespace First_Semester_Project.ActorsNamespace
         {
             MaxHP = 10; //Player's start HP is 10
             CurrentHP = MaxHP;
+            Level = 1;
 
             ActorsSquare = square;
             EquipedWeapon = new Weapon(WeaponTypes.Fists);
@@ -223,9 +224,9 @@ namespace First_Semester_Project.ActorsNamespace
 
         public void Killed(Enemy enemy)
         {
-            Exp += enemy.MaxHP / 3;
+            Exp += enemy.MaxHP / Enemy.Difficulty;
             KillCount++;
-            if (Exp > 5 * Level)
+            if (Exp >= 5 * Level)
             {
                 LevelUp();
             }

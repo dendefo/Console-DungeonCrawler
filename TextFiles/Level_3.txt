@@ -1,6 +1,20 @@
 ||||||||||||||||||||||||||||||||||||||||
 |      E                               |
-|              #           1           |
-| 1                                    |
-| ||                               X   |
+| xxxx    xxxxxx  xxxxxx               |
+| xx 1xx  xx  xx  xx# xx               |
+| xx# xx  xx# xx  xxxxxx           X   |
+| xx  xx  xx 1xx  xx  x                |
+| xxxx    xxxxxx  xx   x               |
+|                                      |
+| xxxxxx  xxxxxx  xx1 xx               |
+| xx #xx  xx1     xxx xx               |
+| xxxxx   xxxx    xxxxxx               |
+| xx 1xx  xx#     xx xxx               |
+| xxxxxx  xxxxxx  xx  xx               |
+|                                      |
+| xxxx    xxxxxx  xxxxxx               |
+| xx #xx  xx #xx  xx# xx               |
+| xx  xx  xx  xx  xxxxxx               |
+| xx 1xx  xx 1xx  xx  x                |
+| xxxx    xxxxxx  xx   x               |
 ||||||||||||||||||||||||||||||||||||||||

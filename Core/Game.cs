@@ -16,20 +16,21 @@
 
         public void ControlSystem()
         {
-            //bool flag = false;
-            //if (!Console.KeyAvailable && !inMenu)
-            //{
-            //    Thread.Sleep(50);
-            //    for (int i = 0; i < 4; i++)
-            //    {
+            {
+                //bool flag = false;
+                //if (!Console.KeyAvailable && !inMenu)
+                //{
+                //    Thread.Sleep(50);
+                //    for (int i = 0; i < 4; i++)
+                //    {
 
-            //        if (Console.KeyAvailable) flag = true;
-            //        Thread.Sleep(50);
-            //    }
+                //        if (Console.KeyAvailable) flag = true;
+                //        Thread.Sleep(50);
+                //    }
 
-            //    if (!flag) return;
-            //}
-
+                //    if (!flag) return;
+                //}
+            }
             ConsoleKey key = Console.ReadKey(true).Key;
 
             if (inCastomization)
@@ -42,7 +43,68 @@
                         ControlSystem();
                         break;
 
+                    case ConsoleKey.D1:
+                        Console.Clear();
+                        Console.WriteLine("Please type the character");
+                        Square.PlayerAvatar = (char)Console.Read();
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
+                    case ConsoleKey.D2:
+                        Console.Clear();
+                        Console.WriteLine("Please type the character");
+                        Square.EnemyAvatar = (char)Console.Read();
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
+                    case ConsoleKey.D3:
+                        Console.Clear();
+                        Console.WriteLine("1. Child\n2. Easy\n3. Medium\n4. Medium Rare\n5. Impossible");
+                        switch (Console.ReadKey().Key)
+                        {
+                            case ConsoleKey.D1:
+                                Enemy.Difficulty = 1; break;
+                            case ConsoleKey.D2:
+                                Enemy.Difficulty = 2; break;
+                            case ConsoleKey.D3:
+                                Enemy.Difficulty = 3; break;
+                            case ConsoleKey.D4:
+                                Enemy.Difficulty = 4; break;
+                            case ConsoleKey.D5:
+                                Enemy.Difficulty = 5; break;
+                        }
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
+                    case ConsoleKey.D4:
+                        Console.Clear();
+                        Square.PlayerColor = Menu.ColorChose();
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
+                    case ConsoleKey.D5:
+                        Console.Clear();
+                        Square.EnemyColor = Menu.ColorChose();
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
+                    case ConsoleKey.D6:
+                        Square.PlayerAvatar = '♥';
+                        Square.EnemyAvatar = '☻';
+                        Square.PlayerColor = ConsoleColor.DarkMagenta;
+                        Square.EnemyColor = ConsoleColor.DarkRed;
+                        Enemy.Difficulty = 3;
+                        Menu.OptionsMenu();
+                        ControlSystem();
+                        break;
+
                     default:
+                        ControlSystem();
                         break;
                 }
             }
@@ -71,9 +133,9 @@
                         inMenu = false;
                         Start(log._currentlevel, false);
                         break;
-                    case ConsoleKey.P:
+                    case ConsoleKey.O:
                         inCastomization = true;
-                        Menu.Castomization();
+                        Menu.OptionsMenu();
                         ControlSystem();
                         break;
 
@@ -93,25 +155,21 @@
                         inMenu = true;
                         Thread.Sleep(10);
                         ControlSystem();
-
                         break;
+
                     case ConsoleKey.A://Left
-
                         LevelMap.Move(User, "Left");
-
                         break;
+
                     case ConsoleKey.D://Right
-
                         LevelMap.Move(User, "Right");
-
                         break;
+
                     case ConsoleKey.S://Down
-
                         LevelMap.Move(User, "Down");
-
                         break;
-                    case ConsoleKey.W://Up
 
+                    case ConsoleKey.W://Up
                         LevelMap.Move(User, "Up");
                         break;
 
@@ -125,12 +183,13 @@
                     case ConsoleKey.D7:
                     case ConsoleKey.D8:
                     case ConsoleKey.D9: //Share same logic of numbers from 0-9
-
-                        User.Use((int)key - 48, log,LevelMap); //Use item
+                        User.Use((int)key - 48, log, LevelMap); //Use item
                         break;
+
                     case ConsoleKey.H:
                         User.FullHeal();
                         break;
+
                     default:
                         break;
                 }
@@ -159,7 +218,7 @@
 
             }, log._cancelToken.Token);//Printing Coin Animation
 
-            if (gameReStart) User = new Player(0, 0,new Square(SquareTypes.Player,0,0));
+            if (gameReStart) User = new Player(0, 0, new Square(SquareTypes.Player, 0, 0));
             else User = new Player(UserAtStart.XCoordinate, UserAtStart.YCoordinate, UserAtStart);
 
             for (int currentLevel = level; currentLevel <= 10; currentLevel++)
@@ -186,12 +245,12 @@
                 {
                     log._cancelToken.Cancel();
                     Menu.EndOfGame();
-                    inMenu= true;
+                    inMenu = true;
                     ControlSystem();
                 }
                 lock (log) { LevelMap.Refresh(); }
             }
         }
-        
+
     }
 }

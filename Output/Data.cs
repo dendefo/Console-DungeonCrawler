@@ -19,7 +19,7 @@ namespace First_Semester_Project.Output
         }
         public void EraseLine()
         {
-            WriteLine("                                                                   ");
+            WriteLine("                                                                      ");
         }
         public void Output(Player player)
         {
@@ -88,6 +88,11 @@ namespace First_Semester_Project.Output
             WriteLine("____________________________________________________");
             WriteLine($"You use {player.EquipedWeapon.Name} with {player.EquipedWeapon.Damage} damage as your Weapon\n" +
                 $"You use {player.EquipedShield.Name} with {player.EquipedShield.Block} block as your Shield\n");
+            Write($"Your level is {player.Level}. Exp: ");
+            ForegroundColor = DarkGreen;
+            Write(String.Concat(Enumerable.Repeat("█", 10*player.Exp/(player.Level*5))));
+            ForegroundColor = White;
+            Write(String.Concat(Enumerable.Repeat("█", 10-(10 * player.Exp / (player.Level * 5))))+$" {player.Exp}/{player.Level*5}    ");
             SetCursorPosition(97, 20);
             ForegroundColor = Red;
             Write("                                            ");

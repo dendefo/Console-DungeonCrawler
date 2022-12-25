@@ -1,11 +1,10 @@
-﻿using System.Drawing.Text;
-
-namespace First_Semester_Project.ActorsNamespace
+﻿namespace First_Semester_Project.ActorsNamespace
 {
 
     //Class that represents Enemy
     internal class Enemy : Actor
     {
+        static public int Difficulty = 3;
         //if player was at range at least once = true
         bool isTriggerd = false;
 
@@ -13,13 +12,12 @@ namespace First_Semester_Project.ActorsNamespace
         public int NumberInArray { get; protected set; }
 
         //Basic constructor
-        public Enemy(int xCoordinate, int yCoordinate, int level, int numberInArray, Square square,Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
+        public Enemy(int xCoordinate, int yCoordinate, int level, int numberInArray, Square square, Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
         {
-            MaxHP = level * 3;
+            MaxHP = level * Difficulty;
             CurrentHP = MaxHP;
             StandsOn = new Square(SquareTypes.Empty, xCoordinate, yCoordinate);
             ActorsSquare = square;
-            Random rand = new Random();
             EquipedWeapon = weapon;
             EquipedShield = shield;
             Evasion = level * 5;
@@ -82,7 +80,7 @@ namespace First_Semester_Project.ActorsNamespace
         private void Pathfinder(Map level, Player player)
         {
 
-            List<Node> reachable = new List<Node>
+            List<Node> reachable = new()
             {
                 new Node(XCoordinate,YCoordinate,null)
             }; //Adding List of Nodes that will be used in algorithm as Nodes that enemy is possibly can get to and addint starting node (Of Enemy)
@@ -95,7 +93,6 @@ namespace First_Semester_Project.ActorsNamespace
 
                 if (node.X == player.XCoordinate && node.Y == player.YCoordinate) //If node's coor-s are same to player's, than we found a path and it's the shortest one
                 {
-
                     node = Node.BuildPath(node); //Algorith that gives us next node to move to
                     level.ChoseCollision(node.X - XCoordinate, node.Y - YCoordinate, this); //Moving the enemy
                     return;
@@ -103,54 +100,22 @@ namespace First_Semester_Project.ActorsNamespace
 
                 visited.Add(node); //Already been there, don't need to check nodes twice
                 reachable.RemoveAt(0);
-                List<Node> new_reachable = new List<Node>(); //Adding from 1 to 4 nodes, that we can reach from thi node
-
-                //Block of four checks (For the four directions). Each block has check if coordinates are exists on map, if this node already been visited and if enemy can actualy walk there
 
                 SquareTypes entity;
-                if (node.X > 0 && !visited.Exists(n => n.X == node.X - 1 && n.Y == node.Y))
+                foreach (int y in new List<int> { -1, 0, 1 }) //For y axis
                 {
-                    entity = level.MapArray[node.Y][node.X - 1].Entity;
-
-                    if (entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)
+                    foreach (int x in new List<int> { -1, 0, 1 }) //For X axis
                     {
-                        new_reachable.Add(new Node(node.X - 1, node.Y, node));
-                    }
-                }
-                if (node.Y > 0 && !visited.Exists(n => n.X == node.X && n.Y == node.Y - 1))
-                {
-                    entity = level.MapArray[node.Y - 1][node.X].Entity;
+                        if (y * y == x * x || visited.Exists(n => n.X == node.X + x && n.Y == node.Y + y)) continue; //If it is diagonal or 0,0 OR if it is already been checked
+                        //It leaves only four directions (0,1)(0,-1)(1,0)(-1,0). No diagonal moving
 
-                    if (entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)
-                    {
-                        new_reachable.Add(new Node(node.X, node.Y - 1, node));
-                    }
-                }
-                if (node.X < level.MapArray[node.Y].Length - 1 && !visited.Exists(n => n.X == node.X + 1 && n.Y == node.Y))
-                {
-                    entity = level.MapArray[node.Y][node.X + 1].Entity;
+                        entity = level.MapArray[node.Y + y][node.X + x].Entity; //Looking what's on the Square
+                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)) continue; //If it's not walkable, then continue
 
-                    if (entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)
-                    {
-                        new_reachable.Add(new Node(node.X + 1, node.Y, node));
-                    }
-                }
-                if (node.Y < level.MapArray.Length - 1 && !visited.Exists(n => n.X == node.X && n.Y == node.Y + 1))
-                {
-                    entity = level.MapArray[node.Y + 1][node.X].Entity;
+                        Node adjacent = new Node(node.X + x, node.Y + y, node); //Create new node to check
+                        if (reachable.Exists(n => n.X == adjacent.X && n.Y == adjacent.Y)) continue; //If it's already awaits for check then continue
 
-                    if (entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)
-                    {
-                        new_reachable.Add(new Node(node.X, node.Y + 1, node));
-                    }
-                }
-
-                //Adding those nodes to "reachable" if they are not there
-                foreach (Node adjacment in new_reachable)
-                {
-                    if (!reachable.Exists(n => n.X == adjacment.X && n.Y == adjacment.Y)) //Checks ONLY Y and X, without checking "previos" field
-                    {
-                        reachable.Add(adjacment);
+                        reachable.Add(adjacent); // Add to List
                     }
                 }
             }
