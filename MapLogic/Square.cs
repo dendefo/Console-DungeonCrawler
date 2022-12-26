@@ -5,6 +5,7 @@
     {
         Empty = 32,
         Wall = 124,
+        SpykeWall = 100,
         CrackedWall = 120,
         Entry = 69,
         Exit = 88,
@@ -44,6 +45,12 @@
                     Color = ConsoleColor.White;
                     break;
 
+                case SquareTypes.SpykeWall:
+                    Symbol = '¤';
+                    Color = EnemyColor;
+                    ActorOnSquare = new Spike(x, y, true, true,false, this);
+                    break;
+
                 case SquareTypes.CrackedWall:
                     Symbol = '▒';
                     Color = ConsoleColor.White;
@@ -66,7 +73,7 @@
                     break;
 
                 case SquareTypes.RevealedTrap:
-                    Symbol = 'T';
+                    Symbol = '¤';
                     Color = ConsoleColor.DarkRed;
                     break;
 

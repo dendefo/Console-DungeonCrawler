@@ -1,12 +1,11 @@
-﻿using System.Reflection.Emit;
-
-namespace First_Semester_Project.MapLogic
+﻿namespace First_Semester_Project.MapLogic
 {
     internal class Map
     {
 
         public Enemy[] Enemies = new Enemy[10]; //Array with enemies on map to make them walk 
         private int _enemyCount; //Only for creating purposes
+        public List<Square> Spykes { get; private set; }
         GraphicEngine engine;
 
         public Data Log;
@@ -18,6 +17,7 @@ namespace First_Semester_Project.MapLogic
         //Map constructor. Filling MapArray with tiles from map-file
         public Map(int Level, Player player, Data log)
         {
+            Spykes= new List<Square>();
             _enemyCount = 0;
             Log = log;
             string[] file = FileReader.Read(Level); //Accepting level from file
@@ -54,22 +54,29 @@ namespace First_Semester_Project.MapLogic
                     Enemies[_enemyCount] = (Enemy)square.ActorOnSquare;
                     _enemyCount++;
                     break;
+
                 case SquareTypes.Entry:
                     square = new Square(SquareTypes.Entry, x, y);
                     player.StandsOn = square;
                     player.Move(y - player.YCoordinate, x - player.XCoordinate, square);
                     User = player;
                     break;
+
                 case SquareTypes.Chest:
-
                     int itemInt = fileSpawn[0][0];
-
                     fileSpawn[0] = fileSpawn[0].Remove(0, 1);
                     square = new Square(SquareTypes.Chest, x, y, ItemParse(itemInt));
                     break;
+
                 case SquareTypes.RevealedTrap:
                     square = new Square(SquareTypes.RevealedTrap, x, y);
                     break;
+
+                case SquareTypes.SpykeWall:
+                    square = new Square(SquareTypes.SpykeWall, x, y);
+                    Spykes.Add(square);
+                    break;
+
                 default:
                     square = new Square((SquareTypes)type, x, y); //Spawning Square based of his type
                     break;
@@ -131,102 +138,17 @@ namespace First_Semester_Project.MapLogic
                 default:
                     return;
             }
-            ChoseCollision(deltaX, deltaY, actor);
+            CollisionLogic.Collision(this,deltaX, deltaY, actor);
 
         } //Moving any actor across the map by 1 tile in 4 directions
 
-        private void ActorMoveOnMap(Actor actor, int y, int deltaY, int x, int deltaX)
+        public void ActorMoveOnMap(Actor actor, int y, int deltaY, int x, int deltaX)
         {
             Square temp = MapArray[y + deltaY][x + deltaX];
             MapArray[y + deltaY][x + deltaX] = actor.ActorsSquare;
             MapArray[y][x] = actor.StandsOn;
 
             actor.Move(deltaY, deltaX, temp);
-        }
-
-        public void ChoseCollision(int deltaX, int deltaY, Actor actor)
-        {
-            if (actor == null) return;
-
-            int y = actor.YCoordinate;
-            int x = actor.XCoordinate;
-
-            switch (MapArray[y + deltaY][x + deltaX].Entity)
-            {
-
-                case SquareTypes.Empty: //If Actor steps on Empty square
-                    ActorMoveOnMap(actor, y, deltaY, x, deltaX);
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break; //If it's not the Player
-                    Log.action = "You moved";
-
-                    break;
-
-                case SquareTypes.Exit:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-
-                    ActorMoveOnMap(actor, y, deltaY, x, deltaX);
-
-                    Log.action = "You moved to the next level! Yay";
-                    Task.Run(SoundEffects.NewLevel);
-                    break;
-
-                case SquareTypes.Enemy:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-                    Enemy enemy = (Enemy)MapArray[y + deltaY][x + deltaX].ActorOnSquare;
-                    Actor.Battle(this, enemy, y, deltaY, x, deltaX, true);
-                    Task.Run(SoundEffects.Attack);
-
-                    break;
-
-                case SquareTypes.Wall:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-
-                    Log.action = "You can't go there";
-                    break;
-                case SquareTypes.CrackedWall:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-                    Log.action = "This wall looks different, maybe it can be destoryed";
-                    break;
-
-                case SquareTypes.Entry:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-                    Log.action = "You came from here, no way back";
-                    break;
-
-                case SquareTypes.Player:
-                    if (actor.ActorsSquare.Entity == SquareTypes.Enemy)
-                    {
-                        Actor.Battle(this, (Enemy)actor, y, deltaY, x, deltaX, false);
-                    }
-
-                    break;
-
-                case SquareTypes.Chest:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-                    Chest che = (Chest)MapArray[y + deltaY][x + deltaX].ActorOnSquare;
-
-                    if (che.Inside != null)
-                    {
-                        Log.action = $"Yay, you got some {che.Inside.Name}";
-                        User.GiveItem(che.Open());
-                        MapArray[y + deltaY][x + deltaX].MakeEmpty();// = new Square(SquareTypes.Empty, x,y);
-                    }
-                    else { Log.action = "There is nothing in this chest."; }
-
-                    break;
-
-                case SquareTypes.DamagingTrap:
-
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
-                    Trap trap = (Trap)MapArray[y + deltaY][x + deltaX].ActorOnSquare;
-                    //SquareTypes temp = trap.TrapType;
-
-                    MapArray[y + deltaY][x + deltaX] = actor.ActorsSquare;
-                    MapArray[y][x] = actor.StandsOn;
-                    actor.Move(deltaY, deltaX, new Square(SquareTypes.RevealedTrap, x + deltaX, y + deltaY));
-                    Log.action = "Oh, you just walked on a trap. Something just happened";
-                    break;
-            }
         }
 
         public void ChangeSquare(Square square, int y, int x)

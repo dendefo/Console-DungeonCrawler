@@ -3,7 +3,7 @@
     internal class Game
     {
         public Player User = null;
-        Map LevelMap = null;
+        Map LevelMap;
         Player UserAtStart;
         Data log = new(1);
         bool inMenu = true;
@@ -241,6 +241,7 @@
                 //Thread.Sleep(1000);
 
                 Enemy.EnemiesMoving(LevelMap, User);
+                SpykeMoving(LevelMap, User);
                 if (User.CurrentHP == 0)
                 {
                     log._cancelToken.Cancel();
@@ -251,6 +252,27 @@
                 lock (log) { LevelMap.Refresh(); }
             }
         }
-
+        private static void SpykeMoving(Map level, Player player)
+        {
+            foreach(Square spyke in level.Spykes)
+            {
+                if (((Spike)spyke.ActorOnSquare).DimentionOfMoving)
+                {
+                    if (((Spike)spyke.ActorOnSquare).VerticalDirection)
+                    {
+                        level.Move(spyke.ActorOnSquare, "Up");
+                    }
+                    else level.Move(spyke.ActorOnSquare, "Down");
+                }
+                else
+                {
+                    if (((Spike)spyke.ActorOnSquare).HorizontalDirection)
+                    {
+                        level.Move(spyke.ActorOnSquare, "Right");
+                    }
+                    else level.Move(spyke.ActorOnSquare, "Left");
+                }
+            }
+        }
     }
 }

@@ -94,7 +94,7 @@
                 if (node.X == player.XCoordinate && node.Y == player.YCoordinate) //If node's coor-s are same to player's, than we found a path and it's the shortest one
                 {
                     node = Node.BuildPath(node); //Algorith that gives us next node to move to
-                    level.ChoseCollision(node.X - XCoordinate, node.Y - YCoordinate, this); //Moving the enemy
+                    CollisionLogic.Collision(level,node.X - XCoordinate, node.Y - YCoordinate, this); //Moving the enemy
                     return;
                 }
 

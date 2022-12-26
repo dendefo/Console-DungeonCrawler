@@ -1,7 +1,4 @@
-﻿using First_Semester_Project.MapLogic;
-using System.Xml.Serialization;
-
-namespace First_Semester_Project.ActorsNamespace
+﻿namespace First_Semester_Project.ActorsNamespace
 {
     //Class that represents Player
     internal class Player : Actor

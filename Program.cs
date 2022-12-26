@@ -10,7 +10,6 @@ namespace First_Semester_Project
     {
         static void Main(string[] args)
         {
-
             Data.SetUp();
             Menu.MainMenu();
             Game game = new();
