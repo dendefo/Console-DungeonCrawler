@@ -1,4 +1,5 @@
-﻿namespace First_Semester_Project.Core
+﻿using static System.ConsoleKey;
+namespace First_Semester_Project.Core
 {
     internal class Game
     {
@@ -7,7 +8,8 @@
         Player UserAtStart;
         Data log = new(1);
         bool inMenu = true;
-        bool inCastomization = false;
+        bool inOptions = false;
+        int _position = 0;
 
         public void Run()
         {
@@ -32,74 +34,109 @@
                 //}
             }
             ConsoleKey key = Console.ReadKey(true).Key;
-
-            if (inCastomization)
+            
+            //If player is in Option Menu
+            if (inOptions)
             {
                 switch (key)
                 {
-                    case ConsoleKey.Escape:
-                        inCastomization = false;
-                        Menu.MainMenu();
+                    case S:
+                    case DownArrow:
+                        _position++;
+                        if (_position > 6) _position = 0;
+                        Menu.PrintCursor(_position, 44, 12);
                         ControlSystem();
                         break;
 
-                    case ConsoleKey.D1:
-                        Console.Clear();
-                        Console.WriteLine("Please type the character");
-                        Square.PlayerAvatar = (char)Console.Read();
-                        Menu.OptionsMenu();
+                    case W:
+                    case UpArrow:
+                        _position--;
+                        if (_position < 0) _position = 6;
+                        Menu.PrintCursor(_position, 44, 12);
                         ControlSystem();
                         break;
 
-                    case ConsoleKey.D2:
-                        Console.Clear();
-                        Console.WriteLine("Please type the character");
-                        Square.EnemyAvatar = (char)Console.Read();
-                        Menu.OptionsMenu();
-                        ControlSystem();
-                        break;
-
-                    case ConsoleKey.D3:
-                        Console.Clear();
-                        Console.WriteLine("1. Child\n2. Easy\n3. Medium\n4. Medium Rare\n5. Impossible");
-                        switch (Console.ReadKey().Key)
+                    case Spacebar:
+                    case Enter:
+                        switch (_position)
                         {
-                            case ConsoleKey.D1:
-                                Enemy.Difficulty = 1; break;
-                            case ConsoleKey.D2:
-                                Enemy.Difficulty = 2; break;
-                            case ConsoleKey.D3:
-                                Enemy.Difficulty = 3; break;
-                            case ConsoleKey.D4:
-                                Enemy.Difficulty = 4; break;
-                            case ConsoleKey.D5:
-                                Enemy.Difficulty = 5; break;
+                            case 0:
+                                Console.Clear();
+                                Square.PlayerColor = Menu.ColorChose(0);
+                                Menu.OptionsMenu();
+                                Menu.PrintCursor(_position, 44, 12);
+                                ControlSystem();
+                                break;
+
+                            case 1:
+                                Console.Clear();
+                                Square.EnemyColor = Menu.ColorChose(0);
+                                Menu.OptionsMenu();
+                                Menu.PrintCursor(_position, 44, 12);
+                                ControlSystem();
+                                break;
+
+                            case 2:
+                                Console.Clear();
+                                Console.WriteLine("Please type the character");
+                                Square.PlayerAvatar = (char)Console.Read();
+                                Menu.OptionsMenu();
+                                Menu.PrintCursor(_position, 44, 12);
+                                ControlSystem();
+                                break;
+
+                            case 3:
+                                Console.Clear();
+                                Console.WriteLine("Please type the character");
+                                Square.EnemyAvatar = (char)Console.Read();
+                                Menu.OptionsMenu();
+                                Menu.PrintCursor(_position, 44, 12);
+                                ControlSystem();
+                                break;
+
+                            case 4:
+                                Console.Clear();
+                                Console.WriteLine("1. Child\n2. Easy\n3. Medium\n4. Medium Rare\n5. Impossible");
+                                switch (Console.ReadKey().Key)
+                                {
+                                    case D1:
+                                        Enemy.Difficulty = 1; break;
+                                    case D2:
+                                        Enemy.Difficulty = 2; break;
+                                    case D3:
+                                        Enemy.Difficulty = 3; break;
+                                    case D4:
+                                        Enemy.Difficulty = 4; break;
+                                    case D5:
+                                        Enemy.Difficulty = 5; break;
+                                }
+                                Menu.OptionsMenu();
+                                ControlSystem();
+                                break;
+                            case 5:
+                                Square.PlayerAvatar = '♥';
+                                Square.EnemyAvatar = '☻';
+                                Square.PlayerColor = ConsoleColor.DarkMagenta;
+                                Square.EnemyColor = ConsoleColor.DarkRed;
+                                Enemy.Difficulty = 3;
+                                Menu.OptionsMenu();
+                                ControlSystem();
+                                break;
+                            case 6:
+                                inOptions = false;
+                                Menu.MainMenu();
+                                _position = 0;
+                                Menu.PrintCursor(_position, 51, 11);
+                                ControlSystem();
+                                break;
                         }
-                        Menu.OptionsMenu();
-                        ControlSystem();
                         break;
 
-                    case ConsoleKey.D4:
-                        Console.Clear();
-                        Square.PlayerColor = Menu.ColorChose();
-                        Menu.OptionsMenu();
-                        ControlSystem();
-                        break;
-
-                    case ConsoleKey.D5:
-                        Console.Clear();
-                        Square.EnemyColor = Menu.ColorChose();
-                        Menu.OptionsMenu();
-                        ControlSystem();
-                        break;
-
-                    case ConsoleKey.D6:
-                        Square.PlayerAvatar = '♥';
-                        Square.EnemyAvatar = '☻';
-                        Square.PlayerColor = ConsoleColor.DarkMagenta;
-                        Square.EnemyColor = ConsoleColor.DarkRed;
-                        Enemy.Difficulty = 3;
-                        Menu.OptionsMenu();
+                    case Escape:
+                        inOptions = false;
+                        Menu.MainMenu();
+                        _position = 0;
+                        Menu.PrintCursor(_position, 51, 11);
                         ControlSystem();
                         break;
 
@@ -107,86 +144,127 @@
                         ControlSystem();
                         break;
                 }
-            }
+            } 
+            //If player is in Main Menu
             else if (inMenu)
             {
                 switch (key)
                 {
-                    case ConsoleKey.Escape:
-                        Environment.Exit(0);
-                        break;
-                    case ConsoleKey.N:
-                        inMenu = false;
-                        Start(1, true);
-                        break;
-                    case ConsoleKey.C:
-                        inMenu = false;
-                        Console.Clear();
-                        if (User == null) Start(1, true);
-                        break;
-                    case ConsoleKey.B:
-                        Menu.Controls();
-                        Menu.MainMenu();
+                    case S:
+                    case DownArrow:
+                        _position++;
+                        if (_position > 5) _position = 0;
+                        Menu.PrintCursor(_position, 51, 11);
                         ControlSystem();
                         break;
-                    case ConsoleKey.R:
-                        inMenu = false;
-                        Start(log._currentlevel, false);
-                        break;
-                    case ConsoleKey.O:
-                        inCastomization = true;
-                        Menu.OptionsMenu();
+                    case W:
+                    case UpArrow:
+                        _position--;
+                        if (_position < 0) _position = 5;
+                        Menu.PrintCursor(_position, 51, 11);
                         ControlSystem();
                         break;
 
+                    case Spacebar:
+                    case Enter:
+                        switch (_position)
+                        {
+                            case 0:
+                                inMenu = false;
+                                Start(1, true);
+                                break;
+
+                            case 1:
+                                inMenu = false;
+                                Start(log._currentlevel, log._currentlevel==1?true:false);
+                                break;
+
+                            case 2:
+                                inMenu = false;
+                                Console.Clear();
+                                if (User == null) Start(1, true);
+                                break;
+
+                            case 3:
+                                Menu.Controls();
+                                _position = 0;
+                                Menu.MainMenu();
+                                Menu.PrintCursor(_position, 51, 11);
+                                ControlSystem();
+                                break;
+
+                            case 4:
+                                inOptions = true;
+                                _position = 0;
+                                Menu.OptionsMenu();
+                                Menu.PrintCursor(_position, 44, 12);
+                                ControlSystem();
+                                break;
+
+                            case 5:
+                                Environment.Exit(0);
+                                break;
+                        }
+                        break;
+
+                    case Escape:
+                        Environment.Exit(0);
+                        break;
                     default:
                         ControlSystem();
                         break;
                 }
                 return;
             }
+            //If player is in game
             else
             {
                 switch (key)
                 {
-                    case ConsoleKey.Escape:
+                    case Escape:
                         log._cancelToken.Cancel();
+                        _position = 0;
                         Menu.MainMenu();
+                        Menu.PrintCursor(_position, 51, 11);
                         inMenu = true;
                         Thread.Sleep(10);
                         ControlSystem();
                         break;
 
-                    case ConsoleKey.A://Left
+                    case A:
+                    case LeftArrow://Left
                         LevelMap.Move(User, "Left");
                         break;
 
-                    case ConsoleKey.D://Right
+                    case D:
+                    case RightArrow://Right
                         LevelMap.Move(User, "Right");
                         break;
 
-                    case ConsoleKey.S://Down
+                    case S:
+                    case DownArrow://Down
                         LevelMap.Move(User, "Down");
                         break;
 
-                    case ConsoleKey.W://Up
+                    case W:
+                    case UpArrow://Up
                         LevelMap.Move(User, "Up");
                         break;
 
-                    case ConsoleKey.D0:
-                    case ConsoleKey.D1:
-                    case ConsoleKey.D2:
-                    case ConsoleKey.D3:
-                    case ConsoleKey.D4:
-                    case ConsoleKey.D5:
-                    case ConsoleKey.D6:
-                    case ConsoleKey.D7:
-                    case ConsoleKey.D8:
-                    case ConsoleKey.D9: //Share same logic of numbers from 0-9
+                    case D0:
+                    case D1:
+                    case D2:
+                    case D3:
+                    case D4:
+                    case D5:
+                    case D6:
+                    case D7:
+                    case D8:
+                    case D9: //Share same logic of numbers from 0-9
                         User.Use((int)key - 48, log, LevelMap); //Use item
                         break;
 
-                    case ConsoleKey.H:
+                    case H:
                         User.FullHeal();
                         break;
 
@@ -254,24 +332,11 @@
         }
         private static void SpykeMoving(Map level, Player player)
         {
-            foreach(Square spyke in level.Spykes)
+            foreach (Square spyke in level.Spikes)
             {
-                if (((Spike)spyke.ActorOnSquare).DimentionOfMoving)
-                {
-                    if (((Spike)spyke.ActorOnSquare).VerticalDirection)
-                    {
-                        level.Move(spyke.ActorOnSquare, "Up");
-                    }
-                    else level.Move(spyke.ActorOnSquare, "Down");
-                }
-                else
-                {
-                    if (((Spike)spyke.ActorOnSquare).HorizontalDirection)
-                    {
-                        level.Move(spyke.ActorOnSquare, "Right");
-                    }
-                    else level.Move(spyke.ActorOnSquare, "Left");
-                }
+
+                level.Move(spyke.ActorOnSquare, ((Spike)spyke.ActorOnSquare).DimentionOfMoving ? ((Spike)spyke.ActorOnSquare).Direction ? "Up" : "Down" : ((Spike)spyke.ActorOnSquare).Direction ? "Right" : "Left");
+
             }
         }
     }

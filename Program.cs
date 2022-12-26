@@ -12,6 +12,7 @@ namespace First_Semester_Project
         {
             Data.SetUp();
             Menu.MainMenu();
+            Menu.PrintCursor(0,51,11);
             Game game = new();
 
             game.Run();

@@ -72,7 +72,7 @@ namespace First_Semester_Project.Output
                     LetterT(x, y);
                     break;
                 case 'u':
-                    LetterV(x, y);
+                    LetterU(x, y);
                     break;
                 case 'v':
                     LetterV(x, y);
@@ -289,9 +289,9 @@ namespace First_Semester_Project.Output
             SetCursorPosition(x, y);
             Write("██  ██");
             SetCursorPosition(x, y + 1);
-            Write("███  █");
+            Write("███ ██");
             SetCursorPosition(x, y + 2);
-            Write("██ █ █");
+            Write("██████");
             SetCursorPosition(x, y + 3);
             Write("██ ███");
             SetCursorPosition(x, y + 4);

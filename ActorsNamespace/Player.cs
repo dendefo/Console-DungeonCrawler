@@ -30,6 +30,7 @@
             XCoordinate = player.XCoordinate;
             YCoordinate = player.YCoordinate;
             MaxHP = player.MaxHP;
+            Level= player.Level;
             CurrentHP = player.CurrentHP;
             Evasion = player.Evasion;
             StandsOn = player.StandsOn;

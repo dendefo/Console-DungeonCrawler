@@ -8,11 +8,8 @@
         //if player was at range at least once = true
         bool isTriggerd = false;
 
-        //Enemies "Id number"
-        public int NumberInArray { get; protected set; }
-
         //Basic constructor
-        public Enemy(int xCoordinate, int yCoordinate, int level, int numberInArray, Square square, Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
+        public Enemy(int xCoordinate, int yCoordinate, int level, Square square, Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
         {
             MaxHP = level * Difficulty;
             CurrentHP = MaxHP;
@@ -21,7 +18,6 @@
             EquipedWeapon = weapon;
             EquipedShield = shield;
             Evasion = level * 5;
-            NumberInArray = numberInArray;
         }
 
         //If enemy dies, he dropes chest with loot
@@ -60,7 +56,7 @@
         public static void EnemiesMoving(Map LevelMap, Player player)
         {
 
-            for (int i = 0; i < LevelMap.Enemies.Length; i++)
+            for (int i = 0; i < LevelMap.Enemies.Count; i++)
             {
 
                 Enemy enemy = LevelMap.Enemies[i];

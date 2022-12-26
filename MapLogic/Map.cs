@@ -3,9 +3,8 @@
     internal class Map
     {
 
-        public Enemy[] Enemies = new Enemy[10]; //Array with enemies on map to make them walk 
-        private int _enemyCount; //Only for creating purposes
-        public List<Square> Spykes { get; private set; }
+        public List<Enemy> Enemies = new(); //Array with enemies on map to make them walk 
+        public List<Square> Spikes { get; private set; }
         GraphicEngine engine;
 
         public Data Log;
@@ -17,8 +16,7 @@
         //Map constructor. Filling MapArray with tiles from map-file
         public Map(int Level, Player player, Data log)
         {
-            Spykes= new List<Square>();
-            _enemyCount = 0;
+            Spikes = new List<Square>();
             Log = log;
             string[] file = FileReader.Read(Level); //Accepting level from file
             fileSpawn = FileReader.ReadSpawnConfig(Level);
@@ -43,16 +41,16 @@
         private Square Spawn(char type, int Level, Player player, int x, int y)
         {
             Square square;
-            
+
 
             switch ((SquareTypes)type)
             {
                 case SquareTypes.Enemy:
-                    int weapon = fileSpawn[1][_enemyCount*2];
-                    int shield = fileSpawn[1][_enemyCount*2+1];
-                    square = new(SquareTypes.Enemy, x, y, Level, _enemyCount ,weapon ,shield);
-                    Enemies[_enemyCount] = (Enemy)square.ActorOnSquare;
-                    _enemyCount++;
+                    int weapon = fileSpawn[1][0];
+                    int shield = fileSpawn[1][1];
+                    square = new(SquareTypes.Enemy, x, y, Level, weapon, shield);
+                    Enemies.Add((Enemy)square.ActorOnSquare);
+                    fileSpawn[1] = fileSpawn[1].Remove(0, 2);
                     break;
 
                 case SquareTypes.Entry:
@@ -74,7 +72,7 @@
 
                 case SquareTypes.SpykeWall:
                     square = new Square(SquareTypes.SpykeWall, x, y);
-                    Spykes.Add(square);
+                    Spikes.Add(square);
                     break;
 
                 default:
@@ -84,7 +82,7 @@
             return square;
         }
 
-        private Item ItemParse(int itemInt)
+        private static Item ItemParse(int itemInt)
         {
 
             switch (itemInt)
@@ -138,7 +136,7 @@
                 default:
                     return;
             }
-            CollisionLogic.Collision(this,deltaX, deltaY, actor);
+            CollisionLogic.Collision(this, deltaX, deltaY, actor);
 
         } //Moving any actor across the map by 1 tile in 4 directions
 

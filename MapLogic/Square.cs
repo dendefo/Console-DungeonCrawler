@@ -19,8 +19,8 @@
     //Each symbol of map
     internal class Square
     {
-        static public char PlayerAvatar = '♥';
-        static public ConsoleColor PlayerColor = ConsoleColor.DarkMagenta;
+        static public char PlayerAvatar = '♥'; //☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼
+        static public ConsoleColor PlayerColor = ConsoleColor.DarkMagenta; 
         static public char EnemyAvatar = '☻';
         static public ConsoleColor EnemyColor = ConsoleColor.DarkRed;
         public ConsoleColor Color { get; private set; }
@@ -48,7 +48,7 @@
                 case SquareTypes.SpykeWall:
                     Symbol = '¤';
                     Color = EnemyColor;
-                    ActorOnSquare = new Spike(x, y, true, true,false, this);
+                    ActorOnSquare = new Spike(x, y, true, this);
                     break;
 
                 case SquareTypes.CrackedWall:
@@ -67,7 +67,7 @@
                     break;
 
                 case SquareTypes.Player:
-                    Symbol = PlayerAvatar;//☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼
+                    Symbol = PlayerAvatar;
                     Color = PlayerColor;
                     ActorOnSquare = new Player(x,y,this);
                     break;
@@ -85,12 +85,12 @@
             }
         }
 
-        public Square(SquareTypes type, int x, int y, int level, int number, int weapon, int shield)
+        public Square(SquareTypes type, int x, int y, int level, int weapon, int shield)
         {
             Entity = type;
             Symbol = EnemyAvatar;
             Color = EnemyColor;
-            ActorOnSquare = new Enemy(x, y, level, number,this, new((WeaponTypes)weapon), new((ShieldTypes)shield));
+            ActorOnSquare = new Enemy(x, y, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield));
         }
         public Square(SquareTypes type, int x, int y, Item item)
         {

@@ -1,4 +1,5 @@
 ﻿using static System.Console;
+using static System.ConsoleColor;
 
 namespace First_Semester_Project.Output
 {
@@ -9,7 +10,7 @@ namespace First_Semester_Project.Output
             
             Clear();
             SetCursorPosition(15, 1);
-            ForegroundColor = ConsoleColor.DarkRed;
+            ForegroundColor = DarkRed;
             Write("███████████████████████████████████████████████████████████████████████████████████████");
             for (int i = 2; i < 9; i++)
             {
@@ -27,47 +28,47 @@ namespace First_Semester_Project.Output
                 Letters.Print(theInsanity[i], 17 + 7 * i, 3);
             }
             SetCursorPosition(85, 8);
-            ForegroundColor = ConsoleColor.Gray;
+            ForegroundColor = Gray;
             Write("Made by Dendefo");
-            SetCursorPosition(45, 11);
-            Write("To start a NEW game press ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'N'");
-            ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(45, 15);
-            Write("To CONTINUE press ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'C'");
-            ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(45, 13);
-            Write("To RESTART current level ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'R'");
-            ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(45, 17);
-            Write("For controls press ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'B'");
-            ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(45, 19);
-            Write("For options ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'O'");
-            ForegroundColor = ConsoleColor.Gray;
-            SetCursorPosition(45, 21);
-            Write("To Exit press ");
-            ForegroundColor = ConsoleColor.Green;
-            Write("'Esc'");
-            ForegroundColor = ConsoleColor.Gray;
+
+            //SetCursorPosition(51, 11 + position * 2);
+            //ForegroundColor = Green;
+            //Write("►");
+            //ForegroundColor = Gray;
+
+            SetCursorPosition(53, 11);
+            Write("Start a new game");
+            SetCursorPosition(53, 15);
+            Write("Continue");
+            SetCursorPosition(53, 13);
+            Write("Restart the level");
+            SetCursorPosition(53, 17);
+            Write("Controls");
+            SetCursorPosition(53, 19);
+            Write("Options");
+            SetCursorPosition(53, 21);
+            Write("Exit");
             Data.Tiltan();
 
+        }
+        public static void PrintCursor(int position,int startX, int startY)
+        {
+            for (int i = startY; i <= 29; i += 2)
+            {
+                SetCursorPosition(startX, i);
+                Write(" ");
+            }
+            SetCursorPosition(startX, startY + position * 2);
+            ForegroundColor = startX<50?Blue:Green;
+            Write("►");
+            ForegroundColor = Gray;
         }
 
         public static void Controls()
         {
             Clear();
-            BackgroundColor = ConsoleColor.White;
-            ForegroundColor = ConsoleColor.Black;
+            BackgroundColor = White;
+            ForegroundColor = Black;
             Letters.Button('a', 8, 10);
             Letters.Button('s', 23, 10);
             Letters.Button('w', 23, 2);
@@ -97,41 +98,175 @@ namespace First_Semester_Project.Output
         public static void OptionsMenu()
         {
             Clear();
-            WriteLine("1. To change Player's avatar");
-            WriteLine("2. To change Enemie's avatar");
-            WriteLine("3. Set the Difficulty (Medium is standart)");
-            WriteLine("4. To chose colour of Player's avatar");
-            WriteLine("5. To chose colour of Enemie's avatar");
-            WriteLine("6. Reset");
-            WriteLine("\nGame has to be restarted to apply the changes ('N' in main menu)\n\n'ESC' to leave this menu");
+            SetCursorPosition(32, 1);
+            ForegroundColor = Blue;
+            Write("██████████████████████████████████████████████████████");
+            for (int i = 2; i < 9; i++)
+            {
+                SetCursorPosition(32, i);
+                Write("█");
+                SetCursorPosition(85, i);
+                Write("█");
+            }
+            SetCursorPosition(32, 9);
+            Write("██████████████████████████████████████████████████████");
+            char[] options = { 'o','p','t','i','o','n','s' };
+            for (int i = 0; i < options.Length; i++)
+            {
+                Letters.Print(options[i], 35 + 7 * i, 3);
+            }
+            ForegroundColor = Gray;
+            SetCursorPosition(46, 12);
+            WriteLine("Chose colour of Player's avatar");
+            SetCursorPosition(46, 14);
+            WriteLine("Chose colour of Enemy's avatar");
+            SetCursorPosition(46, 16);
+            WriteLine("Change Player's avatar");
+            SetCursorPosition(46, 18);
+            WriteLine("Change Enemy's avatar");
+            SetCursorPosition(46, 20);
+            WriteLine("Set the Difficulty");
+            SetCursorPosition(46, 22);
+            WriteLine("Reset ");
+            SetCursorPosition(46, 24);
+            WriteLine("Exit to main menu");
+            SetCursorPosition(28, 27);
+            WriteLine("Game has to be restarted to apply some changes ('N' in main menu)");
 
         }
-        public static ConsoleColor ColorChose()
+        public static ConsoleColor ColorChose(int position)
         {
-            WriteLine("1. White\n2. Red\n3. Green\n4. Magenta\n5. Gray\n6. Blue\n7. Cyan\n8. Yellow\n9. Dark Green\n0. Dark Red");
+            SetCursorPosition(32, 1);
+            ForegroundColor = Blue;
+            Write("██████████████████████████████████████████████████████");
+            for (int i = 2; i < 9; i++)
+            {
+                SetCursorPosition(32, i);
+                Write("█");
+                SetCursorPosition(85, i);
+                Write("█");
+            }
+            SetCursorPosition(32, 9);
+            Write("██████████████████████████████████████████████████████");
+            char[] options = { 'o', 'p', 't', 'i', 'o', 'n', 's' };
+            for (int i = 0; i < options.Length; i++)
+            {
+                Letters.Print(options[i], 35 + 7 * i, 3);
+            }
+            for (int i = 27; i < 100; i += 13)
+            {
+                for (int j = 11; j < 18; j += 2)
+                {
+                    SetCursorPosition(i, j);
+                    Write("              ");
+                    SetCursorPosition(i, j + 1);
+                    Write("              ");
+                    SetCursorPosition(i, j + 2);
+                    Write("              ");
+                }
+            }
+
+            SetCursorPosition(28, 12);
+            ForegroundColor = White;       Write("White          ");
+            ForegroundColor = Green;       Write("Green          ");
+            ForegroundColor = Yellow;      Write("Yellow         ");
+            ForegroundColor = Magenta;     Write("Magenta        ");
+            ForegroundColor = Red;         Write("Red            ");
+
+            SetCursorPosition(28, 14);
+            ForegroundColor = Gray;        Write("Gray           ");
+            ForegroundColor = DarkGreen;   Write("Dark Green     ");
+            ForegroundColor = DarkYellow;  Write("Dark Yellow    ");
+            ForegroundColor = DarkMagenta; Write("Dark Magenta   ");
+            ForegroundColor = DarkRed;     Write("Dark Red       ");
+
+            SetCursorPosition(28, 16);
+            ForegroundColor = DarkGray;    Write("Dark Gray      ");
+            ForegroundColor = DarkBlue;    Write("Dark Blue      ");
+            ForegroundColor = Blue;        Write("Blue           ");
+            ForegroundColor = DarkCyan;    Write("Dark Cyan      ");
+            ForegroundColor = Cyan;        Write("Cyan           ");
+
+            ConsoleColor temp = ColorByInt(position);
+
+            SetCursorPosition(27 + ((position % 5) * 15), 11 + ((position) / 5 * 2));
+            ForegroundColor = temp;
+            Write("▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+            SetCursorPosition(27 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
+            Write("█");
+            SetCursorPosition(40 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
+            Write("█");
+            SetCursorPosition(27 + ((position % 5) * 15), 13 + ((position) / 5 * 2));
+            Write("▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
+
             switch (ReadKey(true).Key)
             {
-                case ConsoleKey.D1:
-                    return ConsoleColor.White;
-                case ConsoleKey.D2:
-                    return ConsoleColor.Red;
-                case ConsoleKey.D3:
-                    return ConsoleColor.Green;
-                case ConsoleKey.D4:
-                    return ConsoleColor.Magenta;
-                case ConsoleKey.D5:
-                    return ConsoleColor.Gray;
-                case ConsoleKey.D6:
-                    return ConsoleColor.Blue;
-                case ConsoleKey.D7:
-                    return ConsoleColor.Cyan;
-                case ConsoleKey.D8:
-                    return ConsoleColor.Yellow;
-                case ConsoleKey.D9:
-                    return ConsoleColor.DarkGreen;
-                case ConsoleKey.D0:
-                    return ConsoleColor.DarkRed;
-                default: return ConsoleColor.White;
+                case ConsoleKey.Enter:
+                case ConsoleKey.Spacebar:
+                    return ColorByInt(position);
+
+                case ConsoleKey.Escape:
+                    return White;
+
+                case ConsoleKey.W:
+                case ConsoleKey.UpArrow:
+                    position -= 5;
+                    if (position < 0)
+                    {
+                        position += 15;
+                    }
+                    return ColorChose(position);
+
+                case ConsoleKey.S:
+                case ConsoleKey.DownArrow:
+                    position += 5;
+                    if (position > 14)
+                    {
+                        position -= 15;
+                    }
+                    return ColorChose(position);
+
+                case ConsoleKey.A:
+                case ConsoleKey.LeftArrow:
+                    position--;
+                    if (position < 0)
+                    {
+                        position = 14;
+                    }
+                    return ColorChose(position);
+
+                case ConsoleKey.D:
+                case ConsoleKey.RightArrow:
+                    position++;
+                    if (position > 14)
+                    {
+                        position = 0;
+                    }
+                    return ColorChose(position);
+
+                default: return ColorChose(position);
+            }
+        }
+        private static ConsoleColor ColorByInt(int position)
+        {
+            switch (position)
+            {
+                case 0: return White;
+                case 1: return Green;
+                case 2: return Yellow;
+                case 3: return Magenta;
+                case 4: return Red;
+                case 5: return Gray;
+                case 6: return DarkGreen;
+                case 7: return DarkYellow;
+                case 8: return DarkMagenta;
+                case 9: return DarkRed;
+                case 10: return DarkGray;
+                case 11: return DarkBlue;
+                case 12: return Blue;
+                case 13: return DarkCyan;
+                case 14: return Cyan;
+                default: return White;
             }
         }
     }
