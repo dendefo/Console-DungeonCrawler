@@ -27,7 +27,6 @@ namespace First_Semester_Project.MapLogic
             //I don't know how to write it better, but it looks like i don't repeat myself a lot, so i'm good with it
             switch (map.MapArray[y + deltaY][x + deltaX].Entity)
             {
-
                 case SquareTypes.Empty: //If Actor steps on Empty square
                     map.ActorMoveOnMap(actor, y, deltaY, x, deltaX);
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break; //If it's not the Player
@@ -35,6 +34,15 @@ namespace First_Semester_Project.MapLogic
                     map.Log.action = "You moved";
                     break;
 
+                case SquareTypes.Coin:
+                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
+                    map.MapArray[y + deltaY][x + deltaX].MakeEmpty();
+                    map.ActorMoveOnMap(actor,y, deltaY, x, deltaX);
+
+                    ((Player)actor).GiveItem(new Coin());
+                    break;
+
+                //case SquareTypes.Market:
                 case SquareTypes.Exit:
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 

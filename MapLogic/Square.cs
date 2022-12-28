@@ -13,7 +13,9 @@
         Enemy = 49,
         Chest = 35,
         RevealedTrap = 48,
-        DamagingTrap = 84
+        DamagingTrap = 84,
+        Coin = 36,
+        Market = 109,
     }
 
     //Each symbol of map
@@ -40,6 +42,15 @@
                     Color = ConsoleColor.White;
                     break;
 
+                case SquareTypes.Coin:
+                    Symbol = '$';
+                    Color = ConsoleColor.Yellow;
+                    break;
+
+                case SquareTypes.Market:
+                    Symbol = 'M';
+                    Color = ConsoleColor.Yellow;
+                    break;
                 case SquareTypes.Wall:
                     Symbol = '█';
                     Color = ConsoleColor.White;
@@ -85,12 +96,12 @@
             }
         }
 
-        public Square(SquareTypes type, int x, int y, int level, int weapon, int shield)
+        public Square(SquareTypes type, int x, int y, int level, int weapon, int shield, int item)
         {
             Entity = type;
             Symbol = EnemyAvatar;
             Color = EnemyColor;
-            ActorOnSquare = new Enemy(x, y, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield));
+            ActorOnSquare = new Enemy(x, y, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield), Item.ItemParse(item));
         }
         public Square(SquareTypes type, int x, int y, Item item)
         {

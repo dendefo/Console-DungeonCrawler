@@ -48,9 +48,10 @@
                 case SquareTypes.Enemy:
                     int weapon = fileSpawn[1][0];
                     int shield = fileSpawn[1][1];
-                    square = new(SquareTypes.Enemy, x, y, Level, weapon, shield);
+                    int item = fileSpawn[1][2];
+                    square = new(SquareTypes.Enemy, x, y, Level, weapon, shield, item);
                     Enemies.Add((Enemy)square.ActorOnSquare);
-                    fileSpawn[1] = fileSpawn[1].Remove(0, 2);
+                    fileSpawn[1] = fileSpawn[1].Remove(0, 3);
                     break;
 
                 case SquareTypes.Entry:
@@ -63,7 +64,7 @@
                 case SquareTypes.Chest:
                     int itemInt = fileSpawn[0][0];
                     fileSpawn[0] = fileSpawn[0].Remove(0, 1);
-                    square = new Square(SquareTypes.Chest, x, y, ItemParse(itemInt));
+                    square = new Square(SquareTypes.Chest, x, y, Item.ItemParse(itemInt));
                     break;
 
                 case SquareTypes.RevealedTrap:
@@ -82,19 +83,7 @@
             return square;
         }
 
-        private static Item ItemParse(int itemInt)
-        {
-
-            switch (itemInt)
-            {
-                case < 60:
-                    return new Weapon((WeaponTypes)itemInt);
-                case < 70:
-                    return new Shield((ShieldTypes)itemInt);
-                case >= 70:
-                    return new Potion((PotionTypes)itemInt);
-            }
-        }
+        
         public void Refresh()
         {
             Console.SetCursorPosition(0, 0);

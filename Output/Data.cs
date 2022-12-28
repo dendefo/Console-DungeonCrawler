@@ -110,6 +110,9 @@ namespace First_Semester_Project.Output
             Write(action2);
             action = "";
             action2 = "";
+            ForegroundColor = Yellow;
+            SetCursorPosition(10, 18);
+            Write($"${player.Coins/100%10}{player.Coins/10%10}{player.Coins%10}$");
             ForegroundColor = White;
         }
 

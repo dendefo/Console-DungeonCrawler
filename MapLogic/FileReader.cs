@@ -13,6 +13,9 @@ namespace First_Semester_Project.MapLogic
         {
             return File.ReadAllLines($"C:\\Users\\danie\\source\\repos\\First_Semester_Project\\TextFiles\\Level_{Level}_SpawnConfig.txt");
         }
+
+
+
         //static public void Write(int stringNumber, char symbol, ConsoleColor color) 
         //{
         //    FileStream file = File.OpenWrite($"C:\\Users\\danie\\source\\repos\\First_Semester_Project\\TextFiles\\Config.txt");

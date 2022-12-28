@@ -183,6 +183,7 @@ namespace First_Semester_Project.Core
                                 inMenu = false;
                                 Console.Clear();
                                 if (User == null) Start(1, true);
+                                Data.PrintGUI();
                                 log._cancelToken = new();
                                 Task.Factory.StartNew(() =>
                                 {

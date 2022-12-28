@@ -18,9 +18,10 @@
         public Square StandsOn { get; set; }
 
 
-        //Square of the Actor (Showing)
+        //Square of the Actor (Showed)
         public Square ActorsSquare { get; protected set; }
 
+        public Item ItemToDrop { get; protected set; }
 
         //Coordination System and moving
         public int XCoordinate { get; protected set; }

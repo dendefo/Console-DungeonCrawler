@@ -9,7 +9,7 @@
         bool isTriggerd = false;
 
         //Basic constructor
-        public Enemy(int xCoordinate, int yCoordinate, int level, Square square, Weapon weapon, Shield shield) : base(xCoordinate, yCoordinate)
+        public Enemy(int xCoordinate, int yCoordinate, int level, Square square, Weapon weapon, Shield shield, Item item) : base(xCoordinate, yCoordinate)
         {
             MaxHP = level * Difficulty;
             CurrentHP = MaxHP;
@@ -17,6 +17,7 @@
             ActorsSquare = square;
             EquipedWeapon = weapon;
             EquipedShield = shield;
+            ItemToDrop = item;
             Evasion = level * 5;
         }
 
@@ -24,33 +25,34 @@
         public Item Die()
         {
             ActorsSquare.MakeEmpty();
-            Random rand = new Random();
-            if (EquipedWeapon.Name != "Fists" && EquipedShield.Name != "Abs")
-            {
-                switch (rand.Next(0, 3))
-                {
-                    case 0: return EquipedWeapon;
-                    case 1: return EquipedShield;
-                    case 2: return new Potion(PotionTypes.GreatHealingPotion);
-                }
-            }
-            else if (EquipedShield.Name != "Abs")
-            {
-                switch (rand.Next(0, 2))
-                {
-                    case 0: return EquipedShield;
-                    case 1: return new Potion(PotionTypes.HealingPotion);
-                }
-            }
-            else if (EquipedWeapon.Name != "Fists")
-            {
-                switch (rand.Next(0, 2))
-                {
-                    case 0: return EquipedWeapon;
-                    case 1: return new Potion(PotionTypes.HealingPotion);
-                }
-            }
-            return new Potion(PotionTypes.SmallHealingPotion);
+            return ItemToDrop;
+            //Random rand = new Random();
+            //if (EquipedWeapon.Name != "Fists" && EquipedShield.Name != "Abs")
+            //{
+            //    switch (rand.Next(0, 3))
+            //    {
+            //        case 0: return EquipedWeapon;
+            //        case 1: return EquipedShield;
+            //        case 2: return new Potion(PotionTypes.GreatHealingPotion);
+            //    }
+            //}
+            //else if (EquipedShield.Name != "Abs")
+            //{
+            //    switch (rand.Next(0, 2))
+            //    {
+            //        case 0: return EquipedShield;
+            //        case 1: return new Potion(PotionTypes.HealingPotion);
+            //    }
+            //}
+            //else if (EquipedWeapon.Name != "Fists")
+            //{
+            //    switch (rand.Next(0, 2))
+            //    {
+            //        case 0: return EquipedWeapon;
+            //        case 1: return new Potion(PotionTypes.HealingPotion);
+            //    }
+            //}
+            //return new Potion(PotionTypes.SmallHealingPotion);
         }
 
         public static void EnemiesMoving(Map LevelMap, Player player)

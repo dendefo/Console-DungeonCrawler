@@ -4,7 +4,8 @@
     {
         Weapon = 40,
         Shield = 41,
-        Potion = 42
+        Potion = 42,
+        Coin = 43,
     }
 
     enum WeaponTypes

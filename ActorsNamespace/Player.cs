@@ -6,6 +6,7 @@
         //Players Inventory in format <Item-object, amount>
         public Dictionary<Item, int> Inventory { get; protected set; }
 
+        public int Coins { get; private set; }
         public int Exp { get; private set; }
         public int KillCount { get; private set; }
         public int Level { get; private set; }
@@ -43,6 +44,11 @@
         //Adding "item" to the Inventory
         public void GiveItem(Item item)
         {
+            if (item.Type == ItemTypes.Coin) //If it's a coin' just add one
+            {
+                Coins++;
+                return;
+            }
             List<Item> keys = Inventory.Keys.ToList(); //Checking each item in Inventory
             foreach (Item key in keys)
             {
@@ -60,6 +66,7 @@
         //Substract "item" from Inventory
         private void TakeItem(Item item, int amount)
         {
+
             Inventory[item] -= amount;
             if (Inventory[item] <= 0)
             {
