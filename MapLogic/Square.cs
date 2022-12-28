@@ -48,7 +48,7 @@
                 case SquareTypes.SpykeWall:
                     Symbol = '¤';
                     Color = EnemyColor;
-                    ActorOnSquare = new Spike(x, y, true, this);
+                    ActorOnSquare = new Spike(x, y, false, this);
                     break;
 
                 case SquareTypes.CrackedWall:

@@ -14,9 +14,18 @@ namespace First_Semester_Project.Output
         public void Print() //I tried to find a way for more smooth printing. 
         {
             string toPrint = "";
-            SetCursorPosition(0, 0); //And then i found this. WOW
-            for (int i = 0; i < Colours.Count-1; i++)
+            //And then i found this. WOW
+            int newline = 4;
+            SetCursorPosition(40, newline);
+            for (int i = 0; i < Colours.Count - 1; i++)
             {
+                if (Colours[i] == ConsoleColor.Black)
+                {
+                    newline++;
+                    SetCursorPosition(40, newline);
+                    continue;
+                }
+                
                 if (Colours[i] == Colours[i + 1])
                 {
                     toPrint += _print[i];
@@ -29,9 +38,9 @@ namespace First_Semester_Project.Output
                     toPrint = "";
                 }
             }
-            ForegroundColor = Colours[Colours.Count-1];
+            ForegroundColor = Colours[Colours.Count - 1];
             Write(toPrint);
-            
+
         }
 
         static public void RePrint(int x, int y, Square ent)//Now Each update looks like this. Much faster and clear but there is a bug, when something may double print on a map

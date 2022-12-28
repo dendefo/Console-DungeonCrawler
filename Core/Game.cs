@@ -44,7 +44,7 @@ namespace First_Semester_Project.Core
                     case DownArrow:
                         _position++;
                         if (_position > 6) _position = 0;
-                        Menu.PrintCursor(_position, 44, 12);
+                        Menu.PrintCursor(_position, 64, 12);
                         ControlSystem();
                         break;
 
@@ -52,7 +52,7 @@ namespace First_Semester_Project.Core
                     case UpArrow:
                         _position--;
                         if (_position < 0) _position = 6;
-                        Menu.PrintCursor(_position, 44, 12);
+                        Menu.PrintCursor(_position, 64, 12);
                         ControlSystem();
                         break;
 
@@ -64,7 +64,7 @@ namespace First_Semester_Project.Core
                                 Console.Clear();
                                 Square.PlayerColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
-                                Menu.PrintCursor(_position, 44, 12);
+                                Menu.PrintCursor(_position, 64, 12);
                                 ControlSystem();
                                 break;
 
@@ -72,7 +72,7 @@ namespace First_Semester_Project.Core
                                 Console.Clear();
                                 Square.EnemyColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
-                                Menu.PrintCursor(_position, 44, 12);
+                                Menu.PrintCursor(_position, 64, 12);
                                 ControlSystem();
                                 break;
 
@@ -81,7 +81,7 @@ namespace First_Semester_Project.Core
                                 Console.WriteLine("Please type the character");
                                 Square.PlayerAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
-                                Menu.PrintCursor(_position, 44, 12);
+                                Menu.PrintCursor(_position, 64, 12);
                                 ControlSystem();
                                 break;
 
@@ -90,7 +90,7 @@ namespace First_Semester_Project.Core
                                 Console.WriteLine("Please type the character");
                                 Square.EnemyAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
-                                Menu.PrintCursor(_position, 44, 12);
+                                Menu.PrintCursor(_position, 64, 12);
                                 ControlSystem();
                                 break;
 
@@ -126,7 +126,7 @@ namespace First_Semester_Project.Core
                                 inOptions = false;
                                 Menu.MainMenu();
                                 _position = 0;
-                                Menu.PrintCursor(_position, 51, 11);
+                                Menu.PrintCursor(_position, 71, 11);
                                 ControlSystem();
                                 break;
                         }
@@ -136,7 +136,7 @@ namespace First_Semester_Project.Core
                         inOptions = false;
                         Menu.MainMenu();
                         _position = 0;
-                        Menu.PrintCursor(_position, 51, 11);
+                        Menu.PrintCursor(_position, 71, 11);
                         ControlSystem();
                         break;
 
@@ -154,14 +154,14 @@ namespace First_Semester_Project.Core
                     case DownArrow:
                         _position++;
                         if (_position > 5) _position = 0;
-                        Menu.PrintCursor(_position, 51, 11);
+                        Menu.PrintCursor(_position, 71, 11);
                         ControlSystem();
                         break;
                     case W:
                     case UpArrow:
                         _position--;
                         if (_position < 0) _position = 5;
-                        Menu.PrintCursor(_position, 51, 11);
+                        Menu.PrintCursor(_position, 71, 11);
                         ControlSystem();
                         break;
 
@@ -183,13 +183,32 @@ namespace First_Semester_Project.Core
                                 inMenu = false;
                                 Console.Clear();
                                 if (User == null) Start(1, true);
+                                log._cancelToken = new();
+                                Task.Factory.StartNew(() =>
+                                {
+                                    while (true)
+                                    {
+                                        Thread.Sleep(150);
+                                        if (log._cancelToken.IsCancellationRequested)
+                                        {
+                                            break;
+                                        }
+                                        lock (log)
+                                        {
+                                            log.Coin();
+                                        }
+
+
+                                    }
+
+                                }, log._cancelToken.Token);
                                 break;
 
                             case 3:
                                 Menu.Controls();
                                 _position = 0;
                                 Menu.MainMenu();
-                                Menu.PrintCursor(_position, 51, 11);
+                                Menu.PrintCursor(_position, 71, 11);
                                 ControlSystem();
                                 break;
 
@@ -197,7 +216,7 @@ namespace First_Semester_Project.Core
                                 inOptions = true;
                                 _position = 0;
                                 Menu.OptionsMenu();
-                                Menu.PrintCursor(_position, 44, 12);
+                                Menu.PrintCursor(_position, 64, 12);
                                 ControlSystem();
                                 break;
 
@@ -225,7 +244,7 @@ namespace First_Semester_Project.Core
                         log._cancelToken.Cancel();
                         _position = 0;
                         Menu.MainMenu();
-                        Menu.PrintCursor(_position, 51, 11);
+                        Menu.PrintCursor(_position, 71, 11);
                         inMenu = true;
                         Thread.Sleep(10);
                         ControlSystem();
@@ -303,6 +322,7 @@ namespace First_Semester_Project.Core
             {
                 LevelMap = new(currentLevel, User, log);
 
+                Data.PrintGUI();
                 PlayTheLevel();
                 log._currentlevel++;
 

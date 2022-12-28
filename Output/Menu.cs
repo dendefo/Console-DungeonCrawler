@@ -9,25 +9,25 @@ namespace First_Semester_Project.Output
         {
             
             Clear();
-            SetCursorPosition(15, 1);
+            SetCursorPosition(35, 1);
             ForegroundColor = DarkRed;
             Write("███████████████████████████████████████████████████████████████████████████████████████");
             for (int i = 2; i < 9; i++)
             {
-                SetCursorPosition(15, i);
+                SetCursorPosition(35, i);
                 Write("█");
-                SetCursorPosition(101, i);
+                SetCursorPosition(121, i);
                 Write("█");
             }
-            SetCursorPosition(15, 9);
+            SetCursorPosition(35, 9);
             Write("███████████████████████████████████████████████████████████████████████████████████████");
             char[] theInsanity = { 't', 'h', 'e', ' ', 'i', 'n', 's', 'a', 'n', 'i', 't', 'y' };
             for (int i = 0; i < 12; i++)
             {
                 if (i == 3) continue;
-                Letters.Print(theInsanity[i], 17 + 7 * i, 3);
+                Letters.Print(theInsanity[i], 37 + 7 * i, 3);
             }
-            SetCursorPosition(85, 8);
+            SetCursorPosition(105, 8);
             ForegroundColor = Gray;
             Write("Made by Dendefo");
 
@@ -36,17 +36,17 @@ namespace First_Semester_Project.Output
             //Write("►");
             //ForegroundColor = Gray;
 
-            SetCursorPosition(53, 11);
+            SetCursorPosition(73, 11);
             Write("Start a new game");
-            SetCursorPosition(53, 15);
+            SetCursorPosition(73, 15);
             Write("Continue");
-            SetCursorPosition(53, 13);
+            SetCursorPosition(73, 13);
             Write("Restart the level");
-            SetCursorPosition(53, 17);
+            SetCursorPosition(73, 17);
             Write("Controls");
-            SetCursorPosition(53, 19);
+            SetCursorPosition(73, 19);
             Write("Options");
-            SetCursorPosition(53, 21);
+            SetCursorPosition(73, 21);
             Write("Exit");
             Data.Tiltan();
 
@@ -59,7 +59,7 @@ namespace First_Semester_Project.Output
                 Write(" ");
             }
             SetCursorPosition(startX, startY + position * 2);
-            ForegroundColor = startX<50?Blue:Green;
+            ForegroundColor = startX<70?Blue:Green;
             Write("►");
             ForegroundColor = Gray;
         }
@@ -98,62 +98,62 @@ namespace First_Semester_Project.Output
         public static void OptionsMenu()
         {
             Clear();
-            SetCursorPosition(32, 1);
+            SetCursorPosition(52, 1);
             ForegroundColor = Blue;
             Write("██████████████████████████████████████████████████████");
             for (int i = 2; i < 9; i++)
             {
-                SetCursorPosition(32, i);
+                SetCursorPosition(52, i);
                 Write("█");
-                SetCursorPosition(85, i);
+                SetCursorPosition(105, i);
                 Write("█");
             }
-            SetCursorPosition(32, 9);
+            SetCursorPosition(52, 9);
             Write("██████████████████████████████████████████████████████");
             char[] options = { 'o','p','t','i','o','n','s' };
             for (int i = 0; i < options.Length; i++)
             {
-                Letters.Print(options[i], 35 + 7 * i, 3);
+                Letters.Print(options[i], 55 + 7 * i, 3);
             }
             ForegroundColor = Gray;
-            SetCursorPosition(46, 12);
+            SetCursorPosition(66, 12);
             WriteLine("Chose colour of Player's avatar");
-            SetCursorPosition(46, 14);
+            SetCursorPosition(66, 14);
             WriteLine("Chose colour of Enemy's avatar");
-            SetCursorPosition(46, 16);
+            SetCursorPosition(66, 16);
             WriteLine("Change Player's avatar");
-            SetCursorPosition(46, 18);
+            SetCursorPosition(66, 18);
             WriteLine("Change Enemy's avatar");
-            SetCursorPosition(46, 20);
+            SetCursorPosition(66, 20);
             WriteLine("Set the Difficulty");
-            SetCursorPosition(46, 22);
+            SetCursorPosition(66, 22);
             WriteLine("Reset ");
-            SetCursorPosition(46, 24);
+            SetCursorPosition(66, 24);
             WriteLine("Exit to main menu");
-            SetCursorPosition(28, 27);
+            SetCursorPosition(48, 27);
             WriteLine("Game has to be restarted to apply some changes ('N' in main menu)");
 
         }
         public static ConsoleColor ColorChose(int position)
         {
-            SetCursorPosition(32, 1);
+            SetCursorPosition(52, 1);
             ForegroundColor = Blue;
             Write("██████████████████████████████████████████████████████");
             for (int i = 2; i < 9; i++)
             {
-                SetCursorPosition(32, i);
+                SetCursorPosition(52, i);
                 Write("█");
-                SetCursorPosition(85, i);
+                SetCursorPosition(105, i);
                 Write("█");
             }
-            SetCursorPosition(32, 9);
+            SetCursorPosition(52, 9);
             Write("██████████████████████████████████████████████████████");
             char[] options = { 'o', 'p', 't', 'i', 'o', 'n', 's' };
             for (int i = 0; i < options.Length; i++)
             {
-                Letters.Print(options[i], 35 + 7 * i, 3);
+                Letters.Print(options[i], 55 + 7 * i, 3);
             }
-            for (int i = 27; i < 100; i += 13)
+            for (int i = 47; i < 120; i += 13)
             {
                 for (int j = 11; j < 18; j += 2)
                 {
@@ -166,21 +166,21 @@ namespace First_Semester_Project.Output
                 }
             }
 
-            SetCursorPosition(28, 12);
+            SetCursorPosition(48, 12);
             ForegroundColor = White;       Write("White          ");
             ForegroundColor = Green;       Write("Green          ");
             ForegroundColor = Yellow;      Write("Yellow         ");
             ForegroundColor = Magenta;     Write("Magenta        ");
             ForegroundColor = Red;         Write("Red            ");
 
-            SetCursorPosition(28, 14);
+            SetCursorPosition(48, 14);
             ForegroundColor = Gray;        Write("Gray           ");
             ForegroundColor = DarkGreen;   Write("Dark Green     ");
             ForegroundColor = DarkYellow;  Write("Dark Yellow    ");
             ForegroundColor = DarkMagenta; Write("Dark Magenta   ");
             ForegroundColor = DarkRed;     Write("Dark Red       ");
 
-            SetCursorPosition(28, 16);
+            SetCursorPosition(48, 16);
             ForegroundColor = DarkGray;    Write("Dark Gray      ");
             ForegroundColor = DarkBlue;    Write("Dark Blue      ");
             ForegroundColor = Blue;        Write("Blue           ");
@@ -189,14 +189,14 @@ namespace First_Semester_Project.Output
 
             ConsoleColor temp = ColorByInt(position);
 
-            SetCursorPosition(27 + ((position % 5) * 15), 11 + ((position) / 5 * 2));
+            SetCursorPosition(47 + ((position % 5) * 15), 11 + ((position) / 5 * 2));
             ForegroundColor = temp;
             Write("▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
-            SetCursorPosition(27 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
+            SetCursorPosition(47 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
             Write("█");
-            SetCursorPosition(40 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
+            SetCursorPosition(60 + ((position % 5) * 15), 12 + ((position) / 5 * 2));
             Write("█");
-            SetCursorPosition(27 + ((position % 5) * 15), 13 + ((position) / 5 * 2));
+            SetCursorPosition(47 + ((position % 5) * 15), 13 + ((position) / 5 * 2));
             Write("▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
 
             switch (ReadKey(true).Key)

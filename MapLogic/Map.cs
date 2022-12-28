@@ -106,7 +106,7 @@
                     engine.Push(tile.Color, tile.Symbol);
 
                 }
-                engine.Push(ConsoleColor.White, '\n');
+                engine.Push(ConsoleColor.Black, '\n');
             }
             engine.Print();
 

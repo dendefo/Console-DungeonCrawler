@@ -14,29 +14,40 @@ namespace First_Semester_Project.Output
         public CancellationTokenSource _cancelToken;
         public static void SetUp()
         {
-            SetWindowSize(120, 30);
+            SetWindowSize(160, 30);
             CursorVisible = false;
         }
         public void EraseLine()
         {
-            WriteLine("                                                                      ");
+            Write("                                                                     ");
         }
         public void Output(Player player)
         {
-            //Wtinig the inventory
-            SetCursorPosition(40, 0);
+            //Printing the exp Bar
+            SetCursorPosition(1, 0);
+            Write($"Your level is {player.Level}. Exp: {player.Exp}/{player.Level * 5}   ");
+            SetCursorPosition(1, 1);
+            ForegroundColor = Black;
+            BackgroundColor = DarkGreen;
+            Write(String.Concat(Enumerable.Repeat(" ",  30 * player.Exp / (player.Level * 5))));
+            BackgroundColor = White;
+            Write(String.Concat(Enumerable.Repeat(" ", 30 - (30 * player.Exp / (player.Level * 5)))));
+            BackgroundColor = Black;
+
+            //Printing the inventory
+            SetCursorPosition(110, 0);
             ForegroundColor = Blue;
-            Write($"                                 Inventory: {player.Inventory.Count} items");
+            Write($"   Inventory: {player.Inventory.Count} items  ");
             for (int j = 0; j < 18; j++) //Clearing Inventory that was before
             {
-                SetCursorPosition(50, j + 2);
+                SetCursorPosition(90, j + 2);
                 Write("                                                                      ");
             }
             int i = 0;
             foreach (Item item in player.Inventory.Keys) // Printing each item in inventory with it's effect and amount
             {
                 if (i == 9) break; //Printing only 10 First Items, TODO 
-                SetCursorPosition(50, i * 2 + 2);
+                SetCursorPosition(90, i * 2 + 2);
 
                 switch (item.Type)
                 {
@@ -61,74 +72,120 @@ namespace First_Semester_Project.Output
 
                         break;
                 }
-                SetCursorPosition(102, i * 2 + 2);
+                SetCursorPosition(142, i * 2 + 2);
                 Write($"Amount: {player.Inventory[item]}");
                 i++;
             }
-            SetCursorPosition(40, 1);
-            SetCursorPosition(0, 20);
-            Write($"You are at level: {_currentlevel}");
-            SetCursorPosition(0, 22);
+
+            ForegroundColor = White;
+            SetCursorPosition(40, 0);
+            Write($"Current dungeon: {_currentlevel}");
+            SetCursorPosition(1, 2);
+
+            Write($"Weapon : {player.EquipedWeapon.Name}.             ");
+            SetCursorPosition(20, 2);
+            Write($"Damage : {player.EquipedWeapon.Damage} ");
+
+            SetCursorPosition(1, 3);
+            Write($"Shield : {player.EquipedShield.Name}. ");
+            SetCursorPosition(20, 3);
+            Write($"Block  : {player.EquipedShield.Block} ");
+
+            SetCursorPosition(3, 5);
+            ForegroundColor = Red;
+            Write("                            ");
+            SetCursorPosition(3, 5);
+            Write($"Your HP is {player.CurrentHP} of {player.MaxHP}");
+            Heart(player);
+
+            SetCursorPosition(35, 26);
             EraseLine();
-            EraseLine();
-            SetCursorPosition(0, 24);
-            WriteLine("____________________________________________________");
-            EraseLine();
+            SetCursorPosition(35, 28);
             EraseLine();
             ForegroundColor = Green;
-            SetCursorPosition(0, 22);
+            SetCursorPosition(35, 26);
             Write(action);
             ForegroundColor = DarkRed;
-            SetCursorPosition(0, 23);
+            SetCursorPosition(35, 28);
             Write(action2);
             action = "";
             action2 = "";
             ForegroundColor = White;
-            SetCursorPosition(0, 24);
-            WriteLine("____________________________________________________");
-            WriteLine($"You use {player.EquipedWeapon.Name} with {player.EquipedWeapon.Damage} damage as your Weapon\n" +
-                $"You use {player.EquipedShield.Name} with {player.EquipedShield.Block} block as your Shield\n");
-            Write($"Your level is {player.Level}. Exp: ");
-
-            ForegroundColor = DarkGreen;
-            Write(String.Concat(Enumerable.Repeat("█", 10*player.Exp/(player.Level*5))));
-            ForegroundColor = White;
-            Write(String.Concat(Enumerable.Repeat("█", 10-(10 * player.Exp / (player.Level * 5))))+$" {player.Exp}/{player.Level*5}    ");
-
-            SetCursorPosition(97, 20);
-            ForegroundColor = Red;
-            Write("                                            ");
-            SetCursorPosition(97, 20);
-            Write($"Your HP is {player.CurrentHP} of {player.MaxHP}");
-            Heart(player);
-            //Sword();
-
-            //Coin();
         }
 
+        static public void PrintGUI()
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                SetCursorPosition(32, i);
+                Write("║");
+                if (i > 25) continue;
+                SetCursorPosition(87, i);
+                Write("║");
+            }
+            for (int i = 0; i < 160; i++)
+            {
+                if (i <= 31)
+                {
+                    SetCursorPosition(i, 17);
+                    Write("═");
+                }
+                else if (i == 32)
+                {
+                    Write("╣");
+                    SetCursorPosition(i, 25);
+                    Write("╠");
+                    SetCursorPosition(i, 2);
+                    Write("╠");
+                }
+                else if (i == 87)
+                {
+                    SetCursorPosition(i, 2);
+                    Write("╣");
+                    SetCursorPosition(i, 25);
+                    Write("╩");
+                }
+                else if (i < 87)
+                {
+                    SetCursorPosition(i, 25);
+                    Write("═");
+                    SetCursorPosition(i, 2);
+                    Write("═");
+                }
+                
+                else
+                {
+                    SetCursorPosition(i, 25);
+                    Write("═");
+                }
+                //else 
+            }
+            //ForegroundColor = White;
+            
+        }
         //TODO it Procedural
         private void Heart(Player player)
         {
             //Code below is printing cute pixel heart.
             {
                 ForegroundColor = White;
-                SetCursorPosition(100, 21);
+                SetCursorPosition(5, 6);
                 Write("████      ████");
-                SetCursorPosition(98, 22);
+                SetCursorPosition(3, 7);
                 Write("██    ██  ██    ██");
-                SetCursorPosition(96, 23);
+                SetCursorPosition(1, 8);
                 Write("██        ██        ██");
-                SetCursorPosition(96, 24);
+                SetCursorPosition(1, 9);
                 Write("██                  ██");
-                SetCursorPosition(98, 25);
+                SetCursorPosition(3, 10);
                 Write("██              ██");
-                SetCursorPosition(100, 26);
+                SetCursorPosition(5, 11);
                 Write("██          ██");
-                SetCursorPosition(102, 27);
+                SetCursorPosition(7, 12);
                 Write("██      ██");
-                SetCursorPosition(104, 28);
+                SetCursorPosition(9, 13);
                 Write("██  ██");
-                SetCursorPosition(106, 29);
+                SetCursorPosition(11, 14);
                 Write("██");
             }
             //Code below is filling heart with red pixels. Please, don't try to read it. 
@@ -139,43 +196,43 @@ namespace First_Semester_Project.Output
                 ForegroundColor = Red;
 
 
-                SetCursorPosition(100, 22);
+                SetCursorPosition(5, 7);
                 int printCount = count == 1 || count == 2 ? count - 1 : count == 0 ? 0 : 2;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
-                SetCursorPosition(110, 22);
+                SetCursorPosition(15, 7);
                 printCount = count == 7 ? 1 : count >= 8 ? 2 : 0;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
 
-                SetCursorPosition(98, 23);
+                SetCursorPosition(3, 8);
                 printCount = count <= 4 ? count : 4;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
-                SetCursorPosition(108, 23);
+                SetCursorPosition(13, 8);
                 printCount = count >= 6 ? count - 5 : 0;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
 
-                SetCursorPosition(98, 24);
+                SetCursorPosition(3, 9);
                 Write(string.Join("", Enumerable.Repeat("██", count)));
 
 
-                SetCursorPosition(100, 25);
+                SetCursorPosition(5, 10);
                 printCount = count > 0 && count <= 8 ? count - 1 : count == 0 ? 0 : 7;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
 
-                SetCursorPosition(102, 26);
+                SetCursorPosition(7, 11);
                 printCount = count > 2 && count <= 7 ? count - 2 : count <= 2 ? 0 : 5;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
 
-                SetCursorPosition(104, 27);
+                SetCursorPosition(9, 12);
                 printCount = count >= 4 && count <= 6 ? count - 3 : count <= 3 ? 0 : 3;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
-                SetCursorPosition(106, 28);
+                SetCursorPosition(11, 13);
                 printCount = count == 5 ? 1 : count < 5 ? 0 : 1;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
             }
@@ -261,20 +318,22 @@ namespace First_Semester_Project.Output
         }
         public void Coin()
         {
+            int x = 2;
+            int y = 19;
             switch (_count)
             {
                 case 0:
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("      ████████      ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -286,7 +345,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         Write("  ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -304,7 +363,7 @@ namespace First_Semester_Project.Output
                         Write("██  ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("  ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -324,7 +383,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         Write("  ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -345,7 +404,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         Write("  ██");
                         ForegroundColor = DarkYellow;
                         Write("██");
@@ -362,7 +421,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         Write("    ██");
                         ForegroundColor = DarkYellow;
                         Write("██████");
@@ -373,10 +432,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("      ████████      ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -386,14 +445,14 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         Write("      ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -405,7 +464,7 @@ namespace First_Semester_Project.Output
                         Write("██      ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -418,7 +477,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -435,7 +494,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -452,7 +511,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         Write("    ██");
                         ForegroundColor = DarkYellow;
                         Write("██");
@@ -463,7 +522,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         Write("      ██");
                         ForegroundColor = DarkYellow;
                         Write("██");
@@ -474,10 +533,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██      ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -487,15 +546,15 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
-                        for (int i = 22; i <= 27; i++)
+                        for (int i = y+2; i <= y+7; i++)
                         {
-                            SetCursorPosition(70, i);
+                            SetCursorPosition(x, i);
                             Write("      ██");
                             ForegroundColor = DarkYellow;
                             Write("██");
@@ -505,10 +564,10 @@ namespace First_Semester_Project.Output
                             Write("██      ");
                         }
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -518,14 +577,14 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         Write("      ██");
                         ForegroundColor = Yellow;
                         Write("██");
@@ -537,7 +596,7 @@ namespace First_Semester_Project.Output
                         Write("██      ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         Write("    ██");
                         ForegroundColor = Yellow;
                         Write("██");
@@ -549,7 +608,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -566,7 +625,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -583,7 +642,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -594,7 +653,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         Write("      ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -605,10 +664,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██      ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -618,16 +677,16 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = White;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("      ████");
                         ForegroundColor = Black;
                         Write("████      ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         ForegroundColor = White;
                         Write("    ██");
                         BackgroundColor = Yellow;
@@ -640,7 +699,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         ForegroundColor = White;
                         Write("  ██");
                         BackgroundColor = Yellow;
@@ -659,7 +718,7 @@ namespace First_Semester_Project.Output
                         Write("██  ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("  ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -679,7 +738,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         Write("  ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -700,7 +759,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         Write("  ██");
                         ForegroundColor = DarkYellow;
                         Write("██");
@@ -717,7 +776,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██  ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         Write("    ██");
                         ForegroundColor = DarkYellow;
                         Write("██████");
@@ -728,10 +787,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("      ████████      ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -741,14 +800,14 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         Write("      ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -758,7 +817,7 @@ namespace First_Semester_Project.Output
                         Write("████      ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         ForegroundColor = Black;
                         Write("    ██");
                         BackgroundColor = Yellow;
@@ -773,7 +832,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("    ██");
                         ForegroundColor = White;
                         Write("████");
@@ -786,7 +845,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         ForegroundColor = White;
                         Write("    ████");
                         ForegroundColor = DarkYellow;
@@ -800,7 +859,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         ForegroundColor = White;
                         Write("    ██");
                         ForegroundColor = DarkYellow;
@@ -812,7 +871,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         Write("      ██");
                         ForegroundColor = DarkYellow;
                         Write("██");
@@ -823,10 +882,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██      ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -836,31 +895,31 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
-                        for (int i = 22; i <= 27; i++)
+                        for (int i = y+2; i <= y+7; i++)
                         {
-                            SetCursorPosition(70, i);
-                            ForegroundColor = i == 27 ? White : Black;
+                            SetCursorPosition(x, i);
+                            ForegroundColor = i == y+7 ? White : Black;
                             Write("      ██");
-                            ForegroundColor = i == 26 || i == 27 ? White : DarkYellow;
+                            ForegroundColor = i == y+6 || i == y+7 ? White : DarkYellow;
                             Write("██");
-                            ForegroundColor = i == 25 || i == 26 ? White : Yellow;
-                            BackgroundColor = i == 25 || i == 26 ? White : DarkGray;
+                            ForegroundColor = i == y+5 || i == y+6 ? White : Yellow;
+                            BackgroundColor = i == y+5 || i == y+6 ? White : DarkGray;
                             Write("▓▓");
                             BackgroundColor = DarkGray;
-                            ForegroundColor = i == 24 || i == 25 ? White : Black;
+                            ForegroundColor = i == y+4 || i == y+5 ? White : Black;
                             Write("██      ");
                         }
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
@@ -870,14 +929,14 @@ namespace First_Semester_Project.Output
                     {
                         BackgroundColor = DarkGray;
                         ForegroundColor = Black;
-                        SetCursorPosition(70, 20);
+                        SetCursorPosition(x, y);
                         Write("                    ");
 
-                        SetCursorPosition(70, 21);
+                        SetCursorPosition(x, y+1);
                         Write("        ████        ");
 
 
-                        SetCursorPosition(70, 22);
+                        SetCursorPosition(x, y+2);
                         Write("      ██");
                         ForegroundColor = Yellow;
                         Write("██");
@@ -889,7 +948,7 @@ namespace First_Semester_Project.Output
                         Write("██      ");
 
 
-                        SetCursorPosition(70, 23);
+                        SetCursorPosition(x, y+3);
                         Write("    ██");
                         ForegroundColor = Yellow;
                         Write("██");
@@ -901,7 +960,7 @@ namespace First_Semester_Project.Output
                         Write("██    ");
 
 
-                        SetCursorPosition(70, 24);
+                        SetCursorPosition(x, y+4);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -918,7 +977,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = Black;
                         Write("██    ");
 
-                        SetCursorPosition(70, 25);
+                        SetCursorPosition(x, y+5);
                         Write("    ██");
                         BackgroundColor = Yellow;
                         ForegroundColor = DarkYellow;
@@ -935,7 +994,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = White;
                         Write("██    ");
 
-                        SetCursorPosition(70, 26);
+                        SetCursorPosition(x, y+6);
                         ForegroundColor = Black;
                         Write("    ██");
                         BackgroundColor = Yellow;
@@ -947,7 +1006,7 @@ namespace First_Semester_Project.Output
                         ForegroundColor = White;
                         Write("██    ");
 
-                        SetCursorPosition(70, 27);
+                        SetCursorPosition(x, y+7);
                         ForegroundColor = Black;
                         Write("      ██");
                         BackgroundColor = Yellow;
@@ -959,10 +1018,10 @@ namespace First_Semester_Project.Output
                         ForegroundColor = White;
                         Write("██      ");
 
-                        SetCursorPosition(70, 28);
+                        SetCursorPosition(x, y+8);
                         Write("        ████        ");
 
-                        SetCursorPosition(70, 29);
+                        SetCursorPosition(x, y+9);
 
                         Write("                    ");
 
