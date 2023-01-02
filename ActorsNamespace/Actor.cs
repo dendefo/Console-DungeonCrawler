@@ -24,6 +24,7 @@
         public Item ItemToDrop { get; protected set; }
 
         //Coordination System and moving
+        public Coordinates Coordinates { get; protected set; }
         public int XCoordinate { get; protected set; }
         public int YCoordinate { get; protected set; }
         public void Move(int deltaY, int deltaX, Square stansdOn)

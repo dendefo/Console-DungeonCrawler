@@ -14,7 +14,6 @@ namespace First_Semester_Project.Output
         public void Print() //I tried to find a way for more smooth printing. 
         {
             string toPrint = "";
-            //And then i found this. WOW
             int newline = 4;
             SetCursorPosition(40, newline);
             for (int i = 0; i < Colours.Count - 1; i++)

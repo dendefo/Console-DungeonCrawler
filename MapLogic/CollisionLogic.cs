@@ -1,6 +1,4 @@
-﻿using First_Semester_Project.ActorsNamespace;
-
-namespace First_Semester_Project.MapLogic
+﻿namespace First_Semester_Project.MapLogic
 {
     static class CollisionLogic
     {
@@ -35,14 +33,13 @@ namespace First_Semester_Project.MapLogic
                     break;
 
                 case SquareTypes.Coin:
-                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
                     map.MapArray[y + deltaY][x + deltaX].MakeEmpty();
                     map.ActorMoveOnMap(actor,y, deltaY, x, deltaX);
 
+                    if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
                     ((Player)actor).GiveItem(new Coin());
                     break;
 
-                //case SquareTypes.Market:
                 case SquareTypes.Exit:
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 

@@ -183,7 +183,7 @@ namespace First_Semester_Project.Core
                                 inMenu = false;
                                 Console.Clear();
                                 if (User == null) Start(1, true);
-                                Data.PrintGUI();
+                                log.PrintGUI();
                                 log._cancelToken = new();
                                 Task.Factory.StartNew(() =>
                                 {
@@ -323,7 +323,7 @@ namespace First_Semester_Project.Core
             {
                 LevelMap = new(currentLevel, User, log);
 
-                Data.PrintGUI();
+                log.PrintGUI();
                 PlayTheLevel();
                 log._currentlevel++;
 
@@ -350,6 +350,7 @@ namespace First_Semester_Project.Core
                 }
                 lock (log) { LevelMap.Refresh(); }
             }
+            Menu.Market(User, log);
         }
         private static void SpykeMoving(Map level, Player player)
         {

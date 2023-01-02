@@ -11,7 +11,7 @@
         public Player User { get; private set; } //Player's Actor
 
         public Square[][] MapArray { get; private set; } //Array with each tile of map
-        string[] fileSpawn;
+        string[] fileSpawn = new string[2];
 
         //Map constructor. Filling MapArray with tiles from map-file
         public Map(int Level, Player player, Data log)
@@ -19,10 +19,17 @@
             Spikes = new List<Square>();
             Log = log;
             string[] file = FileReader.Read(Level); //Accepting level from file
-            fileSpawn = FileReader.ReadSpawnConfig(Level);
-            MapArray = new Square[file.Length][];
+
+            fileSpawn[0] = file[file.Length - 2]; //Contains items of chests
+            fileSpawn[1] = file[file.Length - 1]; //Contains items of enemies
+            file[file.Length - 2] = null;
+            file[file.Length - 1] = null;
+
+
+            MapArray = new Square[file.Length-2][];
             for (int y = 0; y < file.Length; y++) //Going throw each row of level
             {
+                if (file[y] == null) continue;
                 string row = file[y];
                 Square[] maprow = new Square[row.Length];
                 for (int x = 0; x < row.Length; x++) //Going throw each Square of row
@@ -83,7 +90,7 @@
             return square;
         }
 
-        
+
         public void Refresh()
         {
             Console.SetCursorPosition(0, 0);

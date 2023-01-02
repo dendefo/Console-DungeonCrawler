@@ -108,7 +108,7 @@
                         //It leaves only four directions (0,1)(0,-1)(1,0)(-1,0). No diagonal moving
 
                         entity = level.MapArray[node.Y + y][node.X + x].Entity; //Looking what's on the Square
-                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy)) continue; //If it's not walkable, then continue
+                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy||entity ==SquareTypes.Coin)) continue; //If it's not walkable, then continue
 
                         Node adjacent = new Node(node.X + x, node.Y + y, node); //Create new node to check
                         if (reachable.Exists(n => n.X == adjacent.X && n.Y == adjacent.Y)) continue; //If it's already awaits for check then continue

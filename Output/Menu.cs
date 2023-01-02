@@ -21,20 +21,11 @@ namespace First_Semester_Project.Output
             }
             SetCursorPosition(35, 9);
             Write("███████████████████████████████████████████████████████████████████████████████████████");
-            char[] theInsanity = { 't', 'h', 'e', ' ', 'i', 'n', 's', 'a', 'n', 'i', 't', 'y' };
-            for (int i = 0; i < 12; i++)
-            {
-                if (i == 3) continue;
-                Letters.Print(theInsanity[i], 37 + 7 * i, 3);
-            }
+            PrintWord("the insanity",37,3);
+
             SetCursorPosition(105, 8);
             ForegroundColor = Gray;
             Write("Made by Dendefo");
-
-            //SetCursorPosition(51, 11 + position * 2);
-            //ForegroundColor = Green;
-            //Write("►");
-            //ForegroundColor = Gray;
 
             SetCursorPosition(73, 11);
             Write("Start a new game");
@@ -87,34 +78,41 @@ namespace First_Semester_Project.Output
         public static void EndOfGame()
         {
             Clear();
-            char[] gameOver = { 'g', 'a', 'm', 'e', ' ', 'o', 'v', 'e', 'r' };
-            for (int i = 0; i < gameOver.Length; i++)
-            {
-                if (gameOver[i] == ' ') continue;
-                Letters.Print(gameOver[i], 30 + 7 * i, 11);
-            }
+            PrintWord("game over",55,3);
+            
+            PrintCursor(0, 71, 11);
+            SetCursorPosition(73, 11);
+            Write("Start a new game");
+            SetCursorPosition(73, 15);
+            Write("Continue");
+            SetCursorPosition(73, 13);
+            Write("Restart the level");
+            SetCursorPosition(73, 17);
+            Write("Controls");
+            SetCursorPosition(73, 19);
+            Write("Options");
+            SetCursorPosition(73, 21);
+            Write("Exit");
         }
 
         public static void OptionsMenu()
         {
             Clear();
-            SetCursorPosition(52, 1);
+            SetCursorPosition(54, 1);
             ForegroundColor = Blue;
             Write("██████████████████████████████████████████████████████");
             for (int i = 2; i < 9; i++)
             {
-                SetCursorPosition(52, i);
+                SetCursorPosition(54, i);
                 Write("█");
-                SetCursorPosition(105, i);
+                SetCursorPosition(107, i);
                 Write("█");
             }
-            SetCursorPosition(52, 9);
+            SetCursorPosition(54, 9);
             Write("██████████████████████████████████████████████████████");
-            char[] options = { 'o','p','t','i','o','n','s' };
-            for (int i = 0; i < options.Length; i++)
-            {
-                Letters.Print(options[i], 55 + 7 * i, 3);
-            }
+
+            PrintWord("options",57,3);
+            
             ForegroundColor = Gray;
             SetCursorPosition(66, 12);
             WriteLine("Chose colour of Player's avatar");
@@ -131,7 +129,19 @@ namespace First_Semester_Project.Output
             SetCursorPosition(66, 24);
             WriteLine("Exit to main menu");
             SetCursorPosition(48, 27);
-            WriteLine("Game has to be restarted to apply some changes ('N' in main menu)");
+            WriteLine("Game has to be restarted to apply some changes ('Start new game' in main menu)");
+
+        }
+        public static void Market(Player player, Data log)
+        {
+
+            Clear();
+            lock (log)
+            {
+                PrintWord("mystery shack", 20, 3);
+            }
+            
+            ReadKey(true);
 
         }
         public static ConsoleColor ColorChose(int position)
@@ -267,6 +277,14 @@ namespace First_Semester_Project.Output
                 case 13: return DarkCyan;
                 case 14: return Cyan;
                 default: return White;
+            }
+        }
+        private static void PrintWord(string word,int startX, int startY)
+        {
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (word[i] == ' ') continue;
+                Letters.Print(word[i], startX + 7 * i, startY);
             }
         }
     }

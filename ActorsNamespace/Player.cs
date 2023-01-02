@@ -6,6 +6,10 @@
         //Players Inventory in format <Item-object, amount>
         public Dictionary<Item, int> Inventory { get; protected set; }
 
+
+        //Struct that contains player's stats
+        //
+
         public int Coins { get; private set; }
         public int Exp { get; private set; }
         public int KillCount { get; private set; }
@@ -32,12 +36,15 @@
             YCoordinate = player.YCoordinate;
             MaxHP = player.MaxHP;
             Level= player.Level;
+            Exp= player.Exp;
+            Coins = player.Coins;
             CurrentHP = player.CurrentHP;
             Evasion = player.Evasion;
             StandsOn = player.StandsOn;
             ActorsSquare = player.ActorsSquare;
             EquipedWeapon = player.EquipedWeapon;
             EquipedShield = player.EquipedShield;
+            KillCount = player.KillCount;
             Inventory = new Dictionary<Item, int>(player.Inventory);
         }
 
@@ -58,7 +65,6 @@
 
                     return; //Exit
                 }
-
             }
             Inventory.Add(item, 1); //If no sutable item in inventory, Add new 
         }

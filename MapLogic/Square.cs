@@ -15,7 +15,6 @@
         RevealedTrap = 48,
         DamagingTrap = 84,
         Coin = 36,
-        Market = 109,
     }
 
     //Each symbol of map
@@ -47,10 +46,6 @@
                     Color = ConsoleColor.Yellow;
                     break;
 
-                case SquareTypes.Market:
-                    Symbol = 'M';
-                    Color = ConsoleColor.Yellow;
-                    break;
                 case SquareTypes.Wall:
                     Symbol = '█';
                     Color = ConsoleColor.White;
@@ -59,7 +54,7 @@
                 case SquareTypes.SpykeWall:
                     Symbol = '¤';
                     Color = EnemyColor;
-                    ActorOnSquare = new Spike(x, y, false, this);
+                    ActorOnSquare = new Spike(x, y, true, this);
                     break;
 
                 case SquareTypes.CrackedWall:

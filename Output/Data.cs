@@ -116,54 +116,55 @@ namespace First_Semester_Project.Output
             ForegroundColor = White;
         }
 
-        static public void PrintGUI()
+        public void PrintGUI()
         {
-            for (int i = 0; i < 30; i++)
+            lock (this)
             {
-                SetCursorPosition(32, i);
-                Write("║");
-                if (i > 25) continue;
-                SetCursorPosition(87, i);
-                Write("║");
+                for (int i = 0; i < 30; i++)
+                {
+                    SetCursorPosition(32, i);
+                    Write("║");
+                    if (i > 25) continue;
+                    SetCursorPosition(87, i);
+                    Write("║");
+                }
+                for (int i = 0; i < 160; i++)
+                {
+                    if (i <= 31)
+                    {
+                        SetCursorPosition(i, 17);
+                        Write("═");
+                    }
+                    else if (i == 32)
+                    {
+                        Write("╣");
+                        SetCursorPosition(i, 25);
+                        Write("╠");
+                        SetCursorPosition(i, 2);
+                        Write("╠");
+                    }
+                    else if (i == 87)
+                    {
+                        SetCursorPosition(i, 2);
+                        Write("╣");
+                        SetCursorPosition(i, 25);
+                        Write("╩");
+                    }
+                    else if (i < 87)
+                    {
+                        SetCursorPosition(i, 25);
+                        Write("═");
+                        SetCursorPosition(i, 2);
+                        Write("═");
+                    }
+
+                    else
+                    {
+                        SetCursorPosition(i, 25);
+                        Write("═");
+                    }
+                }
             }
-            for (int i = 0; i < 160; i++)
-            {
-                if (i <= 31)
-                {
-                    SetCursorPosition(i, 17);
-                    Write("═");
-                }
-                else if (i == 32)
-                {
-                    Write("╣");
-                    SetCursorPosition(i, 25);
-                    Write("╠");
-                    SetCursorPosition(i, 2);
-                    Write("╠");
-                }
-                else if (i == 87)
-                {
-                    SetCursorPosition(i, 2);
-                    Write("╣");
-                    SetCursorPosition(i, 25);
-                    Write("╩");
-                }
-                else if (i < 87)
-                {
-                    SetCursorPosition(i, 25);
-                    Write("═");
-                    SetCursorPosition(i, 2);
-                    Write("═");
-                }
-                
-                else
-                {
-                    SetCursorPosition(i, 25);
-                    Write("═");
-                }
-                //else 
-            }
-            //ForegroundColor = White;
             
         }
         //TODO it Procedural
