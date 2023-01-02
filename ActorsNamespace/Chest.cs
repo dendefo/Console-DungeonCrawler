@@ -7,7 +7,7 @@
         public Item Inside { get; private set; }
 
         //Basic constructor
-        public Chest(int xCoordinate, int yCoordinate) : base(xCoordinate, yCoordinate)
+        public Chest(Coordinates coor) : base(coor)
         {
         }
 

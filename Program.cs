@@ -10,19 +10,12 @@ namespace First_Semester_Project
     {
         static void Main(string[] args)
         {
-            //Data.SetUp();
-            //Menu.MainMenu();
-            //Menu.PrintCursor(0, 71, 11);
-            //Game game = new();
+            Data.SetUp();
+            Menu.MainMenu();
+            Menu.PrintCursor(0, 71, 11);
+            Game game = new();
 
-            //game.Run();
-
-            Coordinates name = new(Directions.Down);
-            Coordinates x = new(5, 3);
-            name += x;
-            Console.WriteLine(name == new Coordinates(5, 4));
-            Console.WriteLine(name.X);
-            Console.WriteLine(name.Y);
+            game.Run();
         }
     }
 }

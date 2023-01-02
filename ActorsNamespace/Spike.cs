@@ -7,13 +7,13 @@ namespace First_Semester_Project.ActorsNamespace
     {
         public bool Direction { get; private set; } // true is for "Up" or "Right", false is for "Down" or "Left"
         public bool DimentionOfMoving { get; private set; } //true is for Vertical, false is for Horizontal
-        public Spike(int xCoordinate, int yCoordinate, bool dimention, Square actorSquare) : base(xCoordinate, yCoordinate)
+        public Spike(Coordinates coor, bool dimention, Square actorSquare) : base(coor)
         {
             DimentionOfMoving = dimention;
             ActorsSquare = actorSquare;
-            StandsOn = new Square(SquareTypes.Empty, xCoordinate, yCoordinate);
+            StandsOn = new Square(SquareTypes.Empty, coor);
         }
-        public void ChangeDirection(int x, int y)
+        public void ChangeDirection()
         {
             Direction = !Direction;
         }

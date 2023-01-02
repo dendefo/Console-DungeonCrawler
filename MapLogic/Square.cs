@@ -29,7 +29,7 @@
         public char Symbol { get; private set; }
         public Actor ActorOnSquare { get; set; }
 
-        public Square(SquareTypes type, int x,int y)
+        public Square(SquareTypes type, Coordinates coor)
         {
             Entity = type;
             ActorOnSquare = null;
@@ -54,7 +54,7 @@
                 case SquareTypes.SpykeWall:
                     Symbol = '¤';
                     Color = EnemyColor;
-                    ActorOnSquare = new Spike(x, y, true, this);
+                    ActorOnSquare = new Spike(coor, true, this);
                     break;
 
                 case SquareTypes.CrackedWall:
@@ -75,7 +75,7 @@
                 case SquareTypes.Player:
                     Symbol = PlayerAvatar;
                     Color = PlayerColor;
-                    ActorOnSquare = new Player(x,y,this);
+                    ActorOnSquare = new Player(coor,this);
                     break;
 
                 case SquareTypes.RevealedTrap:
@@ -86,24 +86,24 @@
                 case SquareTypes.DamagingTrap:
                     Symbol = ' ';
                     Color = ConsoleColor.DarkRed;
-                    ActorOnSquare = new Trap(x, y, SquareTypes.DamagingTrap,this);
+                    ActorOnSquare = new Trap(coor, SquareTypes.DamagingTrap,this);
                     break;
             }
         }
 
-        public Square(SquareTypes type, int x, int y, int level, int weapon, int shield, int item)
+        public Square(SquareTypes type, Coordinates coor, int level, int weapon, int shield, int item)
         {
             Entity = type;
             Symbol = EnemyAvatar;
             Color = EnemyColor;
-            ActorOnSquare = new Enemy(x, y, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield), Item.ItemParse(item));
+            ActorOnSquare = new Enemy(coor, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield), Item.ItemParse(item));
         }
-        public Square(SquareTypes type, int x, int y, Item item)
+        public Square(SquareTypes type, Coordinates coor, Item item)
         {
             Entity = type;
             Symbol = '#';
             Color = ConsoleColor.Blue;
-            ActorOnSquare = new Chest(x, y);
+            ActorOnSquare = new Chest(coor);
             ((Chest)ActorOnSquare).PutInside(item);
         }
         public void MakeEmpty()

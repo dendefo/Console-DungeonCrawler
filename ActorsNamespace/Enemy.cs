@@ -9,11 +9,11 @@
         bool isTriggerd = false;
 
         //Basic constructor
-        public Enemy(int xCoordinate, int yCoordinate, int level, Square square, Weapon weapon, Shield shield, Item item) : base(xCoordinate, yCoordinate)
+        public Enemy(Coordinates coor, int level, Square square, Weapon weapon, Shield shield, Item item) : base(coor)
         {
             MaxHP = level * Difficulty;
             CurrentHP = MaxHP;
-            StandsOn = new Square(SquareTypes.Empty, xCoordinate, yCoordinate);
+            StandsOn = new Square(SquareTypes.Empty, coor);
             ActorsSquare = square;
             EquipedWeapon = weapon;
             EquipedShield = shield;
@@ -64,10 +64,8 @@
                 Enemy enemy = LevelMap.Enemies[i];
                 if (enemy == null) continue; //if there is no enemy
                 if (enemy.CurrentHP == 0) continue; //if enemy died
-                int xDif = Math.Abs(player.XCoordinate - enemy.XCoordinate); //Distance between player and enemy on X-coordinate
-                int yDif = Math.Abs(player.YCoordinate - enemy.YCoordinate); //Distance between player and enemy on Y-coordinate
 
-                if (!(xDif < 5 && yDif < 5) && !enemy.isTriggerd) continue; //If player isn't in range, but enemy saw him, he will never abandon him no matter what
+                if (!((player.Coor | enemy.Coor) < 5) && !enemy.isTriggerd) continue; //If player isn't in range, but enemy saw him, he will never abandon him no matter what
                 enemy.isTriggerd = true; //Start never-ending chase
 
                 //I burned 5 hours to understand and make this algorithm, used pseudo code from one site as reverence and tryed to implement it for 2 hours
@@ -80,7 +78,7 @@
 
             List<Node> reachable = new()
             {
-                new Node(XCoordinate,YCoordinate,null)
+                new Node(Coor,null)
             }; //Adding List of Nodes that will be used in algorithm as Nodes that enemy is possibly can get to and addint starting node (Of Enemy)
 
             List<Node> visited = new List<Node>(); //List of Nodes that we already checked
@@ -89,10 +87,10 @@
             {
                 Node node = reachable[0]; //Taking first Node of list to check
 
-                if (node.X == player.XCoordinate && node.Y == player.YCoordinate) //If node's coor-s are same to player's, than we found a path and it's the shortest one
+                if (node.Coor==player.Coor) //If node's coor-s are same to player's, than we found a path and it's the shortest one
                 {
                     node = Node.BuildPath(node); //Algorith that gives us next node to move to
-                    CollisionLogic.Collision(level,node.X - XCoordinate, node.Y - YCoordinate, this); //Moving the enemy
+                    CollisionLogic.Collision(level,node.Coor - Coor, this); //Moving the enemy
                     return;
                 }
 
@@ -104,14 +102,19 @@
                 {
                     foreach (int x in new List<int> { -1, 0, 1 }) //For X axis
                     {
-                        if (y * y == x * x || visited.Exists(n => n.X == node.X + x && n.Y == node.Y + y)) continue; //If it is diagonal or 0,0 OR if it is already been checked
+                        Coordinates newCoords = new(x, y);
+                        if (y * y == x * x || visited.Exists(n => n.Coor == node.Coor+newCoords)) continue; //If it is diagonal or 0,0 OR if it is already been checked
                         //It leaves only four directions (0,1)(0,-1)(1,0)(-1,0). No diagonal moving
 
-                        entity = level.MapArray[node.Y + y][node.X + x].Entity; //Looking what's on the Square
+
+                        
+                        entity = level.MapArray[node.Coor.Y + newCoords.Y][node.Coor.X + newCoords.X].Entity; //Looking what's on the Square
+
+
                         if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy||entity ==SquareTypes.Coin)) continue; //If it's not walkable, then continue
 
-                        Node adjacent = new Node(node.X + x, node.Y + y, node); //Create new node to check
-                        if (reachable.Exists(n => n.X == adjacent.X && n.Y == adjacent.Y)) continue; //If it's already awaits for check then continue
+                        Node adjacent = new(node.Coor+newCoords,node); //Create new node to check
+                        if (reachable.Exists(n => n.Coor == adjacent.Coor)) continue; //If it's already awaits for check then continue
 
                         reachable.Add(adjacent); // Add to List
                     }
@@ -121,13 +124,12 @@
     }
     class Node //Representation of map as tree of walkable for Enemy Nodes, that starts at Enemy's node. We search for Player's node at that tree
     {
-        public int X, Y; //Coordinates of Node
+        public Coordinates Coor; //Coordinates of Node
         public Node previous; //Node that linked us to this one. 
-        public Node(int x, int y, Node node)
+        public Node(Coordinates coor, Node node)
         {
             previous = node;
-            X = x;
-            Y = y;
+            Coor = coor;
         }
         static public Node BuildPath(Node to_node) //Gives node that is next to enemy, that he need to move to
         {

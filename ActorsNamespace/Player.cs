@@ -16,7 +16,7 @@
         public int Level { get; private set; }
 
         //Constructor
-        public Player(int xCoordinate, int yCoordinate, Square square) : base(xCoordinate, yCoordinate)
+        public Player(Coordinates coor, Square square) : base(coor)
         {
             MaxHP = 10; //Player's start HP is 10
             CurrentHP = MaxHP;
@@ -30,13 +30,13 @@
         }
 
         //Only for "Deep copying" purposes
-        public Player(int xCoordinate, int yCoordinate, Player player) : base(xCoordinate, yCoordinate)
+        public Player(Coordinates coor, Player player) : base(coor)
         {
-            XCoordinate = player.XCoordinate;
-            YCoordinate = player.YCoordinate;
+
+            Coor = player.Coor;
             MaxHP = player.MaxHP;
-            Level= player.Level;
-            Exp= player.Exp;
+            Level = player.Level;
+            Exp = player.Exp;
             Coins = player.Coins;
             CurrentHP = player.CurrentHP;
             Evasion = player.Evasion;
@@ -196,30 +196,31 @@
                             {
                                 if (enemy == null) continue;
                                 if (enemy.CurrentHP == 0) continue;
-                                if (Math.Abs(enemy.XCoordinate - XCoordinate) < 3 && Math.Abs(enemy.YCoordinate - YCoordinate) < 3)
+
+                                if ((enemy.Coor | Coor) < 3)
                                 {
                                     enemy.DealDamage(((Potion)keys[number]).Damage);
                                     overAllDamage += ((Potion)keys[number]).Damage;
                                     if (enemy.CurrentHP == 0)
                                     {
                                         Killed(enemy);
-                                        level.ChangeSquare(new Square(SquareTypes.Chest, enemy.XCoordinate, enemy.YCoordinate, enemy.Die()), enemy.YCoordinate, enemy.XCoordinate);
+                                        level.ChangeSquare(new Square(SquareTypes.Chest, enemy.Coor, enemy.Die()), enemy.Coor);
 
 
                                     }
                                 }
                             }
 
-                            int countWalls =0;
+                            int countWalls = 0;
                             foreach (int y in new List<int> { -1, 0, 1 })
                             {
                                 foreach (int x in new List<int> { -1, 0, 1 })
                                 {
                                     if (y == 0 && x == 0) continue;
-                                    
-                                    if (level.MapArray[YCoordinate + y][XCoordinate + x].Entity == SquareTypes.CrackedWall)
+                                    Coordinates newCoor = Coor + new Coordinates(x, y);
+                                    if ((newCoor ^ level.MapArray).Entity == SquareTypes.CrackedWall)
                                     {
-                                        level.MapArray[YCoordinate + y][XCoordinate + x] = new Square(SquareTypes.Empty,XCoordinate+x,YCoordinate+y);
+                                        level.MapArray[newCoor.Y][newCoor.X] = new Square(SquareTypes.Empty, Coor);
                                         countWalls++;
                                     }
                                 }

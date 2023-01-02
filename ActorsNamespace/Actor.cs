@@ -24,22 +24,20 @@
         public Item ItemToDrop { get; protected set; }
 
         //Coordination System and moving
-        public Coordinates Coordinates { get; protected set; }
+        public Coordinates Coor { get; protected set; }
         public int XCoordinate { get; protected set; }
         public int YCoordinate { get; protected set; }
-        public void Move(int deltaY, int deltaX, Square stansdOn)
+        public void Move(Coordinates coor, Square stansdOn)
         {
-            XCoordinate += deltaX;
-            YCoordinate += deltaY;
+            Coor += coor;
             StandsOn = stansdOn;
         }
 
 
         //Constractor
-        public Actor(int xCoordinate, int yCoordinate)
+        public Actor(Coordinates coor)
         {
-            XCoordinate = xCoordinate;
-            YCoordinate = yCoordinate;
+            Coor = coor;
         }
 
 
@@ -76,10 +74,10 @@
         public void DealDamage(int damage)
         {
             CurrentHP -= damage;
-            if (CurrentHP< 0) CurrentHP = 0;
+            if (CurrentHP < 0) CurrentHP = 0;
         }
 
-        public static void Battle(Map map , Enemy enemy, int y, int deltaY, int x, int deltaX, bool isPlayerAttacked)
+        public static void Battle(Map map, Enemy enemy, Coordinates coor, bool isPlayerAttacked)
         {
 
             if (isPlayerAttacked)
@@ -88,8 +86,8 @@
                 if (enemy.CurrentHP == 0)
                 {
                     map.User.Killed(enemy);
-                    map.ChangeSquare(new Square(SquareTypes.Chest, x+deltaX,y+deltaY, enemy.Die()), y + deltaY, x + deltaX);
-                    map.Log.action = $"Enemy died and dropped chest with {((Chest)map.MapArray[y + deltaY][x+deltaX].ActorOnSquare).Inside.Name} for you";
+                    map.ChangeSquare(new Square(SquareTypes.Chest, coor, enemy.Die()), coor);
+                    map.Log.action = $"Enemy died and dropped chest with {((Chest)(coor^map.MapArray).ActorOnSquare).Inside.Name} for you";
                     return;
                 }
                 map.Log.action = $"You dealed {userD} damage to the enemy. Now his HP is {enemy.CurrentHP}";

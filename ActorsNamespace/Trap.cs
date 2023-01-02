@@ -7,10 +7,10 @@
         public SquareTypes TrapType { get; private set; }
 
         //Basic constructor
-        public Trap(int xCoordinate, int yCoordinate, SquareTypes type, Square square) : base(xCoordinate, yCoordinate)
+        public Trap(Coordinates coor, SquareTypes type, Square square) : base(coor)
         {
             StandsOn = square; //Trap is hided, so user will see Empty square
-            ActorsSquare = new Square(SquareTypes.RevealedTrap, xCoordinate, yCoordinate);
+            ActorsSquare = new Square(SquareTypes.RevealedTrap, coor);
             TrapType = type;
         }
     }

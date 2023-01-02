@@ -253,22 +253,22 @@ namespace First_Semester_Project.Core
 
                     case A:
                     case LeftArrow://Left
-                        LevelMap.Move(User, "Left");
+                        LevelMap.Move(User, Directions.Left);
                         break;
 
                     case D:
                     case RightArrow://Right
-                        LevelMap.Move(User, "Right");
+                        LevelMap.Move(User, Directions.Right);
                         break;
 
                     case S:
                     case DownArrow://Down
-                        LevelMap.Move(User, "Down");
+                        LevelMap.Move(User, Directions.Down);
                         break;
 
                     case W:
                     case UpArrow://Up
-                        LevelMap.Move(User, "Up");
+                        LevelMap.Move(User, Directions.Up);
                         break;
 
                     case D0:
@@ -316,8 +316,8 @@ namespace First_Semester_Project.Core
 
             }, log._cancelToken.Token);//Printing Coin Animation
 
-            if (gameReStart) User = new Player(0, 0, new Square(SquareTypes.Player, 0, 0));
-            else User = new Player(UserAtStart.XCoordinate, UserAtStart.YCoordinate, UserAtStart);
+            if (gameReStart) User = new Player(new(), new Square(SquareTypes.Player, new()));
+            else User = new Player(UserAtStart.Coor, UserAtStart);
 
             for (int currentLevel = level; currentLevel <= 10; currentLevel++)
             {
@@ -331,7 +331,7 @@ namespace First_Semester_Project.Core
         }
         private void PlayTheLevel()
         {
-            UserAtStart = new Player(User.XCoordinate, User.YCoordinate, User);
+            UserAtStart = new Player(User.Coor, User);
 
             while (User.StandsOn.Entity != SquareTypes.Exit)
             {
@@ -357,7 +357,7 @@ namespace First_Semester_Project.Core
             foreach (Square spyke in level.Spikes)
             {
 
-                level.Move(spyke.ActorOnSquare, ((Spike)spyke.ActorOnSquare).DimentionOfMoving ? ((Spike)spyke.ActorOnSquare).Direction ? "Up" : "Down" : ((Spike)spyke.ActorOnSquare).Direction ? "Right" : "Left");
+                level.Move(spyke.ActorOnSquare, ((Spike)spyke.ActorOnSquare).DimentionOfMoving ? ((Spike)spyke.ActorOnSquare).Direction ? Directions.Up : Directions.Down : ((Spike)spyke.ActorOnSquare).Direction ? Directions.Right : Directions.Left);
 
             }
         }
