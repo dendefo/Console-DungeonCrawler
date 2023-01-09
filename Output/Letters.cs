@@ -248,15 +248,15 @@ namespace First_Semester_Project.Output
         static void LetterK(int x, int y)
         {
             SetCursorPosition(x, y);
-            Write("██   █");
+            Write("██  ██");
             SetCursorPosition(x, y + 1);
-            Write("██  █");
+            Write("██  ██");
             SetCursorPosition(x, y + 2);
             Write("████");
             SetCursorPosition(x, y + 3);
             Write("██  ██");
             SetCursorPosition(x, y + 4);
-            Write("██   █");
+            Write("██  ██");
         }
         static void LetterL(int x, int y)
         {

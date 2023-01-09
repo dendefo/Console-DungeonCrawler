@@ -1,6 +1,6 @@
 ﻿namespace First_Semester_Project.Core
 {
-    internal struct Coordinates
+    struct Coordinates
     {
         public int X = 0;
         public int Y = 0;
@@ -37,6 +37,12 @@
             }
         }
 
+        /// <summary>
+        /// Summs values of two coordinates
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
         public static Coordinates operator +(Coordinates left, Coordinates right)
         {
             return new(left.X + right.X, left.Y + right.Y);
@@ -63,20 +69,9 @@
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Coordinates operator |(Coordinates first, Coordinates second)
+        public static Coordinates Abs (Coordinates left, Coordinates right)
         {
-            return new(Math.Abs(first.X - second.X), Math.Abs(first.Y - second.Y));
-        }
-
-        /// <summary>
-        /// Returns Square from array by coordinates
-        /// </summary>
-        /// <param name="coor"></param>
-        /// <param name="map"></param>
-        /// <returns></returns>
-        public static Square operator ^(Coordinates coor, Square[][] map)
-        {
-            return map[coor.Y][coor.X];
+            return new(Math.Abs(left.X - right.X), Math.Abs(left.Y - right.Y));
         }
 
         /// <summary>

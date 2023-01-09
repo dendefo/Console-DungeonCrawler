@@ -6,6 +6,7 @@
         Empty = 32,
         Wall = 124,
         SpykeWall = 100,
+        HorizontalSpykeWall = 101,
         CrackedWall = 120,
         Entry = 69,
         Exit = 88,
@@ -57,6 +58,13 @@
                     ActorOnSquare = new Spike(coor, true, this);
                     break;
 
+                case SquareTypes.HorizontalSpykeWall:
+                    Symbol = '¤';
+                    Color = EnemyColor;
+                    Entity = SquareTypes.SpykeWall;
+                    ActorOnSquare = new Spike(coor, false, this);
+                    break;
+
                 case SquareTypes.CrackedWall:
                     Symbol = '▒';
                     Color = ConsoleColor.White;
@@ -69,7 +77,7 @@
 
                 case SquareTypes.Exit:
                     Symbol = 'X';
-                    Color = ConsoleColor.DarkGreen;
+                    Color = ConsoleColor.Green;
                     break;
 
                 case SquareTypes.Player:

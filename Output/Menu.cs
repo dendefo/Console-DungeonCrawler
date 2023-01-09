@@ -3,11 +3,10 @@ using static System.ConsoleColor;
 
 namespace First_Semester_Project.Output
 {
-    internal class Menu
+    static class Menu
     {
         public static void MainMenu()
         {
-            
             Clear();
             SetCursorPosition(35, 1);
             ForegroundColor = DarkRed;
@@ -21,7 +20,7 @@ namespace First_Semester_Project.Output
             }
             SetCursorPosition(35, 9);
             Write("███████████████████████████████████████████████████████████████████████████████████████");
-            PrintWord("the insanity",37,3);
+            PrintWord("the insanity", 37, 3);
 
             SetCursorPosition(105, 8);
             ForegroundColor = Gray;
@@ -39,10 +38,10 @@ namespace First_Semester_Project.Output
             Write("Options");
             SetCursorPosition(73, 21);
             Write("Exit");
-            Data.Tiltan();
+            PixelArt.Tiltan();
 
         }
-        public static void PrintCursor(int position,int startX, int startY)
+        public static void PrintCursor(int position, int startX, int startY)
         {
             for (int i = startY; i <= 29; i += 2)
             {
@@ -50,7 +49,7 @@ namespace First_Semester_Project.Output
                 Write(" ");
             }
             SetCursorPosition(startX, startY + position * 2);
-            ForegroundColor = startX<70?Blue:Green;
+            ForegroundColor = startX < 70 ? Blue : Green;
             Write("►");
             ForegroundColor = Gray;
         }
@@ -78,8 +77,8 @@ namespace First_Semester_Project.Output
         public static void EndOfGame()
         {
             Clear();
-            PrintWord("game over",55,3);
-            
+            PrintWord("game over", 55, 3);
+
             PrintCursor(0, 71, 11);
             SetCursorPosition(73, 11);
             Write("Start a new game");
@@ -111,8 +110,8 @@ namespace First_Semester_Project.Output
             SetCursorPosition(54, 9);
             Write("██████████████████████████████████████████████████████");
 
-            PrintWord("options",57,3);
-            
+            PrintWord("options", 57, 3);
+
             ForegroundColor = Gray;
             SetCursorPosition(66, 12);
             WriteLine("Chose colour of Player's avatar");
@@ -136,12 +135,48 @@ namespace First_Semester_Project.Output
         {
 
             Clear();
+            log.CoinCancelToken = new();
+            Task.Factory.StartNew(() =>
+            {
+                int count = 0;
+                while (true)
+                {
+                    lock (log)
+                    {
+                        if (log.CoinCancelToken.IsCancellationRequested)
+                        {
+                            
+                            break;
+                        }
+
+                        PixelArt.Coin(5, 3, count);
+                        PixelArt.Coin(135, 3, count);
+
+                    }
+                    count++;
+                    count %= 8;
+                    Thread.Sleep(150);
+
+                }
+                lock (log)ResetColor();
+
+
+            }, log.CoinCancelToken.Token);
+
             lock (log)
             {
-                PrintWord("mystery shack", 20, 3);
+                PrintWord("mystery shack", 35, 3);
+                PixelArt.Sword(36, 13);
+                PixelArt.Shield(70, 12);
+                PixelArt.Potion(106, 12);
             }
-            
+
+
+
             ReadKey(true);
+
+            log.CoinCancelToken.Cancel();
+            lock (log) Clear();
 
         }
         public static ConsoleColor ColorChose(int position)
@@ -177,25 +212,25 @@ namespace First_Semester_Project.Output
             }
 
             SetCursorPosition(48, 12);
-            ForegroundColor = White;       Write("White          ");
-            ForegroundColor = Green;       Write("Green          ");
-            ForegroundColor = Yellow;      Write("Yellow         ");
-            ForegroundColor = Magenta;     Write("Magenta        ");
-            ForegroundColor = Red;         Write("Red            ");
+            ForegroundColor = White; Write("White          ");
+            ForegroundColor = Green; Write("Green          ");
+            ForegroundColor = Yellow; Write("Yellow         ");
+            ForegroundColor = Magenta; Write("Magenta        ");
+            ForegroundColor = Red; Write("Red            ");
 
             SetCursorPosition(48, 14);
-            ForegroundColor = Gray;        Write("Gray           ");
-            ForegroundColor = DarkGreen;   Write("Dark Green     ");
-            ForegroundColor = DarkYellow;  Write("Dark Yellow    ");
+            ForegroundColor = Gray; Write("Gray           ");
+            ForegroundColor = DarkGreen; Write("Dark Green     ");
+            ForegroundColor = DarkYellow; Write("Dark Yellow    ");
             ForegroundColor = DarkMagenta; Write("Dark Magenta   ");
-            ForegroundColor = DarkRed;     Write("Dark Red       ");
+            ForegroundColor = DarkRed; Write("Dark Red       ");
 
             SetCursorPosition(48, 16);
-            ForegroundColor = DarkGray;    Write("Dark Gray      ");
-            ForegroundColor = DarkBlue;    Write("Dark Blue      ");
-            ForegroundColor = Blue;        Write("Blue           ");
-            ForegroundColor = DarkCyan;    Write("Dark Cyan      ");
-            ForegroundColor = Cyan;        Write("Cyan           ");
+            ForegroundColor = DarkGray; Write("Dark Gray      ");
+            ForegroundColor = DarkBlue; Write("Dark Blue      ");
+            ForegroundColor = Blue; Write("Blue           ");
+            ForegroundColor = DarkCyan; Write("Dark Cyan      ");
+            ForegroundColor = Cyan; Write("Cyan           ");
 
             ConsoleColor temp = ColorByInt(position);
 
@@ -279,7 +314,7 @@ namespace First_Semester_Project.Output
                 default: return White;
             }
         }
-        private static void PrintWord(string word,int startX, int startY)
+        private static void PrintWord(string word, int startX, int startY)
         {
             for (int i = 0; i < word.Length; i++)
             {

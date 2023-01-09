@@ -2,7 +2,7 @@
 {
     static class CollisionLogic
     {
-        static public void Collision(Map map, Coordinates delta, Actor actor)
+        static public void CollisionCheck(Map map, Coordinates delta, Actor actor)
         {
             if (actor == null) return;
 
@@ -12,37 +12,45 @@
 
             //This Switch-case block is checking what to do with actor by the entity that he is going to touch
 
-
-            switch ((newCoor^map.MapArray).Entity)
+            switch (map.GetFromMap(newCoor).Entity)
             {
                 case SquareTypes.Empty: //If Actor steps on Empty square
-                    map.ActorMoveOnMap(actor, coor,delta);
+                    map.ActorMoveOnMap(actor, coor, delta);
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break; //If it's not the Player
 
-                    map.Log.action = "You moved";
+                    map.Log.GreenAction = "You moved";
                     break;
 
                 case SquareTypes.Coin:
-                    (newCoor ^ map.MapArray).MakeEmpty();
-                    map.ActorMoveOnMap(actor,coor, delta);
+                    map.GetFromMap(newCoor).MakeEmpty();
+                    map.ActorMoveOnMap(actor, coor, delta);
 
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
                     ((Player)actor).GiveItem(new Coin());
                     break;
 
                 case SquareTypes.Exit:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                        CollisionCheck(map, -delta, actor);
+                    }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
                     map.ActorMoveOnMap(actor, coor, delta);
-                    map.Log.action = "You moved to the next level! Yay";
+                    map.Log.GreenAction = "You moved to the next level! Yay";
                     Task.Run(SoundEffects.NewLevel);
                     break;
 
                 case SquareTypes.Enemy:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                    }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Enemy enemy = (Enemy)(newCoor ^ map.MapArray).ActorOnSquare;
-                    Actor.Battle(map, enemy, coor+delta, true);
+                    Enemy enemy = (Enemy)map.GetFromMap(newCoor).ActorOnSquare;
+                    Actor.Battle(map, enemy, coor + delta, true);
                     Task.Run(SoundEffects.Attack);
                     break;
 
@@ -51,23 +59,33 @@
                     if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
                     {
                         ((Spike)actor).ChangeDirection();
-                        Collision(map, -delta, actor);
+                        CollisionCheck(map, -delta, actor);
                     }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    map.Log.action = "You can't go there";
+                    map.Log.GreenAction = "You can't go there";
                     break;
 
                 case SquareTypes.CrackedWall:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                        CollisionCheck(map, -delta, actor);
+                    }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    map.Log.action = "This wall looks different, maybe it can be destoryed";
+                    map.Log.GreenAction = "This wall looks different, maybe it can be destoryed";
                     break;
 
                 case SquareTypes.Entry:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                        CollisionCheck(map, -delta, actor);
+                    }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    map.Log.action = "You came from here, no way back";
+                    map.Log.GreenAction = "You came from here, no way back";
                     break;
 
                 case SquareTypes.Player:
@@ -79,29 +97,41 @@
                     if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
                     {
                         map.User.DealDamage(3);
-                        map.Log.action2 = "You was damaged by spikes, be careful";
+                        map.Log.RedAction = "You have been damaged by spikes, be careful";
                     }
 
                     break;
 
                 case SquareTypes.Chest:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                        CollisionCheck(map, -delta, actor);
+                    }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Chest chest = (Chest)(newCoor ^ map.MapArray).ActorOnSquare;
-                    map.Log.action = $"Yay, you got some {chest.Inside.Name}";
+                    Chest chest = (Chest)map.GetFromMap(newCoor).ActorOnSquare;
+                    map.Log.GreenAction = $"Yay, you got some {chest.Inside.Name}";
                     map.User.GiveItem(chest.Open());
-                    (newCoor ^ map.MapArray).MakeEmpty();
+                    map.GetFromMap(newCoor).MakeEmpty();
                     break;
 
                 case SquareTypes.DamagingTrap:
 
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Trap trap = (Trap)(newCoor ^ map.MapArray).ActorOnSquare;
-                    map.MapArray[coor.Y + delta.Y][coor.X + delta.X] = actor.ActorsSquare;
-                    map.MapArray[coor.Y][coor.X] = actor.StandsOn;
-                    actor.Move(coor, new Square(SquareTypes.RevealedTrap, coor+delta));
-                    map.Log.action = "Oh, you just walked on a trap. Something just happened";
+                    Trap trap = (Trap)map.GetFromMap(newCoor).ActorOnSquare;
+                    map.SetToMap(newCoor, actor.ActorsSquare);
+                    map.SetToMap(coor, actor.StandsOn);
+                    actor.Move(delta, new Square(SquareTypes.RevealedTrap, newCoor));
+                    map.Log.GreenAction = "Oh, you just walked on a trap. Something just happened";
+                    break;
+
+                case SquareTypes.SpykeWall:
+                    if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
+                    {
+                        ((Spike)actor).ChangeDirection();
+                    }
                     break;
             }
         }

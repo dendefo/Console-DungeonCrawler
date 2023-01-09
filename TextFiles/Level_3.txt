@@ -1,22 +1,22 @@
-||||||||||||||||||||||||||||||||||||||||
-|      E                               |
-| xxxx    xxxxxx  xxxxxx               |
-| xx 1xx  xx  xx  xx# xx               |
-| xx# xx  xx# xx  xxxxxx           X   |
-| xx  xx  xx 1xx  xx  x                |
-| xxxx    xxxxxx  xx   x               |
-|                                      |
-| xxxxxx  xxxxxx  xx1 xx               |
-| xx #xx  xx1     xxx xx               |
-| xxxxx   xxxx    xxxxxx               |
-| xx 1xx  xx#     xx xxx               |
-| xxxxxx  xxxxxx  xx  xx               |
-|                                      |
-| xxxx    xxxxxx  xxxxxx               |
-| xx #xx  xx #xx  xx# xx               |
-| xx  xx  xx  xx  xxxxxx               |
-| xx 1xx  xx 1xx  xx  x                |
-| xxxx    xxxxxx  xx   x               |
-||||||||||||||||||||||||||||||||||||||||
+||||||||||||||||||||||||||
+|      E                 |
+| xxxx    xxxxxx  xxxxxx |
+| xx 1xx  xx  xx  xx#$xx |
+| xx# xx  xx# xx  xxxxxx |
+| xx  xx  xx 1xx  xx  x  |
+| xx||    xxxxxx  xx   x |
+|                      e |
+| ||xx||  xxxxxx  xx1 xx |
+| || 1||  xx1     xxx xx |
+| ||x||   xxxx    xxxxxx |
+| || X||  xx#     xx xxx |
+| ||||||  xxxxxx  xx  xx |
+| e                      |
+| xxxx    xxxxxx  xxxxxx |
+| xx #xx  xx #xx  xx#$xx |
+| xx  xx  xx  xx  xxxxxx |
+| xx 1xx  xx 1xx  xx  x  |
+| xxxx    xxxxxx  xx   x |
+||||||||||||||||||||||||||
 IIIIIIII
-2=+2=+3<+2<+2<+2<+2<+2<+
+2=+2=+3<+2<I2<+2<+2<+2<+

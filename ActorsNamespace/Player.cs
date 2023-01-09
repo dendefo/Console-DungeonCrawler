@@ -168,7 +168,7 @@
 
                     if (weapon.Name != "Fists") GiveItem(weapon);
 
-                    log.action = $"You equiped {EquipedWeapon.Name}";
+                    log.GreenAction = $"You equiped {EquipedWeapon.Name}";
                     break;
 
                 case ItemTypes.Shield: //Changing shield 
@@ -177,7 +177,7 @@
                     TakeItem(keys[number], 1);
 
                     if (shield.Name != "Abs") GiveItem(shield);
-                    log.action = $"You equiped {EquipedShield.Name}";
+                    log.GreenAction = $"You equiped {EquipedShield.Name}";
                     break;
 
                 case ItemTypes.Potion: //Using potions
@@ -188,7 +188,7 @@
                         case PotionTypes.HealingPotion:
                         case PotionTypes.GreatHealingPotion: //All three potions has the same logic, but different amount of healing
                             Heal(((Potion)keys[number]).Heal);
-                            log.action = $"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points";
+                            log.GreenAction = $"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points";
                             break;
                         case PotionTypes.ExplosivePotion:
                             int overAllDamage = 0;
@@ -197,14 +197,14 @@
                                 if (enemy == null) continue;
                                 if (enemy.CurrentHP == 0) continue;
 
-                                if ((enemy.Coor | Coor) < 3)
+                                if (Coordinates.Abs(enemy.Coor, Coor) < 3)
                                 {
                                     enemy.DealDamage(((Potion)keys[number]).Damage);
                                     overAllDamage += ((Potion)keys[number]).Damage;
                                     if (enemy.CurrentHP == 0)
                                     {
                                         Killed(enemy);
-                                        level.ChangeSquare(new Square(SquareTypes.Chest, enemy.Coor, enemy.Die()), enemy.Coor);
+                                        level.SetToMap(enemy.Coor, new Square(SquareTypes.Chest, enemy.Coor, enemy.Die()));
 
 
                                     }
@@ -218,14 +218,16 @@
                                 {
                                     if (y == 0 && x == 0) continue;
                                     Coordinates newCoor = Coor + new Coordinates(x, y);
-                                    if ((newCoor ^ level.MapArray).Entity == SquareTypes.CrackedWall)
+                                    if (level.GetFromMap(newCoor).Entity == SquareTypes.CrackedWall)
                                     {
-                                        level.MapArray[newCoor.Y][newCoor.X] = new Square(SquareTypes.Empty, Coor);
+                                        level.SetToMap(newCoor, null);
+
+                                        level.SetToMap(newCoor, new Square(SquareTypes.Empty, Coor));
                                         countWalls++;
                                     }
                                 }
                             }
-                            log.action = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
+                            log.GreenAction = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
                             break;
                     }
                     TakeItem(keys[number], 1);

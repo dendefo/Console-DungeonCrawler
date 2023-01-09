@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace First_Semester_Project.ActorsNamespace
+﻿namespace First_Semester_Project.ActorsNamespace
 {
 
     internal class Spike : Actor

@@ -11,11 +11,33 @@
         public Player User { get; private set; } //Player's Actor
 
         public Square[][] MapArray { get; private set; } //Array with each tile of map
+        Coordinates _exit;
 
-
+        /// <summary>
+        /// Returnes Square from given coordinates
+        /// </summary>
+        /// <param name="coor"></param>
+        /// <returns></returns>
+        public Square GetFromMap(Coordinates coor)
+        {
+            return MapArray[coor.Y][coor.X];
+        }
+        public void SetToMap(Coordinates coor, Square square)
+        {
+            if (square == null)
+            {
+                GetFromMap(coor).MakeEmpty();
+                return;
+            }
+            MapArray[coor.Y][coor.X] = square;
+        }
         string[] fileSpawn = new string[2];
-
-        //Map constructor. Filling MapArray with tiles from map-file
+        /// <summary>
+        /// Map constructor. Filling MapArray with tiles from map-file
+        /// </summary>
+        /// <param name="Level"></param>
+        /// <param name="player"></param>
+        /// <param name="log"></param>
         public Map(int Level, Player player, Data log)
         {
             Spikes = new List<Square>();
@@ -45,8 +67,6 @@
             Console.Clear();
             lock (Log) { Refresh(); }//Printing a map
         }
-
-
         private Square Spawn(char type, int Level, Player player, int x, int y)
         {
             Square square;
@@ -70,6 +90,11 @@
                     User = player;
                     break;
 
+                case SquareTypes.Exit:
+                    square = new Square(SquareTypes.Exit, coor);
+                    _exit = coor;
+                    break;
+
                 case SquareTypes.Chest:
                     int itemInt = fileSpawn[0][0];
                     fileSpawn[0] = fileSpawn[0].Remove(0, 1);
@@ -85,14 +110,17 @@
                     Spikes.Add(square);
                     break;
 
+                case SquareTypes.HorizontalSpykeWall:
+                    square = new Square(SquareTypes.HorizontalSpykeWall, coor);
+                    Spikes.Add(square);
+                    break;
+
                 default:
                     square = new Square((SquareTypes)type, coor); //Spawning Square based of his type
                     break;
             }
             return square;
         }
-
-
         public void Refresh()
         {
             Console.SetCursorPosition(0, 0);
@@ -107,38 +135,26 @@
                 engine.Push(ConsoleColor.Black, '\n');
             }
             engine.Print();
-
             Console.ResetColor();
+
+            List<Node> path= Node.BuildPath(User.Pathfinder(this, _exit));
+            if (path != null)
+            {
+                Log.AwayFromExit = path.Count;
+            }
+            else Log.AwayFromExit = 0;
+
             Log.Output(User);
 
         } //Printing map
-        public void Move(Actor actor, Directions direction)
-        {
-            Coordinates delta = new Coordinates(direction);
-
-            CollisionLogic.Collision(this,delta, actor);
-
-        } //Moving any actor across the map by 1 tile in 4 directions
-
         public void ActorMoveOnMap(Actor actor, Coordinates coor, Coordinates delta)
         {
             Coordinates sum = coor + delta;
-            Square temp = sum ^ MapArray;//MapArray[coor.Y + delta.Y][coor.X + delta.X];
-            MapArray[coor.Y + delta.Y][coor.X + delta.X] = actor.ActorsSquare;
-            MapArray[coor.Y][coor.X] = actor.StandsOn;
+            Square temp = GetFromMap(sum);
+            SetToMap(sum, actor.ActorsSquare);
+            SetToMap(coor, actor.StandsOn);
 
             actor.Move(delta, temp);
-        }
-
-        public void ChangeSquare(Square square, Coordinates coor)
-        {
-            if (square == null)
-            {
-                (coor^MapArray).MakeEmpty();
-                return;
-            }
-
-            MapArray[coor.Y][coor.X] = square;
         }
     }
 }
