@@ -11,26 +11,15 @@
         public Player User { get; private set; } //Player's Actor
 
         public Square[][] MapArray { get; private set; } //Array with each tile of map
-        Coordinates _exit;
 
         /// <summary>
-        /// Returnes Square from given coordinates
+        /// Returns Square from map by coordinates
         /// </summary>
         /// <param name="coor"></param>
         /// <returns></returns>
-        public Square GetFromMap(Coordinates coor)
-        {
-            return MapArray[coor.Y][coor.X];
-        }
-        public void SetToMap(Coordinates coor, Square square)
-        {
-            if (square == null)
-            {
-                GetFromMap(coor).MakeEmpty();
-                return;
-            }
-            MapArray[coor.Y][coor.X] = square;
-        }
+        public Square this[Coordinates coor] { get { return MapArray[coor.Y][coor.X]; } set { MapArray[coor.Y][coor.X] = value; } }
+        Coordinates _exit;
+
         string[] fileSpawn = new string[2];
         /// <summary>
         /// Map constructor. Filling MapArray with tiles from map-file
@@ -129,6 +118,7 @@
             {
                 foreach (Square tile in row)
                 {
+                    if (User.CurrentEffect == EffectType.HawkEye && tile.Entity == SquareTypes.DamagingTrap) { engine.Push(Square.EnemyColor, '¤'); continue; }
                     engine.Push(tile.Color, tile.Symbol);
 
                 }
@@ -147,12 +137,12 @@
             Log.Output(User);
 
         } //Printing map
-        public void ActorMoveOnMap(Actor actor, Coordinates coor, Coordinates delta)
+        public void MoveActorOnMap(Actor actor, Coordinates coor, Coordinates delta)
         {
             Coordinates sum = coor + delta;
-            Square temp = GetFromMap(sum);
-            SetToMap(sum, actor.ActorsSquare);
-            SetToMap(coor, actor.StandsOn);
+            Square temp = this[sum];
+            this[sum] = actor.ActorsSquare;
+            this[coor] = actor.StandsOn;
 
             actor.Move(delta, temp);
         }

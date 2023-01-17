@@ -5,6 +5,9 @@
         public PotionTypes PotionType { get; private set; }
         public int Heal { get; private set; }
         public int Damage { get; private set; }
+
+        public EffectType Effect { get; private set; }
+        public int Turns { get; private set; }
         public Potion(PotionTypes type)
         {
             PotionType = type;
@@ -23,9 +26,31 @@
                     Heal = 8;
                     Name = "Great Healing Potion";
                     break;
+
+
                 case PotionTypes.ExplosivePotion:
                     Damage = 10;
-                    Name = "Exploading Potion";
+                    Name = "Exploasive Potion";
+                    break;
+                case PotionTypes.InvisibilityPotion:
+                    Effect = EffectType.Invisibl;
+                    Turns = 5;
+                    Name = "Invisibility Potion";
+                    break;
+                case PotionTypes.HawkEyePotion:
+                    Effect = EffectType.HawkEye;
+                    Turns = 3;
+                    Name = "Hawk Eye Potion";
+                    break;
+                case PotionTypes.AccuracyPotion:
+                    Effect = EffectType.Accuracy;
+                    Turns = 4;
+                    Name = "Potion of Accuracy";
+                    break;
+                case PotionTypes.InvulnerabilityPotion:
+                    Effect = EffectType.Invulnerbl;
+                    Turns = 5;
+                    Name = "Potion of Invincibility";
                     break;
             }
         }

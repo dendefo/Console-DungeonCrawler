@@ -7,8 +7,6 @@
         //This are used only by Enemy and Player
         public Weapon EquipedWeapon { get; protected set; }
         public Shield EquipedShield { get; protected set; }
-
-
         public int MaxHP { get; protected set; }
         public int CurrentHP { get; protected set; }
         public int Evasion { get; protected set; }
@@ -16,7 +14,6 @@
 
         // Square that the Actor is standing on (Not showed)
         public Square StandsOn { get; set; }
-
 
         //Square of the Actor (Showed)
         public Square ActorsSquare { get; protected set; }
@@ -80,20 +77,27 @@
 
             if (isPlayerAttacked)
             {
-                int userD = map.User.Attack(enemy);
+                int userD;
+                if (map.User.CurrentEffect == EffectType.Accuracy)
+                {
+                    userD = map.User.EquipedWeapon.Damage;
+                    enemy.DealDamage(userD);
+                }
+                else
+                {
+                    userD = map.User.Attack(enemy);
+                }
                 if (enemy.CurrentHP == 0)
                 {
                     map.User.Killed(enemy);
-                    map.SetToMap(coor,new Square(SquareTypes.Chest, coor, enemy.Die()));
-                    map.Log.GreenAction = $"Enemy died and dropped chest with {((Chest)map.GetFromMap(coor).ActorOnSquare).Inside.Name} for you";
+                    map[coor] = new Square(SquareTypes.Chest, coor, enemy.Die()); 
+                    map.Log.GreenAction = $"Enemy died and dropped chest with {((Chest)map[coor].ActorOnSquare).Inside.Name} for you";
                     return;
                 }
                 map.Log.GreenAction = $"You dealed {userD} damage to the enemy. Now his HP is {enemy.CurrentHP}";
                 return;
             }
-
-            int enemyD = enemy.Attack(map.User);
-            map.Log.RedAction = $"Enemy atacked you with his {enemy.EquipedWeapon.Name} and dealed {enemyD} damage.";
+            map.Log.Damage += enemy.Attack(map.User);
         }
 
         /// <summary>
@@ -135,10 +139,10 @@
                         if (y * y == x * x || visited.Exists(n => n.Coor == newCoords)) continue; //If it is diagonal or 0,0 OR if it is already been checked
                         //It leaves only four directions (0,1)(0,-1)(1,0)(-1,0). No diagonal moving
 
-                        entity = level.GetFromMap(newCoords).Entity; //Looking what's on the Square
+                        entity = level[newCoords].Entity; //Looking what's on the Square
 
 
-                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Enemy || entity == SquareTypes.Coin ||entity==SquareTypes.Exit)) continue; //If it's not walkable, then continue
+                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Coin ||entity==SquareTypes.Exit)) continue; //If it's not walkable, then continue
 
                         Node adjacent = new(newCoords, node); //Create new node to check
                         if (reachable.Exists(n => n.Coor == adjacent.Coor)) continue; //If it's already awaits for check then continue
@@ -150,7 +154,7 @@
             return null; //There is no path
         }
     }
-    class Node //Representation of map as tree of walkable for Enemy Nodes, that starts at Enemy's node. We search for Player's node at that tree
+    class Node //Representation of map as tree of walkable Nodes, that starts at Actor's node. We search for Target node at that tree
     {
         public Coordinates Coor; //Coordinates of Node
         public Node previous; //Node that linked us to this one. 

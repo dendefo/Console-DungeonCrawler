@@ -12,18 +12,18 @@
 
             //This Switch-case block is checking what to do with actor by the entity that he is going to touch
 
-            switch (map.GetFromMap(newCoor).Entity)
+            switch (map[newCoor].Entity)
             {
                 case SquareTypes.Empty: //If Actor steps on Empty square
-                    map.ActorMoveOnMap(actor, coor, delta);
+                    map.MoveActorOnMap(actor, coor, delta);
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break; //If it's not the Player
 
                     map.Log.GreenAction = "You moved";
                     break;
 
                 case SquareTypes.Coin:
-                    map.GetFromMap(newCoor).MakeEmpty();
-                    map.ActorMoveOnMap(actor, coor, delta);
+                    map[newCoor].MakeEmpty();
+                    map.MoveActorOnMap(actor, coor, delta);
 
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
                     ((Player)actor).GiveItem(new Coin());
@@ -37,7 +37,7 @@
                     }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    map.ActorMoveOnMap(actor, coor, delta);
+                    map.MoveActorOnMap(actor, coor, delta);
                     map.Log.GreenAction = "You moved to the next level! Yay";
                     Task.Run(SoundEffects.NewLevel);
                     break;
@@ -49,8 +49,7 @@
                     }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Enemy enemy = (Enemy)map.GetFromMap(newCoor).ActorOnSquare;
-                    Actor.Battle(map, enemy, coor + delta, true);
+                    Actor.Battle(map, (Enemy)map[newCoor].ActorOnSquare, coor + delta, true);
                     Task.Run(SoundEffects.Attack);
                     break;
 
@@ -89,6 +88,9 @@
                     break;
 
                 case SquareTypes.Player:
+
+                    if (map.User.CurrentEffect == EffectType.Invulnerbl) break;
+
                     if (actor.ActorsSquare.Entity == SquareTypes.Enemy)
                     {
                         Actor.Battle(map, (Enemy)actor, newCoor, false);
@@ -110,21 +112,23 @@
                     }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Chest chest = (Chest)map.GetFromMap(newCoor).ActorOnSquare;
+                    Chest chest = (Chest)map[newCoor].ActorOnSquare;
                     map.Log.GreenAction = $"Yay, you got some {chest.Inside.Name}";
                     map.User.GiveItem(chest.Open());
-                    map.GetFromMap(newCoor).MakeEmpty();
+                    map[newCoor].MakeEmpty();
                     break;
 
                 case SquareTypes.DamagingTrap:
 
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
+                    if (map.User.CurrentEffect == EffectType.Invulnerbl) break;
 
-                    Trap trap = (Trap)map.GetFromMap(newCoor).ActorOnSquare;
-                    map.SetToMap(newCoor, actor.ActorsSquare);
-                    map.SetToMap(coor, actor.StandsOn);
+                    Trap trap = (Trap)map[newCoor].ActorOnSquare;
+                    map[newCoor] = actor.ActorsSquare;
+                    map[coor] = actor.StandsOn;
                     actor.Move(delta, new Square(SquareTypes.RevealedTrap, newCoor));
-                    map.Log.GreenAction = "Oh, you just walked on a trap. Something just happened";
+                    map.User.DealDamage(3);
+                    map.Log.GreenAction = "You walked on a trap and took 3 Damage";
                     break;
 
                 case SquareTypes.SpykeWall:

@@ -15,5 +15,14 @@
         {
             Direction = !Direction;
         }
+        public static void SpykeMoving(Map level)
+        {
+            foreach (Square spyke in level.Spikes)
+            {
+                bool axis = ((Spike)spyke.ActorOnSquare).DimentionOfMoving;
+                bool direction = ((Spike)spyke.ActorOnSquare).Direction;
+                CollisionLogic.CollisionCheck(level, new(axis? direction ? Directions.Up:Directions.Down: direction ? Directions.Right:Directions.Left), spyke.ActorOnSquare);
+            }
+        }
     }
 }

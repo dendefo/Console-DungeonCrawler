@@ -3,25 +3,25 @@
     //All the things that you may find on the map.
     enum SquareTypes
     {
-        Empty = 32,
-        Wall = 124,
-        SpykeWall = 100,
-        HorizontalSpykeWall = 101,
-        CrackedWall = 120,
-        Entry = 69,
-        Exit = 88,
-        Player = 3,
-        Enemy = 49,
-        Chest = 35,
-        RevealedTrap = 48,
-        DamagingTrap = 84,
-        Coin = 36,
+        Empty = 32,                // SPACE
+        Wall = 124,                // |
+        SpykeWall = 100,           // d
+        HorizontalSpykeWall = 101, // e
+        CrackedWall = 120,         // x
+        Entry = 69,                // E
+        Exit = 88,                 // X
+        Player = 3,                // ♥  Do not put on map. Use Entry instead
+        Enemy = 49,                // 1
+        Chest = 35,                // #
+        RevealedTrap = 48,         // 0  Do not use on map. Place another trap instead 
+        DamagingTrap = 84,         // T
+        Coin = 36,                 // $
     }
 
-    //Each symbol of map
+    //Each tile of map
     internal class Square
     {
-        static public char PlayerAvatar = '♥'; //☺☻♥♦♣♠•◘○◙♂♀♪♫☼►◄↕‼¶§▬↨↑↓→←∟↔▲▼
+        static public char PlayerAvatar = '♥';
         static public ConsoleColor PlayerColor = ConsoleColor.DarkMagenta; 
         static public char EnemyAvatar = '☻';
         static public ConsoleColor EnemyColor = ConsoleColor.DarkRed;

@@ -105,7 +105,7 @@ namespace First_Semester_Project.Output
                 printCount = count >= 4 && count <= 6 ? count - 3 : count <= 3 ? 0 : 3;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
 
-                SetCursorPosition(x + 10, 13);
+                SetCursorPosition(x + 10, y + 7);
                 printCount = count == 5 ? 1 : count < 5 ? 0 : 1;
                 Write(string.Join("", Enumerable.Repeat("██", printCount)));
             }
@@ -240,7 +240,7 @@ namespace First_Semester_Project.Output
             Print(DarkRed);
             Print(White);
 
-            Print(x+2, y + 9, Gray);
+            Print(x + 2, y + 9, Gray);
             Print("████████████", DarkRed);
             Print(Gray);
 

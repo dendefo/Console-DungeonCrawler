@@ -1,10 +1,17 @@
-﻿using static System.Console;
+﻿using System.Drawing.Printing;
+using System.Xml.Serialization;
+using static System.Console;
 using static System.ConsoleColor;
 
 namespace First_Semester_Project.Output
 {
     static class Menu
     {
+        static Dictionary<string, int> Prices = new Dictionary<string, int>() { { "Sword", 3},{"Axe", 7},{"Nunchucks", 12},
+            { "Buckler",3},{"Robust Shield",7 },{"Kite Shield",12 },
+            {"Small Healing Potion",2 },{"Healing Potion",3 },{"Great Healing Potion",4 },{"Exploasive Potion",5 },
+            {"Invisibility Potion",10 },{"Hawk Eye Potion",5 },{"Potion of Accuracy",12 },{"Potion of Invincibility",15 } };
+
         public static void MainMenu()
         {
             Clear();
@@ -27,7 +34,7 @@ namespace First_Semester_Project.Output
             Write("Made by Dendefo");
 
             SetCursorPosition(73, 11);
-            Write("Start a new game");
+            Write("Start new game");
             SetCursorPosition(73, 15);
             Write("Continue");
             SetCursorPosition(73, 13);
@@ -37,8 +44,12 @@ namespace First_Semester_Project.Output
             SetCursorPosition(73, 19);
             Write("Options");
             SetCursorPosition(73, 21);
+            Write("Credits");
+            SetCursorPosition(73, 23);
             Write("Exit");
             PixelArt.Tiltan();
+            PixelArt.Sword(8, 2);
+            PixelArt.Shield(132, 2);
 
         }
         public static void PrintCursor(int position, int startX, int startY)
@@ -54,6 +65,11 @@ namespace First_Semester_Project.Output
             ForegroundColor = Gray;
         }
 
+        public static void Credits()
+        {
+            Clear();
+            ReadKey(true);
+        }
         public static void Controls()
         {
             Clear();
@@ -71,7 +87,7 @@ namespace First_Semester_Project.Output
             Letters.Button('s', 70, 21);
             Letters.Button('c', 80, 21);
             ResetColor();
-            ReadKey();
+            ReadKey(true);
         }
 
         public static void EndOfGame()
@@ -91,6 +107,8 @@ namespace First_Semester_Project.Output
             SetCursorPosition(73, 19);
             Write("Options");
             SetCursorPosition(73, 21);
+            Write("Credits");
+            SetCursorPosition(73, 23);
             Write("Exit");
         }
 
@@ -131,6 +149,37 @@ namespace First_Semester_Project.Output
             WriteLine("Game has to be restarted to apply some changes ('Start new game' in main menu)");
 
         }
+
+        private static void SomeMarketText(Data log)
+        {
+            lock (log)
+            {
+                Clear();
+                PrintWord("mystery shack", 35, 3);
+                //PixelArt.Sword(36, 13);
+                //SetCursorPosition(39, 25);
+                //ForegroundColor = White;
+                //Write(" Buy a weapon                     Buy a Shield                     Buy a healing potion");
+                //PixelArt.Shield(70, 12);
+                //PixelArt.Potion(106, 12);
+                ForegroundColor = Green;
+                SetCursorPosition(71, 13);
+                Write("Welcome, Stranger!");
+                SetCursorPosition(45, 15);
+                Write("My name is Dor Vendor and i am the only one Merchant in this dungeon. ");
+                SetCursorPosition(45, 17);
+                Write("I have all sort of weapons shields and potions, if you want some, but ");
+                SetCursorPosition(45, 19);
+                Write("  I am also looking forward to buy anything you've found down there. ");
+                SetCursorPosition(69, 21);
+                Write("What you'd like to do?");
+                ForegroundColor = White;
+                SetCursorPosition(42, 25);
+                Write("I want to buy some items");
+                SetCursorPosition(92, 25);
+                Write("I want to sell something from my bag");
+            }
+        }
         public static void Market(Player player, Data log)
         {
 
@@ -145,7 +194,7 @@ namespace First_Semester_Project.Output
                     {
                         if (log.CoinCancelToken.IsCancellationRequested)
                         {
-                            
+
                             break;
                         }
 
@@ -158,27 +207,220 @@ namespace First_Semester_Project.Output
                     Thread.Sleep(150);
 
                 }
-                lock (log)ResetColor();
+                lock (log) ResetColor();
 
 
-            }, log.CoinCancelToken.Token);
+            }, log.CoinCancelToken.Token); //Coin Print
 
+            SomeMarketText(log);
+
+            int position = 0;
+            while (true)
+            {
+                lock (log)
+                {
+                    for (int i = 40; i <= 100; i += 50)
+                    {
+                        SetCursorPosition(i, 25);
+                        Write(" ");
+                    }
+
+                    SetCursorPosition(40 + position * 50, 25);
+                    ForegroundColor = Green;
+                    Write("►");
+                    ForegroundColor = Gray;
+                }
+                switch (ReadKey(true).Key)
+                {
+                    case ConsoleKey.Escape:
+                        log.CoinCancelToken.Cancel();
+                        lock (log) Clear();
+                        return;
+
+                    case ConsoleKey.D:
+                        position++;
+                        if (position > 1) position = 0;
+                        break;
+
+                    case ConsoleKey.A:
+                        position--;
+                        if (position < 0) position = 1;
+                        break;
+
+                    case ConsoleKey.Enter:
+                        switch (position)
+                        {
+                            case 0:
+                                Buy(player, log);
+                                break;
+                            case 1:
+                                Sell(player, log);
+                                break;
+                        }
+
+                        SomeMarketText(log);
+                        //log.CoinCancelToken.Cancel();
+                        //lock (log) Clear();
+                        break;
+
+                }
+            }
+        }
+
+        private static void Buy(Player player, Data log)
+        {
             lock (log)
             {
-                PrintWord("mystery shack", 35, 3);
-                PixelArt.Sword(36, 13);
-                PixelArt.Shield(70, 12);
-                PixelArt.Potion(106, 12);
+                Clear();
+                SetCursorPosition(55, 9);
+                Write($"You have {player.Coins} money");
+                SetCursorPosition(55, 11);
+                Write("You looked at the counter and saw this:");
             }
+            int x = 40;
+            int y = 15;
+            foreach (string item in Prices.Keys.ToArray())
+            {
+                lock (log)
+                {
+                    SetCursorPosition(x, y);
+                    Write($"{item} {Prices[item]*2}$");
+                }
+                x += 30;
+                if (x > 100)
+                {
+                    y += 2;
+                    x = 40;
+                }
+            }
+            int position = 0;
+            while (true)
+            {
+                for (int i = 0; i < Prices.Keys.Count; i++)
+                {
+                    lock (log)
+                    {
+                        SetCursorPosition(38 + i % 3 * 30, 15 + i / 3 * 2);
+                        Write(" ");
+                    }
+                }
+                lock (log)
+                {
+                    ForegroundColor = Green;
+                    SetCursorPosition(38 + position % 3 * 30, 15 + position / 3 * 2);
+                    Write("►");
+                    ForegroundColor = Gray;
+                }
 
+                switch (ReadKey(true).Key)
+                {
+                    case ConsoleKey.Enter:
+                        if (player.Coins < Prices.Values.ToArray()[position]*2) return;
+                        player.GiveItem(Item.NameParser(Prices.Keys.ToArray()[position]));
+                        player.TakeItem(new Coin(), Prices.Values.ToArray()[position] * 2);
+                        return;
 
-
-            ReadKey(true);
-
-            log.CoinCancelToken.Cancel();
-            lock (log) Clear();
-
+                    case ConsoleKey.D:
+                        position++;
+                        if (position >= Prices.Keys.Count) position = 0;
+                        break;
+                    case ConsoleKey.A:
+                        position--;
+                        if (position < 0) position = Prices.Keys.Count - 1;
+                        if (position < 0) position = 0;
+                        break;
+                    case ConsoleKey.W:
+                        position -= 3;
+                        if (position < 0) position = Prices.Keys.Count + 1 + position;
+                        break;
+                    case ConsoleKey.S:
+                        position += 3;
+                        if (position >= Prices.Keys.Count) position -= ((Prices.Keys.Count / 3) + 1) * 3;
+                        break;
+                    default:
+                        return;
+                }
+                if (position == Prices.Keys.Count) position--;
+                if (position < 0) position = 0;
+            }
         }
+        private static void Sell(Player player, Data log)
+        {
+            lock (log)
+            {
+                Clear();
+                SetCursorPosition(55, 9);
+                Write($"You have {player.Coins} money");
+                SetCursorPosition(55, 11);
+                Write("You looked in your backpack an found this:");
+            }
+            int x = 40;
+            int y = 15;
+            foreach (Item item in player.Inventory.Keys)
+            {
+                lock (log)
+                {
+                    SetCursorPosition(x, y);
+                    Write($"{player.Inventory[item]} {item.Name}. |$: {Prices[item.Name]}");
+                }
+                x += 30;
+                if (x > 100)
+                {
+                    y += 2;
+                    x = 40;
+                }
+            }
+            int position = 0;
+            while (true)
+            {
+                for (int i = 0; i < player.Inventory.Keys.Count; i++)
+                {
+                    lock (log)
+                    {
+                        SetCursorPosition(40 + i % 3 * 30, 15 + i / 3 * 2);
+                        Write(" ");
+                    }
+                }
+                lock (log)
+                {
+                    ForegroundColor = Green;
+                    SetCursorPosition(38 + position % 3 * 30, 15 + position / 3 * 2);
+                    Write("►");
+                    ForegroundColor = Gray;
+                }
+                switch (ReadKey(true).Key)
+                {
+                    case ConsoleKey.Enter:
+                        if (player.Inventory.Keys.Count == 0) return;
+                        player.GiveItem(new Coin(), Prices[player.Inventory.Keys.ToArray()[position].Name]);
+                        player.TakeItem(player.Inventory.Keys.ToArray()[position], 1);
+                        return;
+                    case ConsoleKey.D:
+                        position++;
+                        if (position >= player.Inventory.Keys.Count) position = 0;
+                        break;
+                    case ConsoleKey.A:
+                        position--;
+                        if (position < 0) position = player.Inventory.Keys.Count - 1;
+                        if (position < 0) position = 0;
+                        break;
+                    case ConsoleKey.W:
+                        position -= 3;
+                        if (position < 0) position = player.Inventory.Keys.Count + 1 + position;
+                        break;
+                    case ConsoleKey.S:
+                        position += 3;
+                        if (position >= player.Inventory.Keys.Count) position -= ((player.Inventory.Keys.Count / 3) + 1) * 3;
+                        break;
+                    default:
+                        return;
+                }
+                if (position == player.Inventory.Keys.Count) position--;
+                if (position < 0) position = 0;
+            }
+        }
+
+
         public static ConsoleColor ColorChose(int position)
         {
             SetCursorPosition(52, 1);

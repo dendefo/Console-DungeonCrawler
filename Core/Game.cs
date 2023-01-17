@@ -1,6 +1,4 @@
-﻿using First_Semester_Project.ActorsNamespace;
-using First_Semester_Project.Output;
-using static System.ConsoleKey;
+﻿using static System.ConsoleKey;
 namespace First_Semester_Project.Core
 {
     internal class Game
@@ -40,7 +38,6 @@ namespace First_Semester_Project.Core
                 //}
             }
             ConsoleKey key = Console.ReadKey(true).Key;
-
             //If player is in Option Menu
             if (inOptions)
             {
@@ -51,7 +48,7 @@ namespace First_Semester_Project.Core
                         _position++;
                         if (_position > 6) _position = 0;
                         Menu.PrintCursor(_position, 64, 12);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
 
                     case W:
@@ -59,7 +56,7 @@ namespace First_Semester_Project.Core
                         _position--;
                         if (_position < 0) _position = 6;
                         Menu.PrintCursor(_position, 64, 12);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
 
                     case Spacebar:
@@ -71,7 +68,7 @@ namespace First_Semester_Project.Core
                                 Square.PlayerColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 1:
@@ -79,7 +76,7 @@ namespace First_Semester_Project.Core
                                 Square.EnemyColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 2:
@@ -88,7 +85,7 @@ namespace First_Semester_Project.Core
                                 Square.PlayerAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 3:
@@ -97,7 +94,7 @@ namespace First_Semester_Project.Core
                                 Square.EnemyAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 4:
@@ -117,7 +114,7 @@ namespace First_Semester_Project.Core
                                         Enemy.Difficulty = 5; break;
                                 }
                                 Menu.OptionsMenu();
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
                             case 5:
                                 Square.PlayerAvatar = '♥';
@@ -126,14 +123,14 @@ namespace First_Semester_Project.Core
                                 Square.EnemyColor = ConsoleColor.DarkRed;
                                 Enemy.Difficulty = 3;
                                 Menu.OptionsMenu();
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
                             case 6:
                                 inOptions = false;
                                 Menu.MainMenu();
                                 _position = 0;
                                 Menu.PrintCursor(_position, 71, 11);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
                         }
                         break;
@@ -143,12 +140,12 @@ namespace First_Semester_Project.Core
                         Menu.MainMenu();
                         _position = 0;
                         Menu.PrintCursor(_position, 71, 11);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
 
                     default:
                         return;
-                        ControlSystem();
+                        //ControlSystem();
                         break;
                 }
             }
@@ -160,16 +157,16 @@ namespace First_Semester_Project.Core
                     case S:
                     case DownArrow:
                         _position++;
-                        if (_position > 5) _position = 0;
+                        if (_position > 6) _position = 0;
                         Menu.PrintCursor(_position, 71, 11);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
                     case W:
                     case UpArrow:
                         _position--;
-                        if (_position < 0) _position = 5;
+                        if (_position < 0) _position = 6;
                         Menu.PrintCursor(_position, 71, 11);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
 
                     case Spacebar:
@@ -190,22 +187,20 @@ namespace First_Semester_Project.Core
                             case 2:
                                 inMenu = false;
                                 Console.Clear();
-                                if (User == null)
+                                if (User == null || User.CurrentHP == 0)
                                 {
                                     log.CurrentLevel = 1;
                                     Start(log.CurrentLevel, true);
                                 }
                                 log.PrintGUI();
-                                log.CoinCancelToken = new();
 
                                 break;
 
                             case 3:
                                 Menu.Controls();
-                                _position = 0;
                                 Menu.MainMenu();
                                 Menu.PrintCursor(_position, 71, 11);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 4:
@@ -213,10 +208,16 @@ namespace First_Semester_Project.Core
                                 _position = 0;
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                ControlSystem();
+                                //ControlSystem();
                                 break;
 
                             case 5:
+                                Menu.Credits();
+                                Menu.MainMenu();
+                                Menu.PrintCursor(_position, 71, 11);
+                                break;
+
+                            case 6:
                                 Environment.Exit(0);
                                 break;
                         }
@@ -244,7 +245,7 @@ namespace First_Semester_Project.Core
                         }
                         inMenu = true;
                         Thread.Sleep(10);
-                        ControlSystem();
+                        //ControlSystem();
                         break;
 
                     case A:
@@ -293,33 +294,14 @@ namespace First_Semester_Project.Core
 
         public void Start(int level, bool gameReStart)
         {
-            //log._cancelToken = new();
-            //Task.Factory.StartNew(() =>
-            //{
-            //    while (true)
-            //    {
-            //        Thread.Sleep(150);
-            //        if (log._cancelToken.IsCancellationRequested)
-            //        {
-            //            break;
-            //        }
-            //        lock (log)
-            //        {
-            //            log.Coin();
-            //        }
-
-
-            //    }
-
-            //}, log._cancelToken.Token);//Printing Coin Animation
 
             if (gameReStart) User = new Player(new(), new Square(SquareTypes.Player, new()));
             else User = new Player(UserAtStart.Coor, UserAtStart);
 
             for (int currentLevel = level; currentLevel <= 10; currentLevel++)
             {
+                //Menu.Market(User, log);
                 LevelMap = new(currentLevel, User, log);
-
                 log.PrintGUI();
                 PlayTheLevel();
                 log.CurrentLevel++;
@@ -342,32 +324,19 @@ namespace First_Semester_Project.Core
                         ControlSystem();
                     }
                 }
-                inMenu = false;
+                User.Turn();
                 ControlSystem();
+                if (!inMenu)
+                {
 
-                Enemy.EnemiesMoving(LevelMap, User);
-                SpykeMoving(LevelMap, User);
-                lock (log) { LevelMap.Refresh(); }
-            }
-            Menu.Market(User, log);
-        }
-        private static void SpykeMoving(Map level, Player player)
-        {
-            foreach (Square spyke in level.Spikes)
-            {
-                Directions dire;
-                if (((Spike)spyke.ActorOnSquare).DimentionOfMoving)
-                {
-                    if (((Spike)spyke.ActorOnSquare).Direction) dire = Directions.Up;
-                    else dire = Directions.Down;
+                    if (User.CurrentEffect != EffectType.Invisibl) Enemy.EnemiesMoving(LevelMap, User);
+
+                    Spike.SpykeMoving(LevelMap);
+                    lock (log) { LevelMap.Refresh(); }
                 }
-                else
-                {
-                    if (((Spike)spyke.ActorOnSquare).Direction) dire = Directions.Right;
-                    else dire = Directions.Left;
-                }
-                CollisionLogic.CollisionCheck(level, new(dire), spyke.ActorOnSquare);
             }
+            if (log.CurrentLevel % 2 == 0) Menu.Market(User, log);
         }
+
     }
 }

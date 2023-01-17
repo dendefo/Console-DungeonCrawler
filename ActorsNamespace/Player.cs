@@ -6,14 +6,15 @@
         //Players Inventory in format <Item-object, amount>
         public Dictionary<Item, int> Inventory { get; protected set; }
 
-
-        //Struct that contains player's stats
-        //
-
         public int Coins { get; private set; }
         public int Exp { get; private set; }
         public int KillCount { get; private set; }
         public int Level { get; private set; }
+
+
+
+        public int Countdown { get; private set; }
+        public EffectType CurrentEffect { get; private set; }
 
         //Constructor
         public Player(Coordinates coor, Square square) : base(coor)
@@ -49,11 +50,11 @@
         }
 
         //Adding "item" to the Inventory
-        public void GiveItem(Item item)
+        public void GiveItem(Item item, int amount = 1)
         {
             if (item.Type == ItemTypes.Coin) //If it's a coin' just add one
             {
-                Coins++;
+                Coins += amount;
                 return;
             }
             List<Item> keys = Inventory.Keys.ToList(); //Checking each item in Inventory
@@ -61,7 +62,7 @@
             {
                 if (key.Name == item.Name) //If it has same name as the item we need to give
                 {
-                    Inventory[key]++; //Then add +1 to amount
+                    Inventory[key] += amount; //Then add +1 to amount
 
                     return; //Exit
                 }
@@ -70,14 +71,26 @@
         }
 
         //Substract "item" from Inventory
-        private void TakeItem(Item item, int amount)
+        public void TakeItem(Item item, int amount)
         {
+            if (item.Type == ItemTypes.Coin)
+            {
+                Coins -= amount;
+                return;
+            }
 
             Inventory[item] -= amount;
             if (Inventory[item] <= 0)
             {
                 Inventory.Remove(item);
             }
+        }
+
+        public void Turn()
+        {
+            if (Countdown == 0) return;
+            Countdown--;
+            if (Countdown == 0) CurrentEffect = EffectType.None;
         }
 
         //Healing Player and check for it not to be more than MaxHp
@@ -190,44 +203,48 @@
                             Heal(((Potion)keys[number]).Heal);
                             log.GreenAction = $"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points";
                             break;
+
                         case PotionTypes.ExplosivePotion:
-                            int overAllDamage = 0;
-                            foreach (Enemy enemy in level.Enemies)
                             {
-                                if (enemy == null) continue;
-                                if (enemy.CurrentHP == 0) continue;
-
-                                if (Coordinates.Abs(enemy.Coor, Coor) < 3)
+                                int overAllDamage = 0;
+                                foreach (Enemy enemy in level.Enemies)
                                 {
-                                    enemy.DealDamage(((Potion)keys[number]).Damage);
-                                    overAllDamage += ((Potion)keys[number]).Damage;
-                                    if (enemy.CurrentHP == 0)
+                                    if (enemy == null) continue;
+                                    if (enemy.CurrentHP == 0) continue;
+
+                                    if (Coordinates.Abs(enemy.Coor, Coor) < 3)
                                     {
-                                        Killed(enemy);
-                                        level.SetToMap(enemy.Coor, new Square(SquareTypes.Chest, enemy.Coor, enemy.Die()));
-
-
+                                        enemy.DealDamage(((Potion)keys[number]).Damage);
+                                        overAllDamage += ((Potion)keys[number]).Damage;
+                                        if (enemy.CurrentHP == 0)
+                                        {
+                                            Killed(enemy);
+                                            level[enemy.Coor] = new Square(SquareTypes.Chest, enemy.Coor, enemy.Die());
+                                        }
                                     }
                                 }
-                            }
 
-                            int countWalls = 0;
-                            foreach (int y in new List<int> { -1, 0, 1 })
-                            {
-                                foreach (int x in new List<int> { -1, 0, 1 })
+                                int countWalls = 0;
+                                foreach (int y in new List<int> { -1, 0, 1 })
                                 {
-                                    if (y == 0 && x == 0) continue;
-                                    Coordinates newCoor = Coor + new Coordinates(x, y);
-                                    if (level.GetFromMap(newCoor).Entity == SquareTypes.CrackedWall)
+                                    foreach (int x in new List<int> { -1, 0, 1 })
                                     {
-                                        level.SetToMap(newCoor, null);
-
-                                        level.SetToMap(newCoor, new Square(SquareTypes.Empty, Coor));
-                                        countWalls++;
+                                        if (y == 0 && x == 0) continue;
+                                        Coordinates newCoor = Coor + new Coordinates(x, y);
+                                        if (level[newCoor].Entity == SquareTypes.CrackedWall)
+                                        {
+                                            level[newCoor] = new(SquareTypes.Empty, newCoor);
+                                            countWalls++;
+                                        }
                                     }
                                 }
+                                log.GreenAction = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
+                                break;
                             }
-                            log.GreenAction = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
+
+                        default:
+                            CurrentEffect = ((Potion)keys[number]).Effect;
+                            Countdown = ((Potion)keys[number]).Turns;
                             break;
                     }
                     TakeItem(keys[number], 1);
@@ -252,5 +269,14 @@
             MaxHP += 3;
             CurrentHP = MaxHP;
         }
+    }
+
+    enum EffectType
+    {
+        None,
+        Invisibl,
+        HawkEye,
+        Invulnerbl,
+        Accuracy
     }
 }

@@ -9,9 +9,22 @@ namespace First_Semester_Project.Output
         public int CurrentLevel;
         public string GreenAction;
         public string RedAction;
+        private int _damage;
+        public int Damage
+        {
+            get{ return _damage; }
+            set
+            {
+                _damage = value;
+                if (Damage > 0)
+                {
+                    RedAction = $"Enemy attacked you and dealt {_damage} Damage";
+                }
+            }
+        }
         public int AwayFromExit;
 
-        public CancellationTokenSource CoinCancelToken;
+        public CancellationTokenSource CoinCancelToken { get; set; }
         public static void SetUp()
         {
             try
@@ -37,7 +50,7 @@ namespace First_Semester_Project.Output
             SetCursorPosition(1, 1);
             ForegroundColor = Black;
             BackgroundColor = DarkGreen;
-            Write(String.Concat(Enumerable.Repeat(" ",  30 * player.Exp / (player.Level * 5))));
+            Write(String.Concat(Enumerable.Repeat(" ", 30 * player.Exp / (player.Level * 5))));
             BackgroundColor = White;
             Write(String.Concat(Enumerable.Repeat(" ", 30 - (30 * player.Exp / (player.Level * 5)))));
             BackgroundColor = Black;
@@ -76,6 +89,9 @@ namespace First_Semester_Project.Output
                             case PotionTypes.GreatHealingPotion:
                                 Write($"{i}. {item.Name} with {((Potion)item).Heal} Healing");
                                 break;
+                            default:
+                                Write($"{i}. {item.Name} with {((Potion)item).Turns} Turns");
+                                break;
                         }
 
                         break;
@@ -99,12 +115,17 @@ namespace First_Semester_Project.Output
             SetCursorPosition(20, 3);
             Write($"Block  : {player.EquipedShield.Block} ");
 
+            SetCursorPosition(1, 4);
+            Write($"Effect : {player.CurrentEffect}.           ");
+            SetCursorPosition(20, 4);
+            Write($"Turns  : {player.Countdown} ");
+
             SetCursorPosition(3, 5);
             ForegroundColor = Red;
             Write("                            ");
-            SetCursorPosition(7, 5);
+            SetCursorPosition(7, 7);
             Write($"Your HP is {player.CurrentHP} of {player.MaxHP}");
-            PixelArt.Heart(player,5,6);
+            PixelArt.Heart(player, 5, 8);
 
             SetCursorPosition(35, 26);
             EraseLine();
@@ -118,12 +139,13 @@ namespace First_Semester_Project.Output
             Write(RedAction);
             GreenAction = "";
             RedAction = "";
+            Damage = 0;
             ForegroundColor = Yellow;
             SetCursorPosition(10, 18);
-            Write($"${player.Coins/100%10}{player.Coins/10%10}{player.Coins%10}$");
+            Write($"${player.Coins / 100 % 10}{player.Coins / 10 % 10}{player.Coins % 10}$");
             ForegroundColor = Green;
             SetCursorPosition(2, 19);
-            Write(AwayFromExit!=0?$"You are {AwayFromExit} moves            \n  Away from exit  ":"Can't find a way to the exit\n  Try to move around           ");
+            Write(AwayFromExit != 0 ? $"You are {AwayFromExit} moves            \n  Away from exit  " : "Can't find a way to the exit\n  Try to move around           ");
 
             SetCursorPosition(2, 22);
             ForegroundColor = Square.PlayerColor;
@@ -197,11 +219,11 @@ namespace First_Semester_Project.Output
                     }
                 }
             }
-            
+
         }
 
-        
-        
+
+
         public Data(int currentlevel)
         {
             CurrentLevel = currentlevel;
