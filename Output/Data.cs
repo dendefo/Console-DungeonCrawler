@@ -50,9 +50,9 @@ namespace First_Semester_Project.Output
             SetCursorPosition(1, 1);
             ForegroundColor = Black;
             BackgroundColor = DarkGreen;
-            Write(String.Concat(Enumerable.Repeat(" ", 30 * player.Exp / (player.Level * 5))));
+            Write(string.Concat(Enumerable.Repeat(" ", 30 * player.Exp / (player.Level * 5))));
             BackgroundColor = White;
-            Write(String.Concat(Enumerable.Repeat(" ", 30 - (30 * player.Exp / (player.Level * 5)))));
+            Write(string.Concat(Enumerable.Repeat(" ", 30 - (30 * player.Exp / (player.Level * 5)))));
             BackgroundColor = Black;
 
             //Printing the inventory
@@ -124,7 +124,7 @@ namespace First_Semester_Project.Output
             ForegroundColor = Red;
             Write("                            ");
             SetCursorPosition(7, 7);
-            Write($"Your HP is {player.CurrentHP} of {player.MaxHP}");
+            Write($"Your HP is {player.CurrentHP} of {player.MaxHP}  ");
             PixelArt.Heart(player, 5, 8);
 
             SetCursorPosition(35, 26);
@@ -145,7 +145,7 @@ namespace First_Semester_Project.Output
             Write($"${player.Coins / 100 % 10}{player.Coins / 10 % 10}{player.Coins % 10}$");
             ForegroundColor = Green;
             SetCursorPosition(2, 19);
-            Write(AwayFromExit != 0 ? $"You are {AwayFromExit} moves            \n  Away from exit  " : "Can't find a way to the exit\n  Try to move around           ");
+            Write(AwayFromExit != 0 ? $"You are {AwayFromExit} moves             \n  Away from exit     " : "Can't find a way to the exit\n  Try to move around           ");
 
             SetCursorPosition(2, 22);
             ForegroundColor = Square.PlayerColor;

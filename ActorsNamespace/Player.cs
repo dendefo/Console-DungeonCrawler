@@ -1,7 +1,7 @@
 ﻿namespace First_Semester_Project.ActorsNamespace
 {
     //Class that represents Player
-    internal class Player : Actor
+    internal class Player : Unit
     {
         //Players Inventory in format <Item-object, amount>
         public Dictionary<Item, int> Inventory { get; protected set; }

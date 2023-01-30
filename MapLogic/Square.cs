@@ -29,6 +29,7 @@
         public SquareTypes Entity { get; private set; }
         public char Symbol { get; private set; }
         public Actor ActorOnSquare { get; set; }
+        public bool seen = false;
 
         public Square(SquareTypes type, Coordinates coor)
         {
@@ -38,7 +39,7 @@
             switch (type)
             {
                 case SquareTypes.Empty:
-                    Symbol = ' ';
+                    Symbol = '.';
                     Color = ConsoleColor.White;
                     break;
 
@@ -92,8 +93,8 @@
                     break;
 
                 case SquareTypes.DamagingTrap:
-                    Symbol = ' ';
-                    Color = ConsoleColor.DarkRed;
+                    Symbol = '.';
+                    Color = ConsoleColor.White;
                     ActorOnSquare = new Trap(coor, SquareTypes.DamagingTrap,this);
                     break;
             }
@@ -118,7 +119,7 @@
         {
             Color = ConsoleColor.White;
             Entity = SquareTypes.Empty;
-            Symbol = ' ';
+            Symbol = '.';
             ActorOnSquare = null;
         }
     }

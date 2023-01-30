@@ -1,6 +1,6 @@
 ﻿namespace First_Semester_Project.MapLogic
 {
-    static class CollisionLogic
+    static class Physics
     {
         static public void CollisionCheck(Map map, Coordinates delta, Actor actor)
         {
@@ -49,7 +49,7 @@
                     }
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
-                    Actor.Battle(map, (Enemy)map[newCoor].ActorOnSquare, coor + delta, true);
+                    Unit.Battle(map, (Enemy)map[newCoor].ActorOnSquare, coor + delta, true);
                     Task.Run(SoundEffects.Attack);
                     break;
 
@@ -93,7 +93,7 @@
 
                     if (actor.ActorsSquare.Entity == SquareTypes.Enemy)
                     {
-                        Actor.Battle(map, (Enemy)actor, newCoor, false);
+                        Unit.Battle(map, (Enemy)actor, newCoor, false);
                     }
 
                     if (actor.ActorsSquare.Entity == SquareTypes.SpykeWall)
@@ -113,7 +113,7 @@
                     if (actor.ActorsSquare.Entity != SquareTypes.Player) break;
 
                     Chest chest = (Chest)map[newCoor].ActorOnSquare;
-                    map.Log.GreenAction = $"Yay, you got some {chest.Inside.Name}";
+                    map.Log.GreenAction = $"Yay, you got some {chest.ItemToDrop.Name}";
                     map.User.GiveItem(chest.Open());
                     map[newCoor].MakeEmpty();
                     break;
@@ -137,6 +137,35 @@
                         ((Spike)actor).ChangeDirection();
                     }
                     break;
+            }
+        }
+        static public bool Raycast(Map map, Coordinates start, Coordinates target, List<SquareTypes> objectsToCollide,int maxDistance)
+        {
+            if (start == target) return true;
+            float distance = Coordinates.Distance(start, target);
+            if (distance > maxDistance) return false;
+
+            float cos = (target.X - start.X) / distance;
+            float sin = (target.Y - start.Y) / distance;
+
+            double summ = cos * cos + sin * sin;
+            float x = start.X;
+            float y = start.Y;
+
+            while (true)
+            {
+                x += cos;
+                y += sin;
+
+                if (Math.Round(x) == target.X && Math.Round(y) == target.Y) return true;
+                else if (Math.Floor(x) == target.X && Math.Round(y) == target.Y) return true;
+                else if (Math.Round(x) == target.X && Math.Floor(y) == target.Y) return true;
+                else if (Math.Floor(x) == target.X && Math.Floor(y) == target.Y) return true;
+
+
+
+                if (!objectsToCollide.Contains(map[new((int)Math.Round(x), (int)Math.Round(y))].Entity)) continue;
+                else return false;
             }
         }
     }

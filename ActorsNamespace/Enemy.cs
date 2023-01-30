@@ -2,15 +2,17 @@
 {
 
     //Class that represents Enemy
-    internal class Enemy : Actor
+    internal class Enemy : Unit
     {
         static public int Difficulty = 3;
+        private Coordinates spawnCoord;
+        private Coordinates TargetCoords = new(0,0);
         //if player was at range at least once = true
-        bool isTriggerd = false;
 
         //Basic constructor
         public Enemy(Coordinates coor, int level, Square square, Weapon weapon, Shield shield, Item item) : base(coor)
         {
+            spawnCoord = coor;
             MaxHP = level * Difficulty;
             CurrentHP = MaxHP;
             StandsOn = new Square(SquareTypes.Empty, coor);
@@ -26,33 +28,7 @@
         {
             ActorsSquare.MakeEmpty();
             return ItemToDrop;
-            //Random rand = new Random();
-            //if (EquipedWeapon.Name != "Fists" && EquipedShield.Name != "Abs")
-            //{
-            //    switch (rand.Next(0, 3))
-            //    {
-            //        case 0: return EquipedWeapon;
-            //        case 1: return EquipedShield;
-            //        case 2: return new Potion(PotionTypes.GreatHealingPotion);
-            //    }
-            //}
-            //else if (EquipedShield.Name != "Abs")
-            //{
-            //    switch (rand.Next(0, 2))
-            //    {
-            //        case 0: return EquipedShield;
-            //        case 1: return new Potion(PotionTypes.HealingPotion);
-            //    }
-            //}
-            //else if (EquipedWeapon.Name != "Fists")
-            //{
-            //    switch (rand.Next(0, 2))
-            //    {
-            //        case 0: return EquipedWeapon;
-            //        case 1: return new Potion(PotionTypes.HealingPotion);
-            //    }
-            //}
-            //return new Potion(PotionTypes.SmallHealingPotion);
+            
         }
 
         public static void EnemiesMoving(Map LevelMap, Player player)
@@ -65,13 +41,17 @@
                 if (enemy == null) continue; //if there is no enemy
                 if (enemy.CurrentHP == 0) continue; //if enemy died
 
-                if (!(Coordinates.Abs(player.Coor, enemy.Coor) < 6) && !enemy.isTriggerd) continue; //If player isn't in range, but enemy saw him, he will never abandon him no matter what
-                enemy.isTriggerd = true; //Start never-ending chase
-
+                if (!Physics.Raycast(LevelMap, enemy.Coor, player.Coor, Map.notVisibleThrow, 6)) //If enemy sees the player
+                {
+                    if (enemy.TargetCoords == new Coordinates(0, 0)) continue;
+                }
+                else enemy.TargetCoords = player.Coor;
+                if (enemy.Coor == enemy.TargetCoords) { enemy.TargetCoords = enemy.spawnCoord; }
+                if(enemy.TargetCoords == enemy.spawnCoord&& enemy.TargetCoords == enemy.Coor) { enemy.TargetCoords = new Coordinates(0, 0);}
                 //I burned 5 hours to understand and make this algorithm, used pseudo code from one site as reverence and tryed to implement it for 2 hours
-                List<Node> path = Node.BuildPath(enemy.Pathfinder(LevelMap, player.Coor));
-                if (path ==null) continue;
-                CollisionLogic.CollisionCheck(LevelMap, path[path.Count - 2].Coor - enemy.Coor, enemy);
+                List<Node> path = Node.BuildPath(enemy.Pathfinder(LevelMap, enemy.TargetCoords));
+                if (path == null) { enemy.TargetCoords = new(); continue; }
+                Physics.CollisionCheck(LevelMap, path[path.Count - 2].Coor - enemy.Coor, enemy);
             }
         }
 

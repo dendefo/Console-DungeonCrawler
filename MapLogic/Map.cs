@@ -12,12 +12,24 @@
 
         public Square[][] MapArray { get; private set; } //Array with each tile of map
 
+        public static List<SquareTypes> notVisibleThrow = new List<SquareTypes>() { SquareTypes.Wall,SquareTypes.CrackedWall };
+
         /// <summary>
         /// Returns Square from map by coordinates
         /// </summary>
         /// <param name="coor"></param>
         /// <returns></returns>
-        public Square this[Coordinates coor] { get { return MapArray[coor.Y][coor.X]; } set { MapArray[coor.Y][coor.X] = value; } }
+        public Square this[Coordinates coor]
+        {
+            get
+            {
+                return MapArray[coor.Y][coor.X];
+            }
+            set
+            {
+                MapArray[coor.Y][coor.X] = value;
+            }
+        }
         Coordinates _exit;
 
         string[] fileSpawn = new string[2];
@@ -39,7 +51,7 @@
             file[file.Length - 1] = null;
 
 
-            MapArray = new Square[file.Length-2][];
+            MapArray = new Square[file.Length - 2][];
             for (int y = 0; y < file.Length; y++) //Going throw each row of level
             {
                 if (file[y] == null) continue;
@@ -59,7 +71,7 @@
         private Square Spawn(char type, int Level, Player player, int x, int y)
         {
             Square square;
-            Coordinates coor = new Coordinates(x,y);
+            Coordinates coor = new Coordinates(x, y);
 
             switch ((SquareTypes)type)
             {
@@ -74,8 +86,7 @@
 
                 case SquareTypes.Entry:
                     square = new Square(SquareTypes.Entry, coor);
-                    player.StandsOn = square;
-                    player.Move(coor-player.Coor, square);
+                    player.Move(coor - player.Coor, square);
                     User = player;
                     break;
 
@@ -114,20 +125,29 @@
         {
             Console.SetCursorPosition(0, 0);
             engine = new();
-            foreach (Square[] row in MapArray)
+            for (int i = 0; i < MapArray.Length; i++)
             {
-                foreach (Square tile in row)
+                Square[] row = MapArray[i];
+                for (int j = 0; j < row.Length; j++)
                 {
-                    if (User.CurrentEffect == EffectType.HawkEye && tile.Entity == SquareTypes.DamagingTrap) { engine.Push(Square.EnemyColor, '¤'); continue; }
-                    engine.Push(tile.Color, tile.Symbol);
+                    Square tile = row[j];
 
+                    if (Physics.Raycast(this,User.Coor, new(j, i), notVisibleThrow,7)) { engine.Push(tile.Color, tile.Symbol); }
+                    
+                    //if (this[new(j, i)].seen) engine.Push(tile.Color, tile.Symbol);
+                    else engine.Push(ConsoleColor.White, ' '); 
+
+                    //if (Math.Pow(User.Coor.Y - i, 2) + Math.Pow(User.Coor.X - j, 2) / 2 > 9 && User.CurrentEffect != EffectType.HawkEye) { this[new(j, i)].seen = false; engine.Push(ConsoleColor.White, ' '); continue; }
+                    //else { engine.Push(tile.Color, tile.Symbol); this[new(j, i)].seen = true; continue; }
+                    //if (User.CurrentEffect == EffectType.HawkEye && tile.Entity == SquareTypes.DamagingTrap) { engine.Push(Square.EnemyColor, '¤'); continue; }
+                    //engine.Push(tile.Color, tile.Symbol);
                 }
                 engine.Push(ConsoleColor.Black, '\n');
             }
             engine.Print();
             Console.ResetColor();
 
-            List<Node> path= Node.BuildPath(User.Pathfinder(this, _exit));
+            List<Node> path = Node.BuildPath(User.Pathfinder(this, _exit));
             if (path != null)
             {
                 Log.AwayFromExit = path.Count;
@@ -139,12 +159,16 @@
         } //Printing map
         public void MoveActorOnMap(Actor actor, Coordinates coor, Coordinates delta)
         {
-            Coordinates sum = coor + delta;
-            Square temp = this[sum];
-            this[sum] = actor.ActorsSquare;
-            this[coor] = actor.StandsOn;
+            Coordinates sum = coor + delta; //Get new coordinates of the actor
+            Square temp = this[sum];        //Save the information about the square that actor is going to stand on
+            this[sum] = actor.ActorsSquare; //Place the actor on th next square
+            this[coor] = actor.StandsOn;    //Load the square that actor have been stayed on
+            
+            actor.Move(delta, temp);        //Change actor's coordinates and save the square that actors is stands on
+            actor.ActorsSquare.seen = actor.StandsOn.seen;
 
-            actor.Move(delta, temp);
         }
+
+        
     }
 }

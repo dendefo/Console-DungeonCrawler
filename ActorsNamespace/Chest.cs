@@ -3,23 +3,18 @@
     //Class that represents Chests
     internal class Chest : Actor
     {
-        //Item inside the Chest
-        public Item Inside { get; private set; }
-
         //Basic constructor
-        public Chest(Coordinates coor) : base(coor)
-        {
-        }
+        public Chest(Coordinates coor) : base(coor) { }
 
         public void PutInside(Item inside)
         {
-            Inside = inside;
+            ItemToDrop = inside;
         }
 
         public Item Open()
         {
-            Item temp = Inside;
-            Inside = null;
+            Item temp = ItemToDrop;
+            ItemToDrop = null;
             return temp;
         }
     }

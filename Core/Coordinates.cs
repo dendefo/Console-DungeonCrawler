@@ -1,9 +1,12 @@
-﻿namespace First_Semester_Project.Core
+﻿using System.Numerics;
+
+namespace First_Semester_Project.Core
 {
     struct Coordinates
     {
         public int X = 0;
         public int Y = 0;
+
 
         public Coordinates(int x, int y)
         {
@@ -37,6 +40,16 @@
             }
         }
 
+        public static float Distance(Coordinates left, Coordinates right)
+        {
+            var temp = Square(Abs(left, right), 2);
+            return MathF.Pow(temp.X + temp.Y, 0.5f);
+        }
+
+        public static Coordinates Square(Coordinates coor, float pow)
+        {
+            return new((int)Math.Pow(coor.X, pow), (int)Math.Pow(coor.Y, pow));
+        }
         /// <summary>
         /// Summs values of two coordinates
         /// </summary>
@@ -69,7 +82,7 @@
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Coordinates Abs (Coordinates left, Coordinates right)
+        public static Coordinates Abs(Coordinates left, Coordinates right)
         {
             return new(Math.Abs(left.X - right.X), Math.Abs(left.Y - right.Y));
         }

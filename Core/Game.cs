@@ -250,22 +250,22 @@ namespace First_Semester_Project.Core
 
                     case A:
                     case LeftArrow://Left
-                        CollisionLogic.CollisionCheck(LevelMap, new(Directions.Left), User);
+                        Physics.CollisionCheck(LevelMap, new(Directions.Left), User);
                         break;
 
                     case D:
                     case RightArrow://Right
-                        CollisionLogic.CollisionCheck(LevelMap, new(Directions.Right), User);
+                        Physics.CollisionCheck(LevelMap, new(Directions.Right), User);
                         break;
 
                     case S:
                     case DownArrow://Down
-                        CollisionLogic.CollisionCheck(LevelMap, new(Directions.Down), User);
+                        Physics.CollisionCheck(LevelMap, new(Directions.Down), User);
                         break;
 
                     case W:
                     case UpArrow://Up
-                        CollisionLogic.CollisionCheck(LevelMap, new(Directions.Up), User);
+                        Physics.CollisionCheck(LevelMap, new(Directions.Up), User);
                         break;
 
                     case D0:
@@ -294,18 +294,15 @@ namespace First_Semester_Project.Core
 
         public void Start(int level, bool gameReStart)
         {
-
             if (gameReStart) User = new Player(new(), new Square(SquareTypes.Player, new()));
             else User = new Player(UserAtStart.Coor, UserAtStart);
 
             for (int currentLevel = level; currentLevel <= 10; currentLevel++)
             {
-                //Menu.Market(User, log);
                 LevelMap = new(currentLevel, User, log);
                 log.PrintGUI();
                 PlayTheLevel();
                 log.CurrentLevel++;
-
             }
         }
         private void PlayTheLevel()
@@ -337,6 +334,5 @@ namespace First_Semester_Project.Core
             }
             if (log.CurrentLevel % 2 == 0) Menu.Market(User, log);
         }
-
     }
 }
