@@ -2,8 +2,9 @@
 {
     internal class Weapon : Item
     {
-        public int Damage { get; private set; }
-        public int HitChance { get; private set; }
+        //Damage is virtual only because of override in Fang (Weapon of Snake)
+        virtual public int Damage { get; private set; }
+        public int HitChance { get; protected set; }
         public Weapon(WeaponTypes weapon)
         {
             Type = ItemTypes.Weapon;

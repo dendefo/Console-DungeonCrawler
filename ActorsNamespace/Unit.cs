@@ -1,6 +1,6 @@
 ﻿namespace First_Semester_Project.ActorsNamespace
 {
-    internal class Unit :Actor
+    abstract internal class Unit :Actor
     {
         public Weapon EquipedWeapon { get; protected set; }
         public Shield EquipedShield { get; protected set; }
@@ -12,6 +12,11 @@
 
         public Unit(Coordinates coor) : base(coor) { }
 
+        //Basic Die mechanic for every Unit
+        public virtual void Die(Map map)
+        {
+            map[Coor] = new Square(SquareTypes.Chest, Coor, ItemToDrop);
+        }
 
         //Damage-Dealing system
         public int Attack(Unit defender)
@@ -48,7 +53,7 @@
             if (CurrentHP < 0) CurrentHP = 0;
         } //Deal pure damage
 
-        public static void Battle(Map map, Enemy enemy, Coordinates coor, bool isPlayerAttacked)
+        public static void Battle(Map map, Unit enemy, Coordinates coor, bool isPlayerAttacked)
         {
 
             if (isPlayerAttacked)
@@ -66,22 +71,28 @@
                 if (enemy.CurrentHP == 0)
                 {
                     map.User.Killed(enemy);
-                    map[coor] = new Square(SquareTypes.Chest, coor, enemy.Die());
-                    map.Log.GreenAction = $"Enemy died and dropped chest with {((Chest)map[coor].ActorOnSquare).ItemToDrop.Name} for you";
+                    enemy.Die(map);
+                    map.Log.Logs.Enqueue(new($"Enemy died and dropped chest with {((Chest)map[coor].ActorOnSquare).ItemToDrop.Name} for you"));
                     return;
                 }
-                map.Log.GreenAction = $"You dealed {userD} damage to the enemy. Now his HP is {enemy.CurrentHP}";
+                map.Log.Logs.Enqueue(new($"You dealed {userD} damage to the enemy. Now his HP is {enemy.CurrentHP}"));
                 return;
             }
-            map.Log.Damage += enemy.Attack(map.User);
+            int dmg = enemy.Attack(map.User);
+            if (dmg > 0)
+            {
+                map.Log.Logs.Enqueue(new($"Enemy attacked you with his {enemy.EquipedWeapon.Name} and dealt {dmg} damage!",ConsoleColor.Red));
+            }
+            else map.Log.Logs.Enqueue(new($"You evaded or blocked the damage, nice"));
         }
 
         /// <summary>
         /// Pathfinding algorithm
         /// </summary>
-        /// <param name="level"> Map of current level</param>
-        /// <param name="target"> Target on the map</param>
-        public Node Pathfinder(Map level, Coordinates target)
+        /// <param name="level"> Map of current level </param>
+        /// <param name="target"> Target on the map </param>
+        /// <param name="goThrow"> List of walkables tiles </param>
+        public Node Pathfinder(Map level, Coordinates target, List<SquareTypes> goThrow)
         {
 
             List<Node> reachable = new()
@@ -94,6 +105,7 @@
             while (reachable.Count != 0) //If reachable is 0 and algothm didn't made return, enemy can't reach the player
             {
                 Node node = reachable[0];
+
                 foreach (Node node1 in reachable)
                 {
                     if (node1.Distance < node.Distance) node = node1; //Taking Node with less distance to the target
@@ -107,7 +119,7 @@
                 }
 
                 visited.Add(node); //Already been there, don't need to check nodes twice
-                reachable.RemoveAt(0);
+                reachable.Remove(node);
 
                 SquareTypes entity;
                 foreach (int y in new List<int> { -1, 0, 1 }) //For y axis
@@ -122,7 +134,7 @@
                         entity = level[newCoords].Entity; //Looking what's on the Square
 
 
-                        if (!(entity == SquareTypes.Empty || entity == SquareTypes.Player || entity == SquareTypes.Coin || entity == SquareTypes.Exit)) continue; //If it's not walkable, then continue
+                        if (!goThrow.Contains(entity)) continue; //If it's not walkable, then continue
 
                         Node adjacent = new(newCoords, node, Coordinates.Distance(newCoords, target)); //Create new node to check
                         if (reachable.Exists(n => n.Coor == adjacent.Coor)) continue; //If it's already awaits for check then continue
@@ -134,7 +146,7 @@
             return null; //There is no path
         }
     }
-    class Node //Representation of map as tree of walkable Nodes, that starts at Actor's node. We search for Target node at that tree
+    class Node //Representation of map as graph of walkable Nodes, that starts at Actor's node. We search for Target node at that tree
     {
         public Coordinates Coor; //Coordinates of Node
         public Node previous; //Node that linked us to this one. 

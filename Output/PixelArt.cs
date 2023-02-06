@@ -3,6 +3,10 @@ using static System.ConsoleColor;
 
 namespace First_Semester_Project.Output
 {
+    //You don't want to scroll over this class. There is too much same lines of code, save your time. Cause i didn't saved it
+    
+    //After making all this functions i think that it maybe was better to represent is as matrix of dictionaries<symbol, color> or something like this
+    //But i already made a bad way
     internal class PixelArt
     {
         public static void Print(int x, int y, ConsoleColor color)
@@ -246,6 +250,7 @@ namespace First_Semester_Project.Output
 
             Print(x + 4, y + 10, Gray, "████████████");
         }
+        //Especially this function, cause it is 8 images.
         public static void Coin(int x, int y, int count)
         {
             BackgroundColor = DarkGray;
@@ -985,7 +990,5 @@ namespace First_Semester_Project.Output
             Write("            ██       Tiltan(c)");
             ResetColor();
         }
-
-
     }
 }

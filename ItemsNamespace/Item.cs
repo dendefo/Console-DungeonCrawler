@@ -1,11 +1,12 @@
 ﻿namespace First_Semester_Project.ItemsNamespace
 {
-    internal class Item
+    //Do i have to explain this?
+    internal abstract class Item
     {
         public ItemTypes Type { get; protected set; }
         public string Name { get; protected set; }
 
-
+        //Create item by name
         public static Item NameParser(string name)
         {
             switch (name)
@@ -50,6 +51,7 @@
             }
         }
 
+        //Create item by number
         public static Item ItemParse(int itemInt)
         {
 

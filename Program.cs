@@ -8,10 +8,10 @@ namespace First_Semester_Project
 {
     class Program
     {
+        //Have Fun!
         static void Main(string[] args)
         {
             Data.SetUp();
-            //Menu.Market(new Player(new Coordinates(), new Square(SquareTypes.Player, new())), new(1));
             Menu.MainMenu();
             Menu.PrintCursor(0, 71, 11);
             Game game = new();

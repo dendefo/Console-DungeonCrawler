@@ -1,43 +1,20 @@
-﻿using System.Numerics;
-
-namespace First_Semester_Project.Core
+﻿namespace First_Semester_Project.Core
 {
+    //My Int Vector2 Implemintation
     struct Coordinates
     {
         public int X = 0;
         public int Y = 0;
 
+        static public Coordinates Up = new Coordinates(0, -1);
+        static public Coordinates Down = new Coordinates(0, 1);
+        static public Coordinates Left = new Coordinates(-1, 0);
+        static public Coordinates Right = new Coordinates(1, 0);
 
         public Coordinates(int x, int y)
         {
             X = x;
             Y = y;
-        }
-        public Coordinates(Directions direction)
-        {
-            switch (direction)
-            {
-                case Directions.Up:
-                    X = 0;
-                    Y = -1;
-                    break;
-                case Directions.Down:
-                    X = 0;
-                    Y = 1;
-                    break;
-                case Directions.Left:
-                    X = -1;
-                    Y = 0;
-                    break;
-                case Directions.Right:
-                    X = 1;
-                    Y = 0;
-                    break;
-
-                case Directions.Center:
-                default:
-                    break;
-            }
         }
 
         public static float Distance(Coordinates left, Coordinates right)
@@ -50,6 +27,8 @@ namespace First_Semester_Project.Core
         {
             return new((int)Math.Pow(coor.X, pow), (int)Math.Pow(coor.Y, pow));
         }
+
+        
         /// <summary>
         /// Summs values of two coordinates
         /// </summary>
@@ -106,7 +85,7 @@ namespace First_Semester_Project.Core
         /// <returns></returns>
         public static bool operator !=(Coordinates left, Coordinates right)
         {
-            return left.X == right.X && left.Y == right.Y;
+            return left.X != right.X || left.Y != right.Y;
         }
 
         /// <summary>
@@ -130,13 +109,5 @@ namespace First_Semester_Project.Core
         {
             return coor.X > value && coor.Y > value;
         }
-    }
-    enum Directions
-    {
-        Center,
-        Up,
-        Down,
-        Left,
-        Right,
     }
 }

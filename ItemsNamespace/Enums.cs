@@ -1,5 +1,6 @@
 ﻿namespace First_Semester_Project.ItemsNamespace
 {
+    //All the items Enums. Should've use it like ID system, it would be better
     enum ItemTypes
     {
         Weapon = 40,

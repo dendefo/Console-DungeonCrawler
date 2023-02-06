@@ -2,10 +2,10 @@
 {
     //Anything interactable is called Actor.
     //All the Actor Childs are represented in this namespace
-    internal class Actor
+    abstract internal class Actor
     {
         // Square that the Actor is standing on (Not showed)
-        public Square StandsOn { get; set; }
+        public Square StandsOn { get; protected set; }
         //Square of the Actor (Showed)
         public Square ActorsSquare { get; protected set; }
         public Item ItemToDrop { get; protected set; }
@@ -17,8 +17,6 @@
             Coor += coor;
             StandsOn = stansdOn;
         }
-
-
         //Constractor
         public Actor(Coordinates coor)
         {

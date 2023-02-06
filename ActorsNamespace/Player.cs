@@ -4,17 +4,16 @@
     internal class Player : Unit
     {
         //Players Inventory in format <Item-object, amount>
-        public Dictionary<Item, int> Inventory { get; protected set; }
+        public Dictionary<Item, int> Inventory { get; protected set; } //Inventory system. Not the best one, but works just well
 
-        public int Coins { get; private set; }
+        public int Coins { get; private set; } //Player's amount of money
         public int Exp { get; private set; }
-        public int KillCount { get; private set; }
+        public int KillCount { get; private set; }  //Haven't implemented it yet, something for Meta Game Design
         public int Level { get; private set; }
 
-
-
-        public int Countdown { get; private set; }
-        public EffectType CurrentEffect { get; private set; }
+        //Section about potions with long-term effects
+        public int Countdown { get; private set; } //Turns to the end of the effect
+        public EffectType CurrentEffect { get; private set; } 
 
         //Constructor
         public Player(Coordinates coor, Square square) : base(coor)
@@ -67,6 +66,7 @@
                     return; //Exit
                 }
             }
+            
             Inventory.Add(item, 1); //If no sutable item in inventory, Add new 
         }
 
@@ -86,6 +86,7 @@
             }
         }
 
+        //Potion long-term mechanic
         public void Turn()
         {
             if (Countdown == 0) return;
@@ -102,7 +103,7 @@
 
         }
 
-        //This Method is a huge If, but it works just fine.
+        //This Method is a huge If statement, but it works just fine.
         public void FullHeal()
         {
             Potion small = null, medium = null, big = null;
@@ -168,7 +169,7 @@
         }
 
         //Using item by the player
-        public void Use(int number, Data log, Map level)
+        public void Use(int number, Data log, Map map)
         {
             List<Item> keys = Inventory.Keys.ToList();
             if (number >= keys.Count) return;
@@ -181,7 +182,7 @@
 
                     if (weapon.Name != "Fists") GiveItem(weapon);
 
-                    log.GreenAction = $"You equiped {EquipedWeapon.Name}";
+                    log.Logs.Enqueue(new($"You equiped {EquipedWeapon.Name}"));
                     break;
 
                 case ItemTypes.Shield: //Changing shield 
@@ -190,7 +191,7 @@
                     TakeItem(keys[number], 1);
 
                     if (shield.Name != "Abs") GiveItem(shield);
-                    log.GreenAction = $"You equiped {EquipedShield.Name}";
+                    log.Logs.Enqueue(new($"You equiped {EquipedShield.Name}"));
                     break;
 
                 case ItemTypes.Potion: //Using potions
@@ -201,13 +202,13 @@
                         case PotionTypes.HealingPotion:
                         case PotionTypes.GreatHealingPotion: //All three potions has the same logic, but different amount of healing
                             Heal(((Potion)keys[number]).Heal);
-                            log.GreenAction = $"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points";
+                            log.Logs.Enqueue(new($"You used {keys[number].Name} and healed {((Potion)keys[number]).Heal} Health Points"));
                             break;
 
-                        case PotionTypes.ExplosivePotion:
+                        case PotionTypes.ExplosivePotion: //Killing enemies/Snakes 
                             {
                                 int overAllDamage = 0;
-                                foreach (Enemy enemy in level.Enemies)
+                                foreach (Enemy enemy in map.Enemies)
                                 {
                                     if (enemy == null) continue;
                                     if (enemy.CurrentHP == 0) continue;
@@ -219,7 +220,23 @@
                                         if (enemy.CurrentHP == 0)
                                         {
                                             Killed(enemy);
-                                            level[enemy.Coor] = new Square(SquareTypes.Chest, enemy.Coor, enemy.Die());
+                                            enemy.Die(map);
+                                        }
+                                    }
+                                }
+                                foreach (Snake enemy in map.SnakesHeads)
+                                {
+                                    if (enemy == null) continue;
+                                    if (enemy.CurrentHP == 0) continue;
+
+                                    if (Coordinates.Abs(enemy.Coor, Coor) < 3)
+                                    {
+                                        enemy.DealDamage(((Potion)keys[number]).Damage);
+                                        overAllDamage += ((Potion)keys[number]).Damage;
+                                        if (enemy.CurrentHP == 0)
+                                        {
+                                            Killed(enemy);
+                                            enemy.Die(map);
                                         }
                                     }
                                 }
@@ -231,18 +248,19 @@
                                     {
                                         if (y == 0 && x == 0) continue;
                                         Coordinates newCoor = Coor + new Coordinates(x, y);
-                                        if (level[newCoor].Entity == SquareTypes.CrackedWall)
+                                        if (map[newCoor].Entity == SquareTypes.CrackedWall)
                                         {
-                                            level[newCoor] = new(SquareTypes.Empty, newCoor);
+                                            map[newCoor] = new(SquareTypes.Empty, newCoor);
                                             countWalls++;
                                         }
                                     }
                                 }
-                                log.GreenAction = $"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed";
+                                log.Logs.Enqueue(new($"There was an explosion! {overAllDamage} Damage dealed to enemies, {countWalls} wall destoyed"));
+
                                 break;
                             }
 
-                        default:
+                        default: //Any potion with long-term effect
                             CurrentEffect = ((Potion)keys[number]).Effect;
                             Countdown = ((Potion)keys[number]).Turns;
                             break;
@@ -253,7 +271,7 @@
             }
         }
 
-        public void Killed(Enemy enemy)
+        public void Killed(Unit enemy)
         {
             Exp += enemy.MaxHP / Enemy.Difficulty;
             KillCount++;
@@ -261,6 +279,7 @@
             {
                 LevelUp();
             }
+            
         }
         private void LevelUp()
         {
@@ -271,7 +290,7 @@
         }
     }
 
-    enum EffectType
+    enum EffectType //Potion effects
     {
         None,
         Invisibl,

@@ -16,21 +16,26 @@
         RevealedTrap = 48,         // 0  Do not use on map. Place another trap instead 
         DamagingTrap = 84,         // T
         Coin = 36,                 // $
+        SnakeHead = 83,            // S
+        SnakeSegment = 115         // s
     }
 
     //Each tile of map
     internal class Square
     {
-        static public char PlayerAvatar = '♥';
-        static public ConsoleColor PlayerColor = ConsoleColor.DarkMagenta; 
+        //Changable in options
+        static public char PlayerAvatar = '♥'; 
+        static public ConsoleColor PlayerColor = ConsoleColor.DarkMagenta;
         static public char EnemyAvatar = '☻';
         static public ConsoleColor EnemyColor = ConsoleColor.DarkRed;
-        public ConsoleColor Color { get; private set; }
-        public SquareTypes Entity { get; private set; }
-        public char Symbol { get; private set; }
-        public Actor ActorOnSquare { get; set; }
-        public bool seen = false;
 
+        
+        public ConsoleColor Color { get; private set; } //Printing color
+        public SquareTypes Entity { get; private set; } //Type
+        public char Symbol { get; private set; }        //Printing cymbol
+        public Actor ActorOnSquare { get; set; }        //Interactble
+
+        //Basic constructor
         public Square(SquareTypes type, Coordinates coor)
         {
             Entity = type;
@@ -39,7 +44,7 @@
             switch (type)
             {
                 case SquareTypes.Empty:
-                    Symbol = '.';
+                    Symbol = ' ';
                     Color = ConsoleColor.White;
                     break;
 
@@ -84,7 +89,7 @@
                 case SquareTypes.Player:
                     Symbol = PlayerAvatar;
                     Color = PlayerColor;
-                    ActorOnSquare = new Player(coor,this);
+                    ActorOnSquare = new Player(coor, this);
                     break;
 
                 case SquareTypes.RevealedTrap:
@@ -93,20 +98,36 @@
                     break;
 
                 case SquareTypes.DamagingTrap:
-                    Symbol = '.';
+                    Symbol = ' ';
                     Color = ConsoleColor.White;
-                    ActorOnSquare = new Trap(coor, SquareTypes.DamagingTrap,this);
+                    ActorOnSquare = new Trap(coor, SquareTypes.DamagingTrap, this);
+                    break;
+
+                case SquareTypes.SnakeSegment:
+                    Symbol = 'o';
+                    Color = EnemyColor;
+                    ActorOnSquare = new Snake(coor, 1, this, new(WeaponTypes.Fists), new(ShieldTypes.Abs), new Coin(), false);
                     break;
             }
         }
 
+        //Constructor for tile with enemy
         public Square(SquareTypes type, Coordinates coor, int level, int weapon, int shield, int item)
         {
             Entity = type;
+            if (type == SquareTypes.SnakeHead)
+            {
+                Symbol = 'Q';
+                Color = EnemyColor;
+                ActorOnSquare = new Snake(coor, level, this, new(WeaponTypes.Fists), new(ShieldTypes.Abs), new Potion(PotionTypes.InvulnerabilityPotion), true);
+                return;
+            }
+            
             Symbol = EnemyAvatar;
             Color = EnemyColor;
-            ActorOnSquare = new Enemy(coor, level,this, new((WeaponTypes)weapon), new((ShieldTypes)shield), Item.ItemParse(item));
+            ActorOnSquare = new Enemy(coor, level, this, new((WeaponTypes)weapon), new((ShieldTypes)shield), Item.ItemParse(item));
         }
+        //Constructor with chest
         public Square(SquareTypes type, Coordinates coor, Item item)
         {
             Entity = type;
@@ -115,12 +136,20 @@
             ActorOnSquare = new Chest(coor);
             ((Chest)ActorOnSquare).PutInside(item);
         }
+        //Clear the tile
         public void MakeEmpty()
         {
             Color = ConsoleColor.White;
             Entity = SquareTypes.Empty;
-            Symbol = '.';
+            Symbol = ' ';
             ActorOnSquare = null;
+        }
+        //Snake Segment may become Snake Head
+        public void MakeSnakeHead()
+        {
+            Color = EnemyColor;
+            Entity = SquareTypes.SnakeHead;
+            Symbol = 'Q';
         }
     }
 }

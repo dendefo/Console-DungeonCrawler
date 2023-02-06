@@ -7,24 +7,31 @@ namespace First_Semester_Project.Output
     internal class Data
     {
         public int CurrentLevel;
-        public string GreenAction;
-        public string RedAction;
-        private int _damage;
-        public int Damage
+        private Queue<DataString> _logs = new Queue<DataString>();
+        public Queue<DataString> Logs
         {
-            get{ return _damage; }
+            get
+            {
+                if (_logs.Count > 7)
+                {
+                    _logs.Dequeue();
+                }
+                return _logs;
+            }
             set
             {
-                _damage = value;
-                if (Damage > 0)
+                _logs = value;
+                if (_logs.Count > 7)
                 {
-                    RedAction = $"Enemy attacked you and dealt {_damage} Damage";
+                    _logs.Dequeue();
                 }
+
+
             }
         }
-        public int AwayFromExit;
+        public int AwayFromExit;  //Amount of turns to exit
 
-        public CancellationTokenSource CoinCancelToken { get; set; }
+        public CancellationTokenSource CoinCancelToken { get; set; } //For coin printing
         public static void SetUp()
         {
             try
@@ -37,10 +44,6 @@ namespace First_Semester_Project.Output
                 Environment.Exit(0);
             }
             CursorVisible = false;
-        }
-        public void EraseLine()
-        {
-            Write("                                                                     ");
         }
         public void Output(Player player)
         {
@@ -55,16 +58,17 @@ namespace First_Semester_Project.Output
             Write(string.Concat(Enumerable.Repeat(" ", 30 - (30 * player.Exp / (player.Level * 5)))));
             BackgroundColor = Black;
 
-            //Printing the inventory
+
             SetCursorPosition(110, 0);
             ForegroundColor = Blue;
-            Write($"   Inventory: {player.Inventory.Count} items  ");
-            for (int j = 0; j < 18; j++) //Clearing Inventory that was before
+            Write($"   Inventory: {player.Inventory.Count} items   ");
+            for (int j = 0; j < 28; j++) //Clearing Inventory that was before
             {
                 SetCursorPosition(90, j + 2);
                 Write("                                                                      ");
             }
             int i = 0;
+            //Printing the inventory
             foreach (Item item in player.Inventory.Keys) // Printing each item in inventory with it's effect and amount
             {
                 if (i == 9) break; //Printing only 10 First Items, TODO 
@@ -101,6 +105,7 @@ namespace First_Semester_Project.Output
                 i++;
             }
 
+            //Prints player info
             ForegroundColor = White;
             SetCursorPosition(40, 0);
             Write($"Dungeon depth: {CurrentLevel}");
@@ -120,26 +125,27 @@ namespace First_Semester_Project.Output
             SetCursorPosition(20, 4);
             Write($"Turns  : {player.Countdown} ");
 
+            //And Player's HP
             SetCursorPosition(3, 5);
             ForegroundColor = Red;
             Write("                            ");
             SetCursorPosition(7, 7);
             Write($"Your HP is {player.CurrentHP} of {player.MaxHP}  ");
             PixelArt.Heart(player, 5, 8);
-
-            SetCursorPosition(35, 26);
-            EraseLine();
-            SetCursorPosition(35, 28);
-            EraseLine();
-            ForegroundColor = Green;
-            SetCursorPosition(35, 26);
-            Write(GreenAction);
-            ForegroundColor = DarkRed;
-            SetCursorPosition(35, 28);
-            Write(RedAction);
-            GreenAction = "";
-            RedAction = "";
-            Damage = 0;
+            
+            //And activities 
+            int k = 0;
+            foreach (var item in Logs)
+            {
+                SetCursorPosition(34, 15 + k);
+                ForegroundColor = item.Color;
+                Write(item.Str);
+                k++;
+                SetCursorPosition(34, 15 + k);
+                Write(item.Str2);
+                k++;
+            }
+            //And amount of coins
             ForegroundColor = Yellow;
             SetCursorPosition(10, 18);
             Write($"${player.Coins / 100 % 10}{player.Coins / 10 % 10}{player.Coins % 10}$");
@@ -147,6 +153,7 @@ namespace First_Semester_Project.Output
             SetCursorPosition(2, 19);
             Write(AwayFromExit != 0 ? $"You are {AwayFromExit} moves             \n  Away from exit     " : "Can't find a way to the exit\n  Try to move around           ");
 
+            //And small help window
             SetCursorPosition(2, 22);
             ForegroundColor = Square.PlayerColor;
             Write($"{Square.PlayerAvatar} - Player");
@@ -169,8 +176,8 @@ namespace First_Semester_Project.Output
 
             ForegroundColor = White;
         }
-
-        public void PrintGUI()
+        //Prints white stripes for better looking
+        public void PrintGRID()
         {
             lock (this)
             {
@@ -178,7 +185,6 @@ namespace First_Semester_Project.Output
                 {
                     SetCursorPosition(32, i);
                     Write("║");
-                    if (i > 25) continue;
                     SetCursorPosition(87, i);
                     Write("║");
                 }
@@ -192,7 +198,7 @@ namespace First_Semester_Project.Output
                     else if (i == 32)
                     {
                         Write("╣");
-                        SetCursorPosition(i, 25);
+                        SetCursorPosition(i, 14);
                         Write("╠");
                         SetCursorPosition(i, 2);
                         Write("╠");
@@ -201,32 +207,39 @@ namespace First_Semester_Project.Output
                     {
                         SetCursorPosition(i, 2);
                         Write("╣");
-                        SetCursorPosition(i, 25);
-                        Write("╩");
+                        SetCursorPosition(i, 14);
+                        Write("╣");
                     }
                     else if (i < 87)
                     {
-                        SetCursorPosition(i, 25);
+                        SetCursorPosition(i, 14);
                         Write("═");
                         SetCursorPosition(i, 2);
                         Write("═");
                     }
-
-                    else
-                    {
-                        SetCursorPosition(i, 25);
-                        Write("═");
-                    }
                 }
             }
-
         }
-
-
 
         public Data(int currentlevel)
         {
             CurrentLevel = currentlevel;
+        }
+    }
+
+    //Log type of output
+    public struct DataString
+    {
+        //Has two strings and color
+        public string Str;
+        public ConsoleColor Color;
+        public string Str2 = "".PadRight(52, ' '); //Second string is in case the first string is too long
+
+        public DataString(string str, ConsoleColor color = ConsoleColor.Green)
+        {
+            Str = str.PadRight(52, ' ');
+            Color = color;
+            if (Str.Length > 52) { Str2 = Str.Substring(52); Str = Str.Substring(0, 52); }
         }
     }
 }

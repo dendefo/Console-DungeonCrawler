@@ -1,10 +1,10 @@
-﻿using System.Drawing.Printing;
-using System.Xml.Serialization;
-using static System.Console;
+﻿using static System.Console;
 using static System.ConsoleColor;
 
 namespace First_Semester_Project.Output
 {
+    //A lot of visual outputs that are not inGame HUD. All the menus and Shop
+    //I don't gonna explain about each thing inside each function, only important points
     static class Menu
     {
         static Dictionary<string, int> Prices = new Dictionary<string, int>() { { "Sword", 3},{"Axe", 7},{"Nunchucks", 12},
@@ -27,7 +27,7 @@ namespace First_Semester_Project.Output
             }
             SetCursorPosition(35, 9);
             Write("███████████████████████████████████████████████████████████████████████████████████████");
-            PrintWord("the insanity", 37, 3);
+            PrintWord("code s crypt", 37, 3);
 
             SetCursorPosition(105, 8);
             ForegroundColor = Gray;
@@ -47,11 +47,14 @@ namespace First_Semester_Project.Output
             Write("Credits");
             SetCursorPosition(73, 23);
             Write("Exit");
+            //It took me too much time and i shouldn't do this pixel arts in console again
             PixelArt.Tiltan();
             PixelArt.Sword(8, 2);
             PixelArt.Shield(132, 2);
 
         }
+
+        //For menu navigation
         public static void PrintCursor(int position, int startX, int startY)
         {
             for (int i = startY; i <= 29; i += 2)
@@ -68,8 +71,15 @@ namespace First_Semester_Project.Output
         public static void Credits()
         {
             Clear();
+            ForegroundColor = Blue;
+            PrintWord("student", 46, 2);
+            PrintWord("teacher", 46, 17);
+            ForegroundColor = Green;
+            PrintWord("dendefo", 56, 9);
+            PrintWord("dor ben dor", 56, 24); //I needed to write something in Credits, but my nickname, didn't i?
             ReadKey(true);
         }
+
         public static void Controls()
         {
             Clear();
@@ -81,8 +91,8 @@ namespace First_Semester_Project.Output
             Letters.Button('d', 38, 10);
 
             Letters.Button('h', 60, 2);
-            Letters.Button('o', 60, 11);
-            Letters.Button('9', 75, 11);
+            Letters.Button('o', 60, 10);
+            Letters.Button('9', 75, 10);
             Letters.Button('e', 60, 21);
             Letters.Button('s', 70, 21);
             Letters.Button('c', 80, 21);
@@ -150,18 +160,13 @@ namespace First_Semester_Project.Output
 
         }
 
+        //Best name that i can come up with
         private static void SomeMarketText(Data log)
         {
             lock (log)
             {
                 Clear();
                 PrintWord("mystery shack", 35, 3);
-                //PixelArt.Sword(36, 13);
-                //SetCursorPosition(39, 25);
-                //ForegroundColor = White;
-                //Write(" Buy a weapon                     Buy a Shield                     Buy a healing potion");
-                //PixelArt.Shield(70, 12);
-                //PixelArt.Potion(106, 12);
                 ForegroundColor = Green;
                 SetCursorPosition(71, 13);
                 Write("Welcome, Stranger!");
@@ -259,8 +264,6 @@ namespace First_Semester_Project.Output
                         }
 
                         SomeMarketText(log);
-                        //log.CoinCancelToken.Cancel();
-                        //lock (log) Clear();
                         break;
 
                 }
@@ -296,20 +299,17 @@ namespace First_Semester_Project.Output
             int position = 0;
             while (true)
             {
+
+
                 for (int i = 0; i < Prices.Keys.Count; i++)
                 {
                     lock (log)
                     {
                         SetCursorPosition(38 + i % 3 * 30, 15 + i / 3 * 2);
-                        Write(" ");
+                        ForegroundColor = Green;
+                        Write(position == i ? "►" : " ");
+                        ForegroundColor = Gray;
                     }
-                }
-                lock (log)
-                {
-                    ForegroundColor = Green;
-                    SetCursorPosition(38 + position % 3 * 30, 15 + position / 3 * 2);
-                    Write("►");
-                    ForegroundColor = Gray;
                 }
 
                 switch (ReadKey(true).Key)
@@ -361,7 +361,7 @@ namespace First_Semester_Project.Output
                 lock (log)
                 {
                     SetCursorPosition(x, y);
-                    Write($"{player.Inventory[item]} {item.Name}. |$: {Prices[item.Name]}");
+                    Write($"{player.Inventory[item]} {item.Name} {Prices[item.Name]}$");
                 }
                 x += 30;
                 if (x > 100)
@@ -377,16 +377,11 @@ namespace First_Semester_Project.Output
                 {
                     lock (log)
                     {
-                        SetCursorPosition(40 + i % 3 * 30, 15 + i / 3 * 2);
-                        Write(" ");
+                        ForegroundColor = Green;
+                        SetCursorPosition(38 + i % 3 * 30, 15 + i / 3 * 2);
+                        Write(position==i? "►" : " ");
+                        ForegroundColor = Gray;
                     }
-                }
-                lock (log)
-                {
-                    ForegroundColor = Green;
-                    SetCursorPosition(38 + position % 3 * 30, 15 + position / 3 * 2);
-                    Write("►");
-                    ForegroundColor = Gray;
                 }
                 switch (ReadKey(true).Key)
                 {
@@ -420,7 +415,7 @@ namespace First_Semester_Project.Output
             }
         }
 
-
+        //I love how this option window looks like.
         public static ConsoleColor ColorChose(int position)
         {
             SetCursorPosition(52, 1);

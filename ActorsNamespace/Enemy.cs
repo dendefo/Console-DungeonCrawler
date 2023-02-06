@@ -4,10 +4,12 @@
     //Class that represents Enemy
     internal class Enemy : Unit
     {
-        static public int Difficulty = 3;
+        //List of Pathfinding walkable tiles
+        public static List<SquareTypes> ToPlayer = new List<SquareTypes> { SquareTypes.Empty, SquareTypes.Player, SquareTypes.Coin };
+        public static int Difficulty = 3;
+
         private Coordinates spawnCoord;
-        private Coordinates TargetCoords = new(0,0);
-        //if player was at range at least once = true
+        private Coordinates TargetCoords = new(0, 0);
 
         //Basic constructor
         public Enemy(Coordinates coor, int level, Square square, Weapon weapon, Shield shield, Item item) : base(coor)
@@ -24,34 +26,36 @@
         }
 
         //If enemy dies, he dropes chest with loot
-        public Item Die()
+        public override void Die(Map map)
         {
             ActorsSquare.MakeEmpty();
-            return ItemToDrop;
-            
+            base.Die(map);
         }
 
-        public static void EnemiesMoving(Map LevelMap, Player player)
+        public static void EnemiesMoving(Map map, Player player)
         {
 
-            for (int i = 0; i < LevelMap.Enemies.Count; i++)
+            for (int i = 0; i < map.Enemies.Count; i++)
             {
 
-                Enemy enemy = LevelMap.Enemies[i];
+                Enemy enemy = map.Enemies[i];
                 if (enemy == null) continue; //if there is no enemy
                 if (enemy.CurrentHP == 0) continue; //if enemy died
 
-                if (!Physics.Raycast(LevelMap, enemy.Coor, player.Coor, Map.notVisibleThrow, 6)) //If enemy sees the player
+                if (!Physics.Raycast(map, enemy.Coor, player.Coor, Map.NotVisibleThrow, 6)) //If enemy doesn't sees the player
                 {
-                    if (enemy.TargetCoords == new Coordinates(0, 0)) continue;
+                    if (enemy.TargetCoords == new Coordinates(0, 0)) continue; //Then no target
                 }
-                else enemy.TargetCoords = player.Coor;
-                if (enemy.Coor == enemy.TargetCoords) { enemy.TargetCoords = enemy.spawnCoord; }
-                if(enemy.TargetCoords == enemy.spawnCoord&& enemy.TargetCoords == enemy.Coor) { enemy.TargetCoords = new Coordinates(0, 0);}
-                //I burned 5 hours to understand and make this algorithm, used pseudo code from one site as reverence and tryed to implement it for 2 hours
-                List<Node> path = Node.BuildPath(enemy.Pathfinder(LevelMap, enemy.TargetCoords));
+                else enemy.TargetCoords = player.Coor; //Else Player's coords is target
+
+                if (enemy.Coor == enemy.TargetCoords) { enemy.TargetCoords = enemy.spawnCoord; } //If stands on target then new target is spawnPoint
+                if (enemy.TargetCoords == enemy.spawnCoord && enemy.TargetCoords == enemy.Coor) { enemy.TargetCoords = new Coordinates(0, 0); } //If stands on spawn point and has no target
+
+
+                //I burned 5 hours to understand and make this algorithm, used pseudo code from one site as reference and tryed to implement it for 2 hours
+                List<Node> path = Node.BuildPath(enemy.Pathfinder(map, enemy.TargetCoords, ToPlayer));
                 if (path == null) { enemy.TargetCoords = new(); continue; }
-                Physics.CollisionCheck(LevelMap, path[path.Count - 2].Coor - enemy.Coor, enemy);
+                Physics.CollisionCheck(map, path[path.Count - 2].Coor - enemy.Coor, enemy);
             }
         }
 

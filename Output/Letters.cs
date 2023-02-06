@@ -2,6 +2,8 @@
 
 namespace First_Semester_Project.Output
 {
+    //Litterally it is list of letters, cause i print words sometimes, it's nice to have all the letters if i want to print something new
+    //And there is number 9
     static internal class Letters
     {
         public static void Print(char letter, int x, int y)

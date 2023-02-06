@@ -6,13 +6,17 @@ namespace First_Semester_Project.Output
     {
         private List<ConsoleColor> Colours = new();
         private string _print = "";
+        //Add object for print
         public void Push(ConsoleColor printingColor, char symbol)
         {
             Colours.Add(printingColor);
             _print += symbol;
         }
-        public void Print() //I tried to find a way for more smooth printing. 
+        //Just prints all the objects little bit faster
+        public void Print() 
         {
+            ClearMap();
+            
             string toPrint = "";
             int newline = 4;
             SetCursorPosition(40, newline);
@@ -42,7 +46,21 @@ namespace First_Semester_Project.Output
 
         }
 
-        static public void RePrint(int x, int y, Square ent)//Now Each update looks like this. Much faster and clear but there is a bug, when something may double print on a map
+        //Had some visual bug and didn't found the solution, so each turn i clear the map
+        private void ClearMap()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                SetCursorPosition(40, 4 + i);
+                Write("                  \n");
+            }
+        }
+
+        //Now Each update looks like this. Much faster and clear but there is a bug, when something may double print on a map
+
+        //Comment above was me At December. Now it is me at February. To implement this function back i need to rewrite half of the Map.Refresh function. 
+        //I don't want to do it. Map refreshing don't take too mush time, cause map is now in small window. All the HUD takes more CPU
+        static public void RePrint(int x, int y, Square ent)
         {
             SetCursorPosition(x, y);
             ForegroundColor = ent.Color;

@@ -3,25 +3,25 @@
 
     internal class Spike : Actor
     {
-        public bool Direction { get; private set; } // true is for "Up" or "Right", false is for "Down" or "Left"
-        public bool DimentionOfMoving { get; private set; } //true is for Vertical, false is for Horizontal
+        private bool _direction { get; set; } // true is for "Up" or "Right", false is for "Down" or "Left"
+        private bool _dimentionOfMoving { get;  set; } //true is for Vertical, false is for Horizontal
         public Spike(Coordinates coor, bool dimention, Square actorSquare) : base(coor)
         {
-            DimentionOfMoving = dimention;
+            _dimentionOfMoving = dimention;
             ActorsSquare = actorSquare;
             StandsOn = new Square(SquareTypes.Empty, coor);
         }
         public void ChangeDirection()
         {
-            Direction = !Direction;
+            _direction = !_direction;
         }
-        public static void SpykeMoving(Map level)
+        public static void SpykeMoving(Map map)
         {
-            foreach (Square spyke in level.Spikes)
+            foreach (Square spyke in map.Spikes)
             {
-                bool axis = ((Spike)spyke.ActorOnSquare).DimentionOfMoving;
-                bool direction = ((Spike)spyke.ActorOnSquare).Direction;
-                Physics.CollisionCheck(level, new(axis? direction ? Directions.Up:Directions.Down: direction ? Directions.Right:Directions.Left), spyke.ActorOnSquare);
+                bool axis = ((Spike)spyke.ActorOnSquare)._dimentionOfMoving;
+                bool direction = ((Spike)spyke.ActorOnSquare)._direction;
+                Physics.CollisionCheck(map, (axis? direction ? Coordinates.Up:Coordinates.Down: direction ? Coordinates.Right:Coordinates.Left), spyke.ActorOnSquare);
             }
         }
     }

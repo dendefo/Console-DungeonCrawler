@@ -1,5 +1,6 @@
 ﻿namespace First_Semester_Project.ItemsNamespace
 {
+    //All the potions in game
     internal class Potion : Item
     {
         public PotionTypes PotionType { get; private set; }
@@ -8,6 +9,7 @@
 
         public EffectType Effect { get; private set; }
         public int Turns { get; private set; }
+        //Constructor
         public Potion(PotionTypes type)
         {
             PotionType = type;

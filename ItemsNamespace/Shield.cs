@@ -1,5 +1,6 @@
 ﻿namespace First_Semester_Project.ItemsNamespace
 {
+    //Shields
     internal class Shield : Item
     {
         public int Block { get; private set; }

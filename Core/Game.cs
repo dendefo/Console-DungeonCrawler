@@ -1,15 +1,16 @@
 ﻿using static System.ConsoleKey;
+
 namespace First_Semester_Project.Core
 {
     internal class Game
     {
+        
         public Player User = null;
-        Map LevelMap;
-        Player UserAtStart;
-        Data log = new(1);
-        bool inMenu = true;
-        bool inOptions = false;
-        bool inMarket = false;
+        Map _map;
+        Player _userAtStart;
+        Data _log = new(1);
+        bool _inMenu = true;
+        bool _inOptions = false;
         int _position = 0;
 
         public void Run()
@@ -22,81 +23,63 @@ namespace First_Semester_Project.Core
 
         public void ControlSystem()
         {
-            {
-                //bool flag = false;
-                //if (!Console.KeyAvailable && !inMenu)
-                //{
-                //    Thread.Sleep(50);
-                //    for (int i = 0; i < 4; i++)
-                //    {
-
-                //        if (Console.KeyAvailable) flag = true;
-                //        Thread.Sleep(50);
-                //    }
-
-                //    if (!flag) return;
-                //}
-            }
+            
             ConsoleKey key = Console.ReadKey(true).Key;
             //If player is in Option Menu
-            if (inOptions)
+            if (_inOptions)
             {
                 switch (key)
                 {
+                    //Down
                     case S:
                     case DownArrow:
                         _position++;
                         if (_position > 6) _position = 0;
                         Menu.PrintCursor(_position, 64, 12);
-                        //ControlSystem();
                         break;
-
+                    //Up
                     case W:
                     case UpArrow:
                         _position--;
                         if (_position < 0) _position = 6;
                         Menu.PrintCursor(_position, 64, 12);
-                        //ControlSystem();
                         break;
-
+                    //Chose
                     case Spacebar:
                     case Enter:
                         switch (_position)
                         {
+                            //Choose Player Color
                             case 0:
                                 Console.Clear();
                                 Square.PlayerColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                //ControlSystem();
                                 break;
-
+                            //Chose Enemy Color
                             case 1:
                                 Console.Clear();
                                 Square.EnemyColor = Menu.ColorChose(0);
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                //ControlSystem();
                                 break;
-
+                            //Chose Player Symbol
                             case 2:
                                 Console.Clear();
                                 Console.WriteLine("Please type the character");
                                 Square.PlayerAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                //ControlSystem();
                                 break;
-
+                            //Chose Enemy Symbol
                             case 3:
                                 Console.Clear();
                                 Console.WriteLine("Please type the character");
                                 Square.EnemyAvatar = (char)Console.Read();
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                //ControlSystem();
                                 break;
-
+                            //Chose Defficulty
                             case 4:
                                 Console.Clear();
                                 Console.WriteLine("1. Child\n2. Easy\n3. Medium\n4. Medium Rare\n5. Impossible");
@@ -114,8 +97,8 @@ namespace First_Semester_Project.Core
                                         Enemy.Difficulty = 5; break;
                                 }
                                 Menu.OptionsMenu();
-                                //ControlSystem();
                                 break;
+                            //Reset
                             case 5:
                                 Square.PlayerAvatar = '♥';
                                 Square.EnemyAvatar = '☻';
@@ -123,106 +106,100 @@ namespace First_Semester_Project.Core
                                 Square.EnemyColor = ConsoleColor.DarkRed;
                                 Enemy.Difficulty = 3;
                                 Menu.OptionsMenu();
-                                //ControlSystem();
                                 break;
+                            //Exit
                             case 6:
-                                inOptions = false;
+                                _inOptions = false;
                                 Menu.MainMenu();
                                 _position = 0;
                                 Menu.PrintCursor(_position, 71, 11);
-                                //ControlSystem();
                                 break;
                         }
                         break;
-
+                    //Exit
                     case Escape:
-                        inOptions = false;
+                        _inOptions = false;
                         Menu.MainMenu();
                         _position = 0;
                         Menu.PrintCursor(_position, 71, 11);
-                        //ControlSystem();
                         break;
 
                     default:
                         return;
-                        //ControlSystem();
-                        break;
                 }
             }
             //If player is in Main Menu
-            else if (inMenu)
+            else if (_inMenu)
             {
                 switch (key)
                 {
+                    //Down
                     case S:
                     case DownArrow:
                         _position++;
                         if (_position > 6) _position = 0;
                         Menu.PrintCursor(_position, 71, 11);
-                        //ControlSystem();
                         break;
+                    //Up
                     case W:
                     case UpArrow:
                         _position--;
                         if (_position < 0) _position = 6;
                         Menu.PrintCursor(_position, 71, 11);
-                        //ControlSystem();
                         break;
-
+                    //Chose
                     case Spacebar:
                     case Enter:
                         switch (_position)
                         {
+                            //New Game
                             case 0:
-                                inMenu = false;
-                                log.CurrentLevel = 1;
-                                Start(log.CurrentLevel, true);
+                                _inMenu = false;
+                                _log.CurrentLevel = 1;
+                                Start(_log.CurrentLevel, true);
                                 break;
-
+                            //Restart the level
                             case 1:
-                                inMenu = false;
-                                Start(log.CurrentLevel, log.CurrentLevel == 1 ? true : false);
+                                _inMenu = false;
+                                Start(_log.CurrentLevel, _log.CurrentLevel == 1 ? true : false);
                                 break;
-
+                            //Continue the Game
                             case 2:
-                                inMenu = false;
+                                _inMenu = false;
                                 Console.Clear();
                                 if (User == null || User.CurrentHP == 0)
                                 {
-                                    log.CurrentLevel = 1;
-                                    Start(log.CurrentLevel, true);
+                                    _log.CurrentLevel = 1;
+                                    Start(_log.CurrentLevel, true);
                                 }
-                                log.PrintGUI();
-
+                                _log.PrintGRID();
                                 break;
-
+                            //Controls
                             case 3:
                                 Menu.Controls();
                                 Menu.MainMenu();
                                 Menu.PrintCursor(_position, 71, 11);
-                                //ControlSystem();
                                 break;
-
+                            //Options
                             case 4:
-                                inOptions = true;
+                                _inOptions = true;
                                 _position = 0;
                                 Menu.OptionsMenu();
                                 Menu.PrintCursor(_position, 64, 12);
-                                //ControlSystem();
                                 break;
-
+                            //Credits
                             case 5:
                                 Menu.Credits();
                                 Menu.MainMenu();
                                 Menu.PrintCursor(_position, 71, 11);
                                 break;
-
+                            //Exit
                             case 6:
                                 Environment.Exit(0);
                                 break;
                         }
                         break;
-
+                    //Exit
                     case Escape:
                         Environment.Exit(0);
                         break;
@@ -236,38 +213,38 @@ namespace First_Semester_Project.Core
             {
                 switch (key)
                 {
+                    //Leave to main Menu
                     case Escape:
                         _position = 0;
-                        lock (log)
+                        lock (_log)
                         {
                             Menu.MainMenu();
                             Menu.PrintCursor(_position, 71, 11);
                         }
-                        inMenu = true;
+                        _inMenu = true;
                         Thread.Sleep(10);
-                        //ControlSystem();
                         break;
-
+                    //Left
                     case A:
-                    case LeftArrow://Left
-                        Physics.CollisionCheck(LevelMap, new(Directions.Left), User);
+                    case LeftArrow:
+                        Physics.CollisionCheck(_map, Coordinates.Left, User);
                         break;
-
+                    //Right
                     case D:
-                    case RightArrow://Right
-                        Physics.CollisionCheck(LevelMap, new(Directions.Right), User);
+                    case RightArrow:
+                        Physics.CollisionCheck(_map, Coordinates.Right, User);
                         break;
-
+                    //Down
                     case S:
-                    case DownArrow://Down
-                        Physics.CollisionCheck(LevelMap, new(Directions.Down), User);
+                    case DownArrow:
+                        Physics.CollisionCheck(_map, Coordinates.Down, User);
                         break;
-
+                    //Up
                     case W:
-                    case UpArrow://Up
-                        Physics.CollisionCheck(LevelMap, new(Directions.Up), User);
+                    case UpArrow:
+                        Physics.CollisionCheck(_map, Coordinates.Up, User);
                         break;
-
+                    //Use item
                     case D0:
                     case D1:
                     case D2:
@@ -278,61 +255,72 @@ namespace First_Semester_Project.Core
                     case D7:
                     case D8:
                     case D9: //Share same logic of numbers from 0-9
-                        User.Use((int)key - 48, log, LevelMap); //Use item
+                        User.Use((int)key - 48, _log, _map); 
                         break;
-
+                    //Heal Max HP
                     case H:
                         User.FullHeal();
                         break;
 
                     default:
                         return;
-                        break;
                 }
             }
         }
-
+        //Start a new game
         public void Start(int level, bool gameReStart)
         {
             if (gameReStart) User = new Player(new(), new Square(SquareTypes.Player, new()));
-            else User = new Player(UserAtStart.Coor, UserAtStart);
+            else User = new Player(_userAtStart.Coor, _userAtStart);    // in case of restarting the level
 
-            for (int currentLevel = level; currentLevel <= 10; currentLevel++)
+            for (int currentLevel = level; currentLevel <= 5; currentLevel++) //I made only 5 levels
             {
-                LevelMap = new(currentLevel, User, log);
-                log.PrintGUI();
+                _map = new(currentLevel, User, _log);
+                _log.PrintGRID();
                 PlayTheLevel();
-                log.CurrentLevel++;
+                _log.CurrentLevel++;
             }
+            Console.Clear();
+            Console.WriteLine("Congrats, you won!");
         }
+        //Play each level
         private void PlayTheLevel()
         {
-            UserAtStart = new Player(User.Coor, User);
+            _userAtStart = new Player(User.Coor, User);
 
             while (User.StandsOn.Entity != SquareTypes.Exit)
             {
-                if (User.CurrentHP == 0)
+                if (User.CurrentHP == 0) //Plyer is dead
                 {
                     Menu.EndOfGame();
-                    inMenu = true;
+                    _inMenu = true;
                     _position = 0;
                     while (true)
                     {
                         ControlSystem();
                     }
                 }
-                User.Turn();
-                ControlSystem();
-                if (!inMenu)
+                User.Turn(); //PotionEffects--
+                ControlSystem(); //User Input
+                if (!_inMenu)
                 {
-
-                    if (User.CurrentEffect != EffectType.Invisibl) Enemy.EnemiesMoving(LevelMap, User);
-
-                    Spike.SpykeMoving(LevelMap);
-                    lock (log) { LevelMap.Refresh(); }
+                    if (User.CurrentEffect != EffectType.Invisibl) 
+                    { 
+                        //Moving Enemies
+                        Enemy.EnemiesMoving(_map, User); 
+                        foreach (Snake snake in _map.SnakesHeads)
+                        {
+                            if (snake != null) snake.SnakeMove(_map, User);
+                        }
+                       
+                    }
+                    //Moving spykes
+                    Spike.SpykeMoving(_map);
+                    lock (_log) { _map.Refresh(); }
                 }
             }
-            if (log.CurrentLevel % 2 == 0) Menu.Market(User, log);
+            //Each 2 levels player can buy/sell items
+            if (_log.CurrentLevel % 2 == 0) Menu.Market(User, _log);
         }
     }
 }
